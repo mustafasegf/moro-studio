@@ -5,10 +5,12 @@ import { Navbar } from "../component/navbar";
 import { api } from "~/utils/api";
 
 export default function Login() {
+
+
   const [email, setEmail] = useState("");
   const addContoh = api.contoh.addContoh.useMutation();
 
-  const handleSubmit = (e: FormEvent) => {
+  function handleSubmit(e: FormEvent)  {
     e.preventDefault();
     console.log(email);
 
@@ -38,7 +40,7 @@ export default function Login() {
       )}
 
       <div className="flex content-center justify-center">
-        <div className="border border-white p-[10%] md:p-40 bg-[#CBC3E3]">
+        <div className="border border-white p-[10%] m-4">
           <h1>Login</h1>
           <form onSubmit={handleSubmit}>
             <label className="label">
