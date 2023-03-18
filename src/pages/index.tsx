@@ -19,7 +19,7 @@ export default  function Home() {
       </main>
     </>
   );
-};
+}
 
 
 // const AuthShowcase: React.FC = () => {

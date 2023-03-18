@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { type FormEvent, useState } from "react";
 
 import { Navbar } from "../component/navbar";
 
@@ -15,7 +15,7 @@ export default function Login() {
     console.log(email);
 
     addContoh.mutate({ email });
-  };
+  }
 
   return (
     <>
