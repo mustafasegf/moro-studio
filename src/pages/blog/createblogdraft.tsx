@@ -3,7 +3,7 @@ import React from "react";
 export default function CreateBlogDraft() {
   return (
     <>
-      <div className="bg-[#ffffff] py-5">
+      <div className="bg-white py-5">
         
         <div>
           <p className="flex justify-center text-2xl font-bold text-black">
