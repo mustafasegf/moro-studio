@@ -1,23 +1,19 @@
 import React from "react";
 
-export default function BlogDraftList() {
+export default function DraftApproval() {
   return (
     <>
       <div className="bg-white py-5">
         <div>
-          <p className="mx-5 flex text-2xl font-bold text-black">Draf Blog</p>
-        </div>
-
-        <div>
-          <button className="btn-sm btn mx-5 my-5 ">
-            + | Buat draf blog baru
-          </button>
+          <p className="mx-5 flex pb-5 text-2xl font-bold text-black">
+            Draf Blog
+          </p>
         </div>
 
         <div>
           {/* to solve text overflow can either make new attribute foe blog obj (description), or just let it happened :) */}
           {/* make the loop func here */}
-          <div className="card card-compact mx-5 mb-2 flex justify-center rounded-none bg-white shadow-md">
+          <a href="#" className="card card-compact mx-5 mb-2 flex justify-center rounded-none bg-white shadow-md">
             <div className="card-body">
               <table className="w-10/10 table-fixed">
                 <thead>
@@ -61,8 +57,8 @@ export default function BlogDraftList() {
                     <td className="w-2/10 ">
                     <div>
                       <p className=" flex justify-center pb-2">Belum Disetujui</p>
-                        <button className="flex  justify-center btn-outline btn-warning btn-sm btn w-28">
-                          Edit
+                        <button className="flex  justify-center btn-outline btn-success btn-sm btn w-28">
+                          Setujui
                         </button>
                     </div>
                     </td>
@@ -71,7 +67,7 @@ export default function BlogDraftList() {
                 </tbody>
               </table>
             </div>
-          </div>
+          </a>
           {/* loop end here */}
         </div>
       </div>

@@ -1,19 +1,23 @@
 import React from "react";
 
-export default function DeleteBlogPost() {
+export default function DraftList() {
   return (
     <>
       <div className="bg-white py-5">
         <div>
-          <p className="mx-5 flex pb-5 text-2xl font-bold text-black">
-            Draf Blog
-          </p>
+          <p className="mx-5 flex text-2xl font-bold text-black">Draf Blog</p>
+        </div>
+
+        <div>
+          <button className="btn-sm btn mx-5 my-5 ">
+            + | Buat draf blog baru
+          </button>
         </div>
 
         <div>
           {/* to solve text overflow can either make new attribute foe blog obj (description), or just let it happened :) */}
           {/* make the loop func here */}
-          <a href="#" className="card card-compact mx-5 mb-2 flex justify-center rounded-none bg-white shadow-md">
+          <div className="card card-compact mx-5 mb-2 flex justify-center rounded-none bg-white shadow-md">
             <div className="card-body">
               <table className="w-10/10 table-fixed">
                 <thead>
@@ -56,8 +60,9 @@ export default function DeleteBlogPost() {
 
                     <td className="w-2/10 ">
                     <div>
-                        <button className="flex  justify-center btn-outline btn-error btn-sm btn w-28">
-                          Hapus
+                      <p className=" flex justify-center pb-2">Belum Disetujui</p>
+                        <button className="flex  justify-center btn-outline btn-warning btn-sm btn w-28">
+                          Edit
                         </button>
                     </div>
                     </td>
@@ -66,7 +71,7 @@ export default function DeleteBlogPost() {
                 </tbody>
               </table>
             </div>
-          </a>
+          </div>
           {/* loop end here */}
         </div>
       </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function BlogDraftApproval() {
+export default function DeletePost() {
   return (
     <>
       <div className="bg-white py-5">
@@ -56,9 +56,8 @@ export default function BlogDraftApproval() {
 
                     <td className="w-2/10 ">
                     <div>
-                      <p className=" flex justify-center pb-2">Belum Disetujui</p>
-                        <button className="flex  justify-center btn-outline btn-success btn-sm btn w-28">
-                          Setujui
+                        <button className="flex  justify-center btn-outline btn-error btn-sm btn w-28">
+                          Hapus
                         </button>
                     </div>
                     </td>

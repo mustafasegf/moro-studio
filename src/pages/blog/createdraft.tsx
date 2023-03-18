@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function CreateBlogDraft() {
+export default function CreateDraft() {
   return (
     <>
       <div className="bg-white py-5">
