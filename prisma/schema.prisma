@@ -2,66 +2,252 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
-}
-
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  provider = "postgresql"
+  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+  // Further reading:
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url      = env("DATABASE_URL")
 }
 
 // Necessary for Next auth
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String?  @db.Text
-    access_token      String?  @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String?  @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+  id             String           @id @default(cuid())
+  nama           String
+  email          String           @unique
+  hp             String
+  instagram      String?
+  role           Role             @default(user)
+  accounts       Account[]
+  sessions       Session[]
+  booking        Booking[]
+  blastMarketing BlastMarketing[]
+  chatRoomAdmin  ChatRoom[]       @relation("ChatRoomAdmin")
+  chatRoomUser   ChatRoom[]       @relation("ChatRoomUser")
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
+enum Role {
+  admin
+  studioManager
+  blogManager
+  user
+}
+
+model Katalog {
+  id        String    @id @default(cuid())
+  nama      String
+  durasi    String
+  harga     Int
+  deskripsi String    @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Booking   Booking[]
+}
+
+model Kupon {
+  id             String    @id @default(cuid())
+  nama           String
+  kode           String
+  diskon         Float
+  kuotaPemakaian Int
+  kuotaTerpakai  Int
+  status         Boolean
+  tanggal        DateTime
+  Booking        Booking[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model BackgroundFoto {
+  warna     String    @id
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Booking   Booking[]
+}
+
+enum BookinStatus {
+  booked
+  dp
+  lunas
+}
+
+model Booking {
+  id              String         @id @default(cuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id])
+  backgroundWarna String
+  background      BackgroundFoto @relation(fields: [backgroundWarna], references: [warna])
+  peliharaan      Boolean
+  harga           Int
+  jadwal          DateTime
+  katalogId       String
+  katalog         Katalog        @relation(fields: [katalogId], references: [id])
+  detail          String         @db.Text
+  kuponId         String
+  kupon           Kupon          @relation(fields: [kuponId], references: [id])
+  status          BookinStatus
+  // foto FotoUser[]
+  Pembayaran      Pembayaran[]
+  FotoUser        FotoUser[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model Pembayaran {
+  id        String   @id @default(cuid())
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  dp        Boolean
+  jumlah    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FotoUser {
+  id        String   @id @default(cuid())
+  gambar    String
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model KontenBlog {
+  id        String        @id @default(cuid())
+  judul     String
+  comment   CommentBlog[]
+  thumbnail String
+  isi       String        @db.Text
+  posted    Boolean
+  like      Int
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model CommentBlog {
+  id           String     @id @default(cuid())
+  kontenBlogId String
+  kontenBlog   KontenBlog @relation(fields: [kontenBlogId], references: [id])
+  nama         String
+  isi          String
+  like         Int
+  dislike      Int
+  createdAt    DateTime
+  updatedAt    DateTime
+}
+
+model BlastMarketing {
+  id        String   @id @default(cuid())
+  subjek    String
+  isi       String   @db.Text
+  penerima  User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum SectionType {
+  heroSection
+  carousel
+  leftImageCTA
+  centerImageCTA
+  rightImageCTA
+}
+
+model Homepage {
+  id        String    @id @default(cuid())
+  section   Section[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Section {
+  Id         String      @id @default(cuid())
+  Image      String[]
+  Title      String?
+  Text       String?
+  Type       SectionType
+  CreatedAt  DateTime
+  UpdatedAt  DateTime
+  homepageId String?
+  homepage   Homepage?   @relation(fields: [homepageId], references: [id])
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model ChatRoom {
+  Id        String   @id @default(cuid())
+  adminId   String
+  admin     User     @relation("ChatRoomAdmin", fields: [adminId], references: [id])
+  userId    String?
+  User      User?    @relation("ChatRoomUser", fields: [userId], references: [id])
+  Chat      Chat[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Chat {
+  id         String   @id @default(cuid())
+  chatRoomId String
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [Id])
+  chat       String   @db.Text
+  adminSend  Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model PertanyaanFeedback {
+  id         String     @id @default(cuid())
+  pertanyaan String
+  feedback   Feedback[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Feedback {
+  Id                 String               @id @default(cuid())
+  namaPenulis        String
+  pertanyaanFeedback PertanyaanFeedback[]
+  isiFeedback        String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+}
