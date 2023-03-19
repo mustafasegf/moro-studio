@@ -13,7 +13,7 @@ export default function DraftApproval() {
         <div>
           {/* to solve text overflow can either make new attribute foe blog obj (description), or just let it happened :) */}
           {/* make the loop func here */}
-          <a href="#" className="card card-compact mx-5 mb-2 flex justify-center rounded-none bg-white shadow-md">
+          <a href="selectedpost" className="card card-compact mx-5 mb-2 flex justify-center rounded-none bg-white shadow-md">
             <div className="card-body">
               <table className="w-10/10 table-fixed">
                 <thead>
@@ -57,9 +57,9 @@ export default function DraftApproval() {
                     <td className="w-2/10 ">
                     <div>
                       <p className=" flex justify-center pb-2">Belum Disetujui</p>
-                        <button className="flex  justify-center btn-outline btn-success btn-sm btn w-28">
+                        <a href="#" className="flex  justify-center btn-outline btn-success btn-sm btn w-28">
                           Setujui
-                        </button>
+                        </a>
                     </div>
                     </td>
                     

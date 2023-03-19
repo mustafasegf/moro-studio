@@ -9,9 +9,9 @@ export default function DraftList() {
         </div>
 
         <div>
-          <button className="btn-sm btn mx-5 my-5 ">
+          <a href="createdraft" className="btn-sm btn mx-5 my-5 ">
             + | Buat draf blog baru
-          </button>
+          </a>
         </div>
 
         <div>
@@ -61,9 +61,9 @@ export default function DraftList() {
                     <td className="w-2/10 ">
                     <div>
                       <p className=" flex justify-center pb-2">Belum Disetujui</p>
-                        <button className="flex  justify-center btn-outline btn-warning btn-sm btn w-28">
+                        <a href="updatedraft" className="flex  justify-center btn-outline btn-warning btn-sm btn w-28">
                           Edit
-                        </button>
+                        </a>
                     </div>
                     </td>
                     

@@ -6,14 +6,14 @@ export default function DeletePost() {
       <div className="bg-white py-5">
         <div>
           <p className="mx-5 flex pb-5 text-2xl font-bold text-black">
-            Draf Blog
+          Blog Terbaru Untuk Anda
           </p>
         </div>
 
         <div>
           {/* to solve text overflow can either make new attribute foe blog obj (description), or just let it happened :) */}
           {/* make the loop func here */}
-          <a href="#" className="card card-compact mx-5 mb-2 flex justify-center rounded-none bg-white shadow-md">
+          <a href="selectedpost" className="card card-compact mx-5 mb-2 flex justify-center rounded-none bg-white shadow-md">
             <div className="card-body">
               <table className="w-10/10 table-fixed">
                 <thead>
@@ -56,9 +56,9 @@ export default function DeletePost() {
 
                     <td className="w-2/10 ">
                     <div>
-                        <button className="flex  justify-center btn-outline btn-error btn-sm btn w-28">
+                        <a href="#" className="flex  justify-center btn-outline btn-error btn-sm btn w-28">
                           Hapus
-                        </button>
+                        </a>
                     </div>
                     </td>
                     

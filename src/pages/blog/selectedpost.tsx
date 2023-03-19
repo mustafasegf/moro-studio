@@ -5,10 +5,13 @@ export default function SelectedPost() {
     <>
       <div className="bg-white py-5 ">
         <div>
+          <div className="pb-5">
+          <a href="/blog" className="mx-5 btn btn-outline btn-sm ">Kembali</a>
+          </div>
           <div className=" mx-5 flex h-80 justify-center rounded-lg border">
             <img
               className="w-full rounded-lg object-fill"
-              src=""
+              src="https://picsum.photos/800/600?image=1080"
               alt="Shoes"
             />
           </div>

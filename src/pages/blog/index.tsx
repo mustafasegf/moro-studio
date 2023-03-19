@@ -1,6 +1,7 @@
 import React from "react";
 
 export default function BlogPostList() {
+  
   return (
     <>
       <div className="bg-white py-5">
@@ -13,7 +14,7 @@ export default function BlogPostList() {
         <div>
           {/* to solve text overflow can either make new attribute foe blog obj (description), or just let it happened :) */}
           {/* make the loop func here */}
-          <a href="#" className="card card-compact mx-5 mb-2 flex justify-center rounded-none bg-white shadow-md">
+          <a href="blog/selectedpost" className="card card-compact mx-5 mb-2 flex justify-center rounded-none bg-white shadow-md">
             <div className="card-body">
               <table className="w-10/10 table-fixed">
                 <thead>
