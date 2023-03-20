@@ -27,6 +27,20 @@ export const feedbackRouter = createTRPCRouter({
     return ctx.prisma.feedback.findMany();
   }),
 
+  getFeedbackById: publicProcedure
+    .input(
+      z.object({
+        Id: z.string(),
+      })
+    )
+    .query(({ input, ctx }) => {
+      return ctx.prisma.feedback.findUnique({
+        where: {
+          Id : input.Id,
+        }
+      });
+    }),
+
   deleteFeedback: publicProcedure
   .input(
     z.object({
@@ -45,6 +59,7 @@ export const feedbackRouter = createTRPCRouter({
     .input(
       z.object({
         Id: z.string(),
+        namaPenulis: z.string(),
         isiFeedback: z.string(),
       })
     )
@@ -54,6 +69,7 @@ export const feedbackRouter = createTRPCRouter({
           Id: input.Id,
         },
         data: {
+          namaPenulis: input.namaPenulis,
           isiFeedback: input.isiFeedback,
         },
       });
