@@ -8,32 +8,32 @@ export default function Login() {
 
 
   const [email, setEmail] = useState("");
-  const addContoh = api.contoh.addContoh.useMutation();
+  const login = api.auth.login.useMutation();
 
   function handleSubmit(e: FormEvent)  {
     e.preventDefault();
     console.log(email);
 
-    addContoh.mutate({ email });
+    login.mutate({ email });
   }
 
   return (
     <>
-      {addContoh.isSuccess && (
+      {login.isSuccess && (
         <div className="toast">
           <div className="alert alert-info">
             <div>
-              <span>Contoh added </span>
+              <span>link terkirim</span>
             </div>
           </div>
         </div>
       )}
 
-      {addContoh.error && (
+      {login.error && (
         <div className="toast">
           <div className="alert alert-error">
             <div>
-              <span>Something went wrong. {addContoh.error.message}</span>
+              <span>Something went wrong. {login.error.message}</span>
             </div>
           </div>
         </div>
