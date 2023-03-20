@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { sign } from "jsonwebtoken";
 
 import {
   createTRPCRouter,
@@ -14,14 +15,20 @@ export const authRouter = createTRPCRouter({
         email: z.string().email(),
       })
     ).mutation( async ({ input, ctx }) => {
-      const payload = {url:"" , email: env.EMAIL_FROM, host: env.NEXTAUTH_URL}
+      const payload = { email: input.email}
+      const token = sign(payload, env.NEXTAUTH_SECRET, {
+        expiresIn: "1d",
+      })
+      const emailPayload = {url:`${env.NEXTAUTH_URL}/api/auth/login?token=${token}` , email: env.EMAIL_FROM, host: env.NEXTAUTH_URL}
+
+      console.log(token)
 
       return await ctx.email.sendMail({
         from: `MoroStudio <${env.EMAIL_FROM}>`,
         to: input.email,
         subject: `Sign in to ${env.NEXTAUTH_URL}`,
-        html: html(payload),
-        text: text(payload),
+        html: html(emailPayload),
+        text: text(emailPayload),
       })
 
     }
