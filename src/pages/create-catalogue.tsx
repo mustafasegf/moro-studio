@@ -14,7 +14,7 @@ export default function CreateCatalogue() {
   useEffect(
     function () {
       if (addCatalogue.isSuccess) {
-        router.push("/list-catalogue");
+        void router.push("/list-catalogue");
       }
     },
     [addCatalogue.isSuccess]
