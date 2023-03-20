@@ -6,13 +6,23 @@ import { useState } from "react";
 import { Dialog } from "../components/dialog";
 
 export default function ListCatalogue() {
-  const { data, isLoading, error } = api.catalogue.getAllCatalogue.useQuery();
+  const { data, isLoading, error, refetch } = api.catalogue.getAllCatalogue.useQuery();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDialog = () => {
     setIsOpen(!isOpen);
   };
+
+  const deleteCatalogue = api.catalogue.deleteCatalogue.useMutation();
+
+  function onDelete (id: string){
+    console.log("TESS")
+    console.log(id)
+    deleteCatalogue.mutate({id})
+    refetch()
+    setIsOpen(false)
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -80,6 +90,7 @@ export default function ListCatalogue() {
                 id={item.id}
                 isOpen={isOpen}
                 onClose={toggleDialog}
+                onDelete={() => onDelete(item.id)}
               />
               {/* <button className="rounded-md bg-gray-600 px-6 py-2 text-white hover:bg-gray-700">
                 Pilih Jadwal

@@ -1,5 +1,4 @@
 import { MdDelete } from "react-icons/md";
-import { deleteCatalogue } from "~/pages/delete-catalogue";
 
 type DialogProps = {
   title: string;
@@ -7,9 +6,10 @@ type DialogProps = {
   id: string;
   isOpen: boolean;
   onClose: () => void;
+  onDelete: () => void;
 };
 
-export function Dialog({ title, content, id, isOpen, onClose}: DialogProps) {
+export function Dialog({ title, content, id, isOpen, onClose, onDelete}: DialogProps) {
   return (
     <>
       {isOpen && (
@@ -46,7 +46,7 @@ export function Dialog({ title, content, id, isOpen, onClose}: DialogProps) {
               <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                 <button
                   type="button"
-                  className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" onClick={deleteCatalogue}
+                  className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" onClick={onDelete}
                 >
                   Hapus
                 </button>
