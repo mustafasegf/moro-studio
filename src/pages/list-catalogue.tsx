@@ -3,14 +3,14 @@ import { BiTimeFive } from "react-icons/bi";
 import { IoIosPricetag } from "react-icons/io";
 import Link from "next/link";
 import { useState } from "react";
-// import ReactModal from 'react-modal';
+import { Dialog } from "../components/dialog";
 
 export default function ListCatalogue() {
   const { data, isLoading, error } = api.catalogue.getAllCatalogue.useQuery();
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleButtonClick = () => {
+  const toggleDialog = () => {
     setIsOpen(!isOpen);
   };
 
@@ -41,7 +41,9 @@ export default function ListCatalogue() {
         >
           <h2 className="text-center text-xl font-bold">{item.nama}</h2>
           <div className="mt-6 rounded-md bg-gray-300 p-4 text-black">
-            <div className="text"><pre>{item.deskripsi}</pre></div>
+            <div className="text">
+              <pre>{item.deskripsi}</pre>
+            </div>
           </div>
           <div className="mt-6 flex items-center justify-between">
             <div className="flex flex-col">
@@ -60,8 +62,25 @@ export default function ListCatalogue() {
               </div>
             </div>
             <div className="text-right">
-              <Link href={`/update-catalogue/${item.id}`} className="px-6 py-2 mr-2  border border-gray-600 text-gray-600 rounded-md hover:bg-gray-700 hover:text-gray-200 border border-gray-600 hover:border-gray-700 transition duration-300 ease-in-out">Ubah</Link>
-              <button onClick={handleButtonClick} className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 hover:text-white border border-red-500 hover:border-red-600 transition duration-300 ease-in-out">Hapus</button>
+              <Link
+                href={`/update-catalogue/${item.id}`}
+                className="mr-2 rounded-md border  border border-gray-600 border-gray-600 px-6 py-2 text-gray-600 transition duration-300 ease-in-out hover:border-gray-700 hover:bg-gray-700 hover:text-gray-200"
+              >
+                Ubah
+              </Link>
+              <button
+                onClick={toggleDialog}
+                className="rounded-md border border-red-500 bg-red-500 px-6 py-2 text-white transition duration-300 ease-in-out hover:border-red-600 hover:bg-red-600 hover:text-white"
+              >
+                Hapus
+              </button>
+              <Dialog
+                title="Hapus Katalog"
+                content="Apakah Anda yakin akan menghapus katalog ini?"
+                id={item.id}
+                isOpen={isOpen}
+                onClose={toggleDialog}
+              />
               {/* <button className="rounded-md bg-gray-600 px-6 py-2 text-white hover:bg-gray-700">
                 Pilih Jadwal
               </button> */}
@@ -69,10 +88,6 @@ export default function ListCatalogue() {
           </div>
         </div>
       ))}
-      {/* <ReactModal isOpen={isOpen} onRequestClose={handleButtonClick}>
-        <h2>Dialog Box Title</h2>
-        <p>Dialog Box Content</p>
-      </ReactModal> */}
     </>
   );
 }

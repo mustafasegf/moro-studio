@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@next-auth/prisma-adapter': ^1.0.5
   '@prisma/client': ^4.9.0
+  '@tailwindui/react': ^0.1.1
   '@tanstack/react-query': ^4.20.2
   '@trpc/client': ^10.9.0
   '@trpc/next': ^10.9.0
@@ -37,6 +38,7 @@ specifiers:
 dependencies:
   '@next-auth/prisma-adapter': 1.0.5_qpmskah7lm3ildf4stmwh4q42u
   '@prisma/client': 4.10.1_prisma@4.10.1
+  '@tailwindui/react': 0.1.1_react@18.2.0
   '@tanstack/react-query': 4.24.10_biqbaboplfbrettd7655fr4n2y
   '@trpc/client': 10.12.0_@trpc+server@10.12.0
   '@trpc/next': 10.12.0_twxsmod72jqp5mq5sjgf4pkz2u
@@ -321,6 +323,15 @@ packages:
     resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
     dependencies:
       tslib: 2.5.0
+    dev: false
+
+  /@tailwindui/react/0.1.1_react@18.2.0:
+    resolution: {integrity: sha512-2VoUokHT/EYHaWQjH49gwKqYtwii7snb1SIp93ewfuI9fSy4x6DYocs4v4WNfyiE971ixc/PT+cs6tCi+zabSA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@tanstack/query-core/4.24.10:
