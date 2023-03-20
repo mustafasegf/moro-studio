@@ -56,6 +56,7 @@ model User {
   chatRoomUser   ChatRoom[]       @relation("ChatRoomUser")
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+  // feedback       Feedback[]
 }
 
 model VerificationToken {
@@ -201,7 +202,7 @@ model Homepage {
 }
 
 model Section {
-  Id         String      @id @default(cuid())
+  id         String      @id @default(cuid())
   Image      String[]
   Title      String?
   Text       String?
@@ -243,6 +244,16 @@ model PertanyaanFeedback {
   updatedAt  DateTime   @updatedAt
 }
 
+// model Feedback {
+//   id                 String               @id @default(cuid())
+//   user               User                 @relation(fields: [userId], references: [id])
+//   pertanyaanFeedback PertanyaanFeedback[]
+//   isiFeedback        String
+//   createdAt          DateTime             @default(now())
+//   updatedAt          DateTime             @updatedAt
+//   userId             String
+// }
+
 model Feedback {
   Id                 String               @id @default(cuid())
   namaPenulis        String
@@ -253,6 +264,6 @@ model Feedback {
 }
 
 model Contoh {
-  id String @id @default(cuid())
+  id    String @id @default(cuid())
   email String
 }

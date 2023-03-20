@@ -3,16 +3,16 @@ import { Navbar } from "../component/navbar";
 import { api } from "~/utils/api";
 
 export default function Feedback() {
-  const [namaPenulis, setNamaPenulis] = useState("");
+  const [Id, setId] = useState("");
   const [isiFeedback, setIsiFeedback] = useState("");
-  const addFeedback = api.feedback.addFeedback.useMutation();
+  const updateFeedback = api.feedback.updateFeedback.useMutation();
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log(namaPenulis);
+    console.log(Id)
     console.log(isiFeedback);
 
-    addFeedback.mutate({ namaPenulis, isiFeedback });
+    updateFeedback.mutate({ Id, isiFeedback });
     window.location.href = "/listfeedback";
   };
 
@@ -29,8 +29,7 @@ export default function Feedback() {
             <input
               type="text"
               placeholder="Nama"
-              className="input-primary input my-4 w-full max-w-xs"
-              onChange={(e) => setNamaPenulis(e.target.value)}
+              className="input-primary input my-4 w-full max-w-xs" disabled
             />
             <textarea 
               className="textarea textarea-primary textarea-lg w-full max-w-xs" 
