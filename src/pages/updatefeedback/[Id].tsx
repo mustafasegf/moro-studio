@@ -2,6 +2,11 @@ import { FormEvent, useEffect, useState } from "react"
 import { api } from "~/utils/api";
 import { useRouter } from 'next/router'
 import Link from "next/link";
+import { ParsedUrlQuery } from "querystring";
+
+interface Query extends ParsedUrlQuery {
+  Id: string;
+}
 
 export default function UpdateFeedback(){
   const [namaPenulis, setNamaPenulis] = useState("");
@@ -9,15 +14,14 @@ export default function UpdateFeedback(){
   
   const updateFeedback = api.feedback.updateFeedback.useMutation();
   const router = useRouter()
-  const { Id } = router.query
+  const { Id } = router.query as Query
 
   useEffect(function(){
     if (updateFeedback.isSuccess){
-      router.push("/listfeedback")
+      void router.push("/listfeedback")
     }
   },[updateFeedback.isSuccess])
 
-  // @ts-ignore
   const { data, isLoading, error } = api.feedback.getFeedbackById.useQuery({Id});
 
   useEffect(()=>{
@@ -26,10 +30,6 @@ export default function UpdateFeedback(){
       setIsiFeedback(data.isiFeedback)
     }
   }, [data])
-
-  if (typeof Id !== "string"){
-    return;
-  }
 
   if (isLoading) {
     return <div>Loading...</div>;
