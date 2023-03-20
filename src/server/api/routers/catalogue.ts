@@ -27,11 +27,11 @@ export const catalogueRouter = createTRPCRouter({
       });
     }),
 
-    getAllCatalogue: publicProcedure.query(({ ctx }) => {
-      return ctx.prisma.katalog.findMany();
-    }),
+  getAllCatalogue: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.katalog.findMany();
+  }),
 
-    getCatalogueById: publicProcedure
+  getCatalogueById: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -40,12 +40,12 @@ export const catalogueRouter = createTRPCRouter({
     .query(({ input, ctx }) => {
       return ctx.prisma.katalog.findUnique({
         where: {
-          id : input.id,
-        }
+          id: input.id,
+        },
       });
     }),
 
-    updateCatalogue: publicProcedure
+  updateCatalogue: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -69,7 +69,7 @@ export const catalogueRouter = createTRPCRouter({
       });
     }),
 
-    deleteCatalogue: publicProcedure
+  deleteCatalogue: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -81,5 +81,5 @@ export const catalogueRouter = createTRPCRouter({
           id: input.id,
         },
       });
-    })
+    }),
 });
