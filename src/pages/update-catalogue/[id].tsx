@@ -2,6 +2,11 @@ import { FormEvent, useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { ParsedUrlQuery } from "querystring";
+
+interface Query extends ParsedUrlQuery {
+  id: string;
+}
 
 export default function UpdateCatalogue() {
   const [nama, setNama] = useState("");
@@ -11,18 +16,17 @@ export default function UpdateCatalogue() {
 
   const updateCatalogue = api.catalogue.updateCatalogue.useMutation();
   const router = useRouter();
-  const { id } = router.query;
+  const { id } = router.query as Query
 
   useEffect(
     function () {
       if (updateCatalogue.isSuccess) {
-        router.push("/list-catalogue");
+        void router.push("/list-catalogue");
       }
     },
     [updateCatalogue.isSuccess]
   );
 
-  // @ts-ignore
   const { data, isLoading, error } = api.catalogue.getCatalogueById.useQuery({id});
 
   useEffect(() => {
@@ -33,10 +37,6 @@ export default function UpdateCatalogue() {
       setDeskripsi(data.deskripsi);
     }
   }, [data]);
-
-  if (typeof id !== "string") {
-    return;
-  }
 
   if (isLoading) {
     return <div>Loading...</div>;
