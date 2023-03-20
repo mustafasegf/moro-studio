@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function UpdateDraft() {
-  let bg= "https://picsum.photos/800/600?image=1080"
+  const bg= "https://picsum.photos/800/600?image=1080"
 
     return (
     <>
