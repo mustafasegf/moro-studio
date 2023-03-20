@@ -76,11 +76,11 @@ enum Role {
 model Katalog {
   id        String    @id @default(cuid())
   nama      String
-  durasi    Int
+  durasi    String
   harga     Int
   deskripsi String    @db.Text
-  createdAt DateTime
-  updatedAt DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   Booking   Booking[]
 }
 
