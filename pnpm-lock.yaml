@@ -17,6 +17,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.47.1
   '@typescript-eslint/parser': ^5.47.1
   autoprefixer: ^10.4.7
+  classnames: ^2.3.2
   daisyui: ^2.51.3
   eslint: ^8.30.0
   eslint-config-next: 13.1.6
@@ -33,6 +34,7 @@ specifiers:
   superjson: 1.9.1
   tailwindcss: ^3.2.0
   typescript: ^4.9.4
+  usehooks-ts: ^2.9.1
   zod: ^3.20.2
 
 dependencies:
@@ -44,6 +46,7 @@ dependencies:
   '@trpc/next': 10.12.0_twxsmod72jqp5mq5sjgf4pkz2u
   '@trpc/react-query': 10.12.0_tij422wpfxfl3iixjhzsgwgs2e
   '@trpc/server': 10.12.0
+  classnames: 2.3.2
   daisyui: 2.51.3_gbtt6ss3tbiz4yjtvdr6fbrj44
   next: 13.1.6_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.19.2_3vryta7zmbcsw4rrqf4axjqggm
@@ -52,6 +55,7 @@ dependencies:
   react-icons: 4.8.0_react@18.2.0
   react-modal: 3.16.1_biqbaboplfbrettd7655fr4n2y
   superjson: 1.9.1
+  usehooks-ts: 2.9.1_biqbaboplfbrettd7655fr4n2y
   zod: 3.20.6
 
 devDependencies:
@@ -811,6 +815,10 @@ packages:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.2
+
+  /classnames/2.3.2:
+    resolution: {integrity: sha512-CSbhY4cFEJRe6/GQzIk5qXZ4Jeg5pcsP7b5peFSDpffpe1cqjASH/n9UTjBwOp6XpMSTwQ8Za2K5V02ueA7Tmw==}
+    dev: false
 
   /client-only/0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
@@ -2859,6 +2867,17 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
+    dev: false
+
+  /usehooks-ts/2.9.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-2FAuSIGHlY+apM9FVlj8/oNhd+1y+Uwv5QNkMQz1oSfdHk4PXo1qoCw9I5M7j0vpH8CSWFJwXbVPeYDjLCx9PA==}
+    engines: {node: '>=16.15.0', npm: '>=8'}
+    peerDependencies:
+      react: ^16.8.0  || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0  || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /util-deprecate/1.0.2:
