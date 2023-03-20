@@ -10,7 +10,8 @@
     "push": "prisma db push",
     "studio": "prisma studio",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "reset": "prisma db push --accept-data-loss --schema=./prisma/reset.prisma; prisma db push --accept-data-loss"
   },
   "dependencies": {
     "@prisma/client": "^4.9.0",
