@@ -45,7 +45,7 @@ export default function UpdateFeedback(){
   };
 
   return <>
-  <h1 className="m-8 flex justify-center">Ubah Feedback</h1>
+  <h1 className="my-8 text-center text-3xl font-bold">Update Feedback</h1>
 
   {(
   <div className="flex min-h-full items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
@@ -53,18 +53,16 @@ export default function UpdateFeedback(){
       <div className="overflow-hidden shadow sm:rounded-md">
         <div className="bg-white px-4 py-5 sm:p-6">
           <div className="grid grid-cols-6 gap-6">
-            <div className="col-span-6">
-              <label htmlFor="paket-foto" className="block text-sm font-medium leading-6 text-gray-900">Nama Penulis</label>
+            <div className="col-span-2">
+              <label htmlFor="namaPenulis" className="block text-sm font-medium leading-6 text-gray-900">Nama Penulis</label>
               <input defaultValue={data?.namaPenulis} type="text" name="namaPenulis" id="namaPenulis" className="mt-2 block w-full rounded-md border-0 py-1.5 pl-2.5 pr-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" disabled/>
             </div>
 
-            <div className="col-span-6 sm:col-span-3">
-              <label htmlFor="isiFeedback" className="block text-sm font-medium leading-6 text-gray-900">Isi Feedback</label>
-              <textarea 
-              className="textarea textarea-primary textarea-lg w-full max-w-xs" 
-              value={isiFeedback}
-              onChange={(e) => setIsiFeedback(e.target.value)}
-              />
+            <div className="col-span-6">
+              <label htmlFor="deskripsi" className="block text-sm font-medium leading-6 text-gray-900">Deskripsi Feedback</label>
+                <div className="mt-2">
+                  <textarea id="deskripsi" name="deskripsi" rows={5} className="textarea textarea-bordered textarea-lg w-full max-w-xs mt-1 block rounded-md border-0 py-1.5 pl-2.5 pr-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6" value={isiFeedback} onChange={(e) => setIsiFeedback(e.target.value)}></textarea>
+              </div>
             </div>              
           </div>
         </div>
