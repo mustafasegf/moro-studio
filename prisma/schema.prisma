@@ -33,13 +33,13 @@ datasource db {
 //   @@unique([provider, providerAccountId])
 // }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  expires      DateTime
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
+// model Session {
+//   id           String   @id @default(cuid())
+//   sessionToken String   @unique
+//   expires      DateTime
+//   userId       String
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
 
 model User {
   id             String           @id @default(cuid())
@@ -48,7 +48,7 @@ model User {
   hp             String
   instagram      String?
   role           Role             @default(user)
-  sessions       Session[]
+  // sessions       Session[]
   booking        Booking[]
   blastMarketing BlastMarketing[]
   chatRoomAdmin  ChatRoom[]       @relation("ChatRoomAdmin")

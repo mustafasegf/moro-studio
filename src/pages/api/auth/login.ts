@@ -6,6 +6,7 @@ import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 import tryToCatch from "try-to-catch";
 import { setCookie } from "nookies";
+import { tryCatch } from "~/utils/trycatch"
 
 const schema = z.object({
   token: z.string(),
@@ -63,18 +64,4 @@ export default async function handler(
   setCookie({ res }, "token", token);
 
   return res.redirect("/");
-}
-
-function tryCatch<Data, FnArgs extends any[]>(
-  fn: (...args: FnArgs) => Data,
-  ...fnArgs: FnArgs
-): [Error] | [null, Data] {
-  try {
-    return [null, fn(...fnArgs)];
-  } catch (err) {
-    if (!(err instanceof Error)) {
-      return [new Error(String(err))];
-    }
-    return [err];
-  }
 }
