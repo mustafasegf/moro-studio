@@ -1,12 +1,27 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "~/utils/api";
+import { CTA, CarouselSection, HeroSection } from "./homepage/templates";
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const homepage = api.homepage.getSortedSections.useQuery();
+  let homepageArray: JSX.Element[] = [];
+  console.log(homepage);
+
+  homepage.data?.forEach((section) => {
+    if (section.order != 0) {
+      if (section.type == "hero") {
+        homepageArray.push(HeroSection(section));
+      } else if (section.type == "carousel") {
+        homepageArray.push(CarouselSection(section));
+      } else if (section.type == "CTA") {
+        homepageArray.push(CTA(section));
+      }
+    }
+  });
 
   return (
     <>
@@ -17,33 +32,11 @@ const Home: NextPage = () => {
       </Head>
       <main className="">
         <h1>Hello world</h1>
+        <Link href={"/homepage/edit"}>Edit</Link>
+        <div>{homepageArray}</div>
       </main>
     </>
   );
 };
 
 export default Home;
-
-const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession();
-
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined },
-  );
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
-      </p>
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
-    </div>
-  );
-};
