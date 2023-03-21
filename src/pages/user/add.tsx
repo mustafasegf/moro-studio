@@ -14,6 +14,7 @@ export default function AddUser() {
     hp: "",
   });
   const addUser = api.user.addUser.useMutation()
+  const { data:session, isLoading } = api.auth.getSession.useQuery();
 
   useEffect(function(){
     if (addUser.isSuccess) {
@@ -26,6 +27,14 @@ export default function AddUser() {
   function handleSubmit(e: FormEvent) { 
     e.preventDefault()
     addUser.mutate(user)
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (!session) {
+    router.push('/login')
   }
 
   return (
