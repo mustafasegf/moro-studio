@@ -21,23 +21,12 @@ const Edit: NextPage = () => {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  return (
-    <>
-      <main className="">
-        <h1>Pilih Section</h1>
-        <Link href={"/homepage/create/hero"}>
-          <button className="btn">Hero</button>
-        </Link>
-        <Link href={"/homepage/create/carousel"}>
-          <button className="btn">Carousel</button>
-        </Link>
-        <Link href={"/homepage/create/CTA"}>
-          <button className="btn">CTA</button>
-        </Link>
+  function renderTable() {
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    }
+    return (
+      <>
         <table className="border-collapse	border-spacing-0.5">
           <div className="text-center align-middle">
             <tr className=" place-content-center">
@@ -76,6 +65,24 @@ const Edit: NextPage = () => {
             ))}
           </div>
         </table>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <main className="">
+        <h1>Pilih Section</h1>
+        <Link href={"/homepage/create/hero"}>
+          <button className="btn">Hero</button>
+        </Link>
+        <Link href={"/homepage/create/carousel"}>
+          <button className="btn">Carousel</button>
+        </Link>
+        <Link href={"/homepage/create/CTA"}>
+          <button className="btn">CTA</button>
+        </Link>
+        {renderTable()}
       </main>
     </>
   );
