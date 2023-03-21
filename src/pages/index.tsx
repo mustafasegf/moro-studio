@@ -2,10 +2,30 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
+import { Section } from "@prisma/client";
+import React, { useState } from "react";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+
+import "@splidejs/react-splide/css";
 
 import { api } from "~/utils/api";
 
-export default  function Home() {
+const Home: NextPage = () => {
+  const homepage = api.homepage.getSortedSections.useQuery();
+  const homepageArray: JSX.Element[] = [];
+  console.log(homepage);
+
+  homepage.data?.forEach((section) => {
+    if (section.order != 0) {
+      if (section.type == "hero") {
+        homepageArray.push(HeroSection(section));
+      } else if (section.type == "carousel") {
+        homepageArray.push(CarouselSection(section));
+      } else if (section.type == "CTA") {
+        homepageArray.push(CTA(section));
+      }
+    }
+  });
 
   return (
     <>
@@ -15,33 +35,64 @@ export default  function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="">
-        <h1>Home page</h1>
+        <div>{homepageArray}</div>
       </main>
+    </>
+  );
+};
+
+export function HeroSection(hero: Section) {
+  const image = hero.image[0];
+
+  return (
+    <div className="max-h-fit">
+      <img className="object-contain" src={image} alt="" />
+    </div>
+  );
+}
+
+export function CarouselSection(carousel: Section) {
+  const images = carousel.image;
+
+  return (
+    <>
+      <div className=" snap-y snap-proximity">
+        <div className="snap-center snap-always">
+          <Splide
+            options={{
+              type: "loop",
+              height: "90vh",
+              padding: "5rem",
+              focus: "center",
+              autoWidth: true,
+              drag: "free",
+            }}
+            aria-label="My Favorite Images"
+          >
+            {images.map((image) => (
+              <>
+                <SplideSlide>
+                  <img
+                    className="h-full w-full object-contain"
+                    src={image}
+                    alt="Image"
+                  />
+                </SplideSlide>
+              </>
+            ))}
+          </Splide>
+        </div>
+      </div>
     </>
   );
 }
 
+export function CTA(cta: Section) {
+  return (
+    <div>
+      <p>CTA</p>
+    </div>
+  );
+}
 
-// const AuthShowcase: React.FC = () => {
-//   const { data: sessionData } = useSession();
-
-//   const { data: secretMessage } = api.contoh.getAllContoh.useQuery(
-//     undefined, // no input
-//     { enabled: sessionData?.user !== undefined },
-//   );
-
-//   return (
-//     <div className="flex flex-col items-center justify-center gap-4">
-//       <p className="text-center text-2xl text-white">
-//         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-//         {secretMessage && <span> - {secretMessage}</span>}
-//       </p>
-//       <button
-//         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-//         onClick={sessionData ? () => void signOut() : () => void signIn()}
-//       >
-//         {sessionData ? "Sign out" : "Sign in"}
-//       </button>
-//     </div>
-//   );
-// };
+export default Home;

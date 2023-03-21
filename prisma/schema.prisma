@@ -185,33 +185,16 @@ model BlastMarketing {
   updatedAt DateTime @updatedAt
 }
 
-enum SectionType {
-  heroSection
-  carousel
-  leftImageCTA
-  centerImageCTA
-  rightImageCTA
-}
-
-model Homepage {
-  id        String    @id @default(cuid())
-  section   Section[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-}
-
 model Section {
-  id         String      @id @default(cuid())
-  Image      String[]
-  Title      String?
-  Text       String?
-  Type       SectionType
-  CreatedAt  DateTime
-  UpdatedAt  DateTime
-  homepageId String?
-  homepage   Homepage?   @relation(fields: [homepageId], references: [id])
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id        String   @id @default(cuid())
+  image     String[]
+  title     String[]
+  text      String[]
+  link      String[]
+  type      String
+  order     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ChatRoom {
