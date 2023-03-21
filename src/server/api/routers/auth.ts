@@ -20,6 +20,17 @@ export const authRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
+      //check if user exist
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
       const payload = { email: input.email };
       const token = sign(payload, env.NEXTAUTH_SECRET, {
         expiresIn: "1d",

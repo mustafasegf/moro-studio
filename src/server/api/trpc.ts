@@ -9,6 +9,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { User } from "@prisma/client";
 import { z } from "zod";
+import { decode } from "jsonwebtoken";
 
 const sessionSchema = z.object({
   id: z.string(),
@@ -38,16 +39,21 @@ function getServerAuthSession({
   res: NextApiResponse;
 }) {
   const parsedCookies = parseCookies({ req });
+  console.log("parsed cookies:", parsedCookies);
   const token = parsedCookies["token"];
   if (!token) {
     return null;
   }
 
-  const [err, data] = tryCatch(sessionSchema.parse, token);
-  if (err) {
+  let decoded = decode(token);
+  if (!decoded) {
     return null;
   }
 
+  const [err, data] = tryCatch(sessionSchema.parse, decoded);
+  if (err) {
+    return null;
+  }
   return data;
 }
 

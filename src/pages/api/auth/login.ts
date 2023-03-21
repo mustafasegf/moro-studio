@@ -58,10 +58,13 @@ export default async function handler(
     return res.redirect(`/error?data=${encodeURI("No User")}`);
   }
 
-  const payload = { id: user.id };
+  const payload = { id: user.id, nama: user.nama, role: user.role };
   const token = sign(payload, env.NEXTAUTH_SECRET, {});
 
-  setCookie({ res }, "token", token);
+  setCookie({ res }, "token", token, {
+    path: "/"
+  });
 
   return res.redirect("/");
+  // return res.status(200).json({ data: "ok" });
 }
