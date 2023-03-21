@@ -30,13 +30,13 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
   };
 };
 
-const getServerAuthSession = async ({
+function getServerAuthSession({
   req,
   res,
 }: {
   req: NextApiRequest;
   res: NextApiResponse;
-}) => {
+}) {
   const parsedCookies = parseCookies({ req });
   const token = parsedCookies["token"];
   if (!token) {
@@ -49,7 +49,7 @@ const getServerAuthSession = async ({
   }
 
   return data;
-};
+}
 
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
