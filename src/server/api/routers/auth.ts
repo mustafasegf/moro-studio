@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { sign } from "jsonwebtoken";
 
 import {
   createTRPCRouter,
@@ -8,41 +9,64 @@ import {
 import { env } from "~/env.mjs";
 
 export const authRouter = createTRPCRouter({
-  login : publicProcedure
+  getSession: publicProcedure.query(({ ctx }) => {
+    return ctx.session;
+  }),
+
+  login: publicProcedure
     .input(
       z.object({
         email: z.string().email(),
       })
-    ).mutation( async ({ input, ctx }) => {
-      const payload = {url:"" , email: env.EMAIL_FROM, host: env.NEXTAUTH_URL}
+    )
+    .mutation(async ({ input, ctx }) => {
+      //check if user exist
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const payload = { email: input.email };
+      const token = sign(payload, env.NEXTAUTH_SECRET, {
+        expiresIn: "1d",
+      });
+      const emailPayload = {
+        url: `${env.NEXTAUTH_URL}/api/auth/login?token=${token}`,
+        email: env.EMAIL_FROM,
+        host: env.NEXTAUTH_URL,
+      };
+
+      console.log(token);
 
       return await ctx.email.sendMail({
         from: `MoroStudio <${env.EMAIL_FROM}>`,
         to: input.email,
         subject: `Sign in to ${env.NEXTAUTH_URL}`,
-        html: html(payload),
-        text: text(payload),
-      })
-
-    }
-  ),
+        html: html(emailPayload),
+        text: text(emailPayload),
+      });
+    }),
 });
 
 function text({ url, host }: Record<"url" | "host", string>) {
-  return `Sign in to ${host}\n${url}\n\n`
+  return `Sign in to ${host}\n${url}\n\n`;
 }
 
-function html({ url, email, host}: Record<"url" | "host" | "email", string>) {
+function html({ url, email, host }: Record<"url" | "host" | "email", string>) {
+  const escapedEmail = email.replace(/\./g, "&#8203;.");
+  const escapedHost = host.replace(/\./g, "&#8203;.");
 
-  const escapedEmail = email.replace(/\./g, "&#8203;.")
-  const escapedHost = host.replace(/\./g, "&#8203;.")
-
-  const backgroundColor = "#f9f9f9"
-  const textColor = "#444444"
-  const mainBackgroundColor = "#ffffff"
-  const buttonBackgroundColor = "#346df1"
-  const buttonBorderColor = "#346df1"
-  const buttonTextColor = "#ffffff"
+  const backgroundColor = "#f9f9f9";
+  const textColor = "#444444";
+  const mainBackgroundColor = "#ffffff";
+  const buttonBackgroundColor = "#346df1";
+  const buttonBorderColor = "#346df1";
+  const buttonTextColor = "#ffffff";
 
   return `
   <body style="background: ${backgroundColor};">
@@ -75,5 +99,5 @@ function html({ url, email, host}: Record<"url" | "host" | "email", string>) {
       </tr>
     </table>
   </body>
-  `
+  `;
 }
