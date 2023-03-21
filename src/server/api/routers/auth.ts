@@ -9,19 +9,28 @@ import {
 import { env } from "~/env.mjs";
 
 export const authRouter = createTRPCRouter({
-  login : publicProcedure
+  getSession: publicProcedure.query(({ ctx }) => {
+    return ctx.session;
+  }),
+
+  login: publicProcedure
     .input(
       z.object({
         email: z.string().email(),
       })
-    ).mutation( async ({ input, ctx }) => {
-      const payload = { email: input.email}
+    )
+    .mutation(async ({ input, ctx }) => {
+      const payload = { email: input.email };
       const token = sign(payload, env.NEXTAUTH_SECRET, {
         expiresIn: "1d",
-      })
-      const emailPayload = {url:`${env.NEXTAUTH_URL}/api/auth/login?token=${token}` , email: env.EMAIL_FROM, host: env.NEXTAUTH_URL}
+      });
+      const emailPayload = {
+        url: `${env.NEXTAUTH_URL}/api/auth/login?token=${token}`,
+        email: env.EMAIL_FROM,
+        host: env.NEXTAUTH_URL,
+      };
 
-      console.log(token)
+      console.log(token);
 
       return await ctx.email.sendMail({
         from: `MoroStudio <${env.EMAIL_FROM}>`,
@@ -29,27 +38,24 @@ export const authRouter = createTRPCRouter({
         subject: `Sign in to ${env.NEXTAUTH_URL}`,
         html: html(emailPayload),
         text: text(emailPayload),
-      })
-
-    }
-  ),
+      });
+    }),
 });
 
 function text({ url, host }: Record<"url" | "host", string>) {
-  return `Sign in to ${host}\n${url}\n\n`
+  return `Sign in to ${host}\n${url}\n\n`;
 }
 
-function html({ url, email, host}: Record<"url" | "host" | "email", string>) {
+function html({ url, email, host }: Record<"url" | "host" | "email", string>) {
+  const escapedEmail = email.replace(/\./g, "&#8203;.");
+  const escapedHost = host.replace(/\./g, "&#8203;.");
 
-  const escapedEmail = email.replace(/\./g, "&#8203;.")
-  const escapedHost = host.replace(/\./g, "&#8203;.")
-
-  const backgroundColor = "#f9f9f9"
-  const textColor = "#444444"
-  const mainBackgroundColor = "#ffffff"
-  const buttonBackgroundColor = "#346df1"
-  const buttonBorderColor = "#346df1"
-  const buttonTextColor = "#ffffff"
+  const backgroundColor = "#f9f9f9";
+  const textColor = "#444444";
+  const mainBackgroundColor = "#ffffff";
+  const buttonBackgroundColor = "#346df1";
+  const buttonBorderColor = "#346df1";
+  const buttonTextColor = "#ffffff";
 
   return `
   <body style="background: ${backgroundColor};">
@@ -82,5 +88,5 @@ function html({ url, email, host}: Record<"url" | "host" | "email", string>) {
       </tr>
     </table>
   </body>
-  `
+  `;
 }
