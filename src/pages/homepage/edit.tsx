@@ -28,8 +28,6 @@ const Edit: NextPage = () => {
     if (data?.length === 0) {
       return <div>No data</div>;
     }
-      
-    }
     return (
       <>
         <table className="border-collapse	border-spacing-0.5">
