@@ -7,7 +7,6 @@ export default function Login() {
 
   function handleSubmit(e: FormEvent)  {
     e.preventDefault();
-    console.log(email);
 
     login.mutate({ email });
   }

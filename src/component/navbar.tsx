@@ -51,16 +51,13 @@ function Navbar() {
         <div className="flex-none">
           <ul className="menu menu-horizontal px-1">
             <li>
-              <Link
-                href="/login"
-                className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
-              >
-                Login
-              </Link>
-              <p className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800">
-                login as: {data?.nama}
-              </p>
+              {data && (
+                <p className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800">
+                  login as: {data?.nama}
+                </p>
+              )}
             </li>
+
             <li>
               {data ? (
                 <p

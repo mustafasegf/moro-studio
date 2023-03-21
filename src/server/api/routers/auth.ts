@@ -41,8 +41,6 @@ export const authRouter = createTRPCRouter({
         host: env.NEXTAUTH_URL,
       };
 
-      console.log(token);
-
       return await ctx.email.sendMail({
         from: `MoroStudio <${env.EMAIL_FROM}>`,
         to: input.email,
