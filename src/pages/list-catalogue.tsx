@@ -2,11 +2,10 @@ import { api } from "~/utils/api";
 import { BiTimeFive } from "react-icons/bi";
 import { IoIosPricetag } from "react-icons/io";
 import Link from "next/link";
-import { useRef, useState } from "react";
-import { useOnClickOutside } from "usehooks-ts";
-import cn from "classnames";
+import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { Katalog } from "@prisma/client";
+import { Modal } from "~/component/modal"
 
 export default function ListCatalogue() {
   const { data, isLoading, error } = api.catalogue.getAllCatalogue.useQuery();
@@ -136,27 +135,3 @@ export default function ListCatalogue() {
   );
 }
 
-type Props = {
-  children: React.ReactNode;
-  open: boolean;
-  onClose(): void;
-};
-
-const Modal = ({ children, open, onClose }: Props) => {
-  const ref = useRef(null);
-  useOnClickOutside(ref, () => {
-    onClose();
-  });
-
-  const modalClass = cn({
-    "modal modal-bottom sm:modal-middle": true,
-    "modal-open": open,
-  });
-  return (
-    <div className={modalClass}>
-      <div className="modal-box" ref={ref}>
-        {children}
-      </div>
-    </div>
-  );
-};
