@@ -1,12 +1,7 @@
 import { type FormEvent, useState } from "react";
-
-import { Navbar } from "../component/navbar";
-
 import { api } from "~/utils/api";
 
 export default function Login() {
-
-
   const [email, setEmail] = useState("");
   const login = api.auth.login.useMutation();
 
