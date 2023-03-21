@@ -72,6 +72,8 @@ export default function CreateSection(this: any) {
       link: links,
       order: 0,
     });
+
+    void router.push("/homepage/edit");
   };
 
   function returnString(s: string) {
