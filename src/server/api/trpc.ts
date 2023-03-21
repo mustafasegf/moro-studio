@@ -39,7 +39,6 @@ function getServerAuthSession({
   res: NextApiResponse;
 }) {
   const parsedCookies = parseCookies({ req });
-  console.log("parsed cookies:", parsedCookies);
   const token = parsedCookies["token"];
   if (!token) {
     return null;
