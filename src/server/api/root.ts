@@ -4,6 +4,7 @@ import { catalogueRouter } from "~/server/api/routers/catalogue";
 import { contohRouter } from "~/server/api/routers/contoh";
 import { authRouter } from "~/server/api/routers/auth";
 import { feedbackRouter } from "./routers/feedback";
+import { userRouter } from "./routers/user";
 
 /**
  * This is the primary router for your server.
@@ -15,6 +16,7 @@ export const appRouter = createTRPCRouter({
   catalogue: catalogueRouter,
   contoh: contohRouter,
   auth: authRouter,
+  user: userRouter,
   feedback: feedbackRouter,
 });
 
