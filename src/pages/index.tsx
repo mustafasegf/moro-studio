@@ -35,8 +35,6 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="">
-        <h1>Hello world</h1>
-        <Link href={"/homepage/edit"}>Edit</Link>
         <div>{homepageArray}</div>
       </main>
     </>
@@ -47,8 +45,8 @@ export function HeroSection(hero: Section) {
   const image = hero.image[0];
 
   return (
-    <div>
-      <img src={image} alt="" />
+    <div className="max-h-fit">
+      <img className="object-contain" src={image} alt="" />
     </div>
   );
 }
@@ -58,12 +56,12 @@ export function CarouselSection(carousel: Section) {
 
   return (
     <>
-      <div className="snap-y snap-proximity">
+      <div className=" snap-y snap-proximity">
         <div className="snap-center snap-always">
           <Splide
             options={{
               type: "loop",
-              height: "100vh",
+              height: "90vh",
               padding: "5rem",
               focus: "center",
               autoWidth: true,
