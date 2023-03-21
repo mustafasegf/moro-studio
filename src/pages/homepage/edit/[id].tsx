@@ -37,11 +37,11 @@ export default function CreateSection(this: any) {
   const router = useRouter();
   const { id } = router.query as Query;
 
-  useEffect(() => {
-    if (updateSection.isSuccess) {
-      router.push("/homepage/edit");
-    }
-  }, [updateSection.isSuccess]);
+  // useEffect(() => {
+  //   if (updateSection.isSuccess) {
+  //     router.push("/homepage/edit");
+  //   }
+  // }, [updateSection.isSuccess]);
 
   const { data, error, isLoading } = api.homepage.getSectionById.useQuery({
     id,

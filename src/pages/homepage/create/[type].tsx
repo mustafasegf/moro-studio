@@ -9,10 +9,10 @@ interface Query extends ParsedUrlQuery {
 }
 
 export default function CreateSection(this: any) {
-  var images: string[] = [];
-  var titles: string[] = [];
-  var texts: string[] = [];
-  var links: string[] = [];
+  const images: string[] = [];
+  let titles: string[] = [];
+  let texts: string[] = [];
+  let links: string[] = [];
 
   const [image, setImage] = useState("");
   const [title, setTitle] = useState("");
@@ -33,13 +33,13 @@ export default function CreateSection(this: any) {
   const router = useRouter();
   const { type } = router.query as Query;
 
-  useEffect(() => {
-    if (createSection.isSuccess) {
-      router.push("/homepage/edit");
-    }
-  }, [createSection.isSuccess]);
+  // useEffect(() => {
+  //   if (createSection.isSuccess) {
+  //     router.push("/homepage/edit");
+  //   }
+  // }, [createSection.isSuccess]);
 
-  if (types.indexOf(type as string) === -1) {
+  if (!types.includes(type)) {
     return <div>404</div>;
   }
 

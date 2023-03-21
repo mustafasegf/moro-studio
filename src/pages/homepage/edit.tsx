@@ -48,29 +48,31 @@ const Edit: NextPage = () => {
               <th>action</th>
             </tr>
             {section.map((s, indexOf) => (
-              <tr>
-                <td>{indexOf + 1}</td>
-                <td>
-                  <div className="h-16">
-                    {s.image && (
-                      <img
-                        className="h-full w-full object-contain"
-                        src={s.image[0]}
-                        alt=""
-                      />
-                    )}
-                  </div>
-                </td>
-                <td>
-                  {s.type && s.type.charAt(0).toUpperCase() + s.type.slice(1)}
-                </td>
-                <td>{s.order}</td>
-                <td>
-                  <Link href={"/homepage/edit/" + s.id}>
-                    <button className="btn">Edit</button>
-                  </Link>
-                </td>
-              </tr>
+              <>
+                <tr>
+                  <td>{indexOf + 1}</td>
+                  <td>
+                    <div className="h-16">
+                      {s.image && (
+                        <img
+                          className="h-full w-full object-contain"
+                          src={s.image[0]}
+                          alt=""
+                        />
+                      )}
+                    </div>
+                  </td>
+                  <td>
+                    {s.type && s.type.charAt(0).toUpperCase() + s.type.slice(1)}
+                  </td>
+                  <td>{s.order}</td>
+                  <td>
+                    <Link href={"/homepage/edit/" + s.id}>
+                      <button className="btn">Edit</button>
+                    </Link>
+                  </td>
+                </tr>
+              </>
             ))}
           </div>
         </table>

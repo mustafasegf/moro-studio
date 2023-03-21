@@ -2,12 +2,17 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
+import { Section } from "@prisma/client";
+import React, { useState } from "react";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+
+import "@splidejs/react-splide/css";
+
 import { api } from "~/utils/api";
-import { CTA, CarouselSection, HeroSection } from "./homepage/templates";
 
 const Home: NextPage = () => {
   const homepage = api.homepage.getSortedSections.useQuery();
-  let homepageArray: JSX.Element[] = [];
+  const homepageArray: JSX.Element[] = [];
   console.log(homepage);
 
   homepage.data?.forEach((section) => {
@@ -37,5 +42,59 @@ const Home: NextPage = () => {
     </>
   );
 };
+
+export function HeroSection(hero: Section) {
+  const image = hero.image[0];
+
+  return (
+    <div>
+      <img src={image} alt="" />
+    </div>
+  );
+}
+
+export function CarouselSection(carousel: Section) {
+  const images = carousel.image;
+
+  return (
+    <>
+      <div className="snap-y snap-proximity">
+        <div className="snap-center snap-always">
+          <Splide
+            options={{
+              type: "loop",
+              height: "100vh",
+              padding: "5rem",
+              focus: "center",
+              autoWidth: true,
+              drag: "free",
+            }}
+            aria-label="My Favorite Images"
+          >
+            {images.map((image) => (
+              <>
+                <SplideSlide>
+                  <img
+                    className="h-full w-full object-contain"
+                    src={image}
+                    alt="Image"
+                  />
+                </SplideSlide>
+              </>
+            ))}
+          </Splide>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export function CTA(cta: Section) {
+  return (
+    <div>
+      <p>CTA</p>
+    </div>
+  );
+}
 
 export default Home;
