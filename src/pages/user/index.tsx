@@ -3,9 +3,12 @@ import { useState } from "react";
 import { api } from "~/utils/api";
 import { Modal } from "~/component/modal"
 import Link from "next/link";
+import router from "next/router";
 
 export default function ListUser() {
-  const {data} = api.user.getAllUser.useQuery();
+  const { data } = api.user.getAllUser.useQuery();
+  const { data:session, isLoading } = api.auth.getSession.useQuery();
+
   const [user, setUser] = useState<User | null>(null)
   const [open, setOpen] = useState(false);
   const utils = api.useContext();
@@ -27,6 +30,14 @@ export default function ListUser() {
     }
 
     setOpen(false)
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (!session) {
+    router.push('/login')
   }
 
   return <>
