@@ -23,7 +23,7 @@ export default function ListCatalogue() {
   const utils = api.useContext();
   const deleteCatalogue = api.catalogue.deleteCatalogue.useMutation({
     onSuccess(input) {
-      utils.catalogue.getAllCatalogue.invalidate();
+      void utils.catalogue.getAllCatalogue.invalidate();
     },
   });
 
