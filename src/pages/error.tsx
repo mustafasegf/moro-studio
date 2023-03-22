@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring';
+
 interface Query extends ParsedUrlQuery {
-  error: string;
+  data?: string;
 }
 
 export default function ErrorPage(){
@@ -12,7 +13,7 @@ export default function ErrorPage(){
   return (
     <div className="m-4 flex flex-col justify-center">
       <div className="flex justify-center">
-        <h3 className="text-2xl my-8 justify-center">Error: {data}</h3>
+        <h3 className="text-2xl my-8 justify-center">Error: {data ?? "ada masalah pada server"} </h3>
 
       </div>
       <Link className="btn max-w-xs" href="/">Pergi ke Halaman Utama</Link>
