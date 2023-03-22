@@ -4,9 +4,8 @@ import { z } from "zod";
 import { verify, decode, sign } from "jsonwebtoken";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
-import tryToCatch from "try-to-catch";
 import { setCookie } from "nookies";
-import { tryCatch } from "~/utils/trycatch"
+import { tryCatch, tryToCatch } from "~/utils/trycatch"
 
 const schema = z.object({
   token: z.string(),

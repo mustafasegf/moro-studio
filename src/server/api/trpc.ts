@@ -17,7 +17,7 @@ const sessionSchema = z.object({
   role: z.enum(["admin", "studioManager", "blogManager", "user"]),
 });
 
-type Session = z.infer<typeof sessionSchema>;
+export type Session = z.infer<typeof sessionSchema>;
 
 type CreateContextOptions = {
   session: Session | null;
@@ -58,7 +58,7 @@ function getServerAuthSession({
 
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
-  const session = await getServerAuthSession({ req, res });
+  const session = getServerAuthSession({ req, res });
 
   return createInnerTRPCContext({
     session,
@@ -71,6 +71,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
     return shape;
   },
 });
+
 
 export const createTRPCRouter = t.router;
 

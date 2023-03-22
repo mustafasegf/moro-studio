@@ -1,20 +1,43 @@
 import { type AppType } from "next/app";
-
+import App from "next/app";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import { Navbar } from "../component/navbar";
+import { Session } from "~/server/api/trpc";
+import { AuthProvider, getServerAuthSession } from "~/utils/session";
 
-const MyApp: AppType = ({
+//@ts-ignore
+const MyApp: AppType<{ session: Session | null }> = ({
   Component,
-  pageProps: { ...pageProps },
+  pageProps: { session, ...pageProps },
 }) => {
   return (
     <>
-      <Navbar/>
-      <Component {...pageProps} />
+      <AuthProvider session={session}>
+        <Navbar />
+        <Component {...pageProps} />
+      </AuthProvider>
     </>
   );
 };
 
+
+
+//@ts-ignore
+MyApp.getInitialProps = async (appContext) => {
+  //@ts-ignore
+  const pageProps = await App.getInitialProps(appContext)
+  const session = getServerAuthSession(appContext.ctx)
+  return {
+    pageProps: {
+      ...pageProps,
+      session,
+    },
+  };
+};
+
+
+
 export default api.withTRPC(MyApp);
+

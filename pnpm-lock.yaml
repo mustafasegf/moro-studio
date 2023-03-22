@@ -16,8 +16,6 @@ specifiers:
   '@types/prettier': ^2.7.2
   '@types/react': ^18.0.26
   '@types/react-dom': ^18.0.10
-  '@types/try-catch': ^3.0.0
-  '@types/try-to-catch': ^3.0.0
   '@typescript-eslint/eslint-plugin': ^5.47.1
   '@typescript-eslint/parser': ^5.47.1
   autoprefixer: ^10.4.7
@@ -39,8 +37,6 @@ specifiers:
   react-modal: ^3.16.1
   superjson: 1.9.1
   tailwindcss: ^3.2.0
-  try-catch: ^3.0.1
-  try-to-catch: ^3.0.1
   typescript: ^4.9.4
   usehooks-ts: ^2.9.1
   zod: ^3.20.2
@@ -65,8 +61,6 @@ dependencies:
   react-icons: 4.8.0_react@18.2.0
   react-modal: 3.16.1_biqbaboplfbrettd7655fr4n2y
   superjson: 1.9.1
-  try-catch: 3.0.1
-  try-to-catch: 3.0.1
   usehooks-ts: 2.9.1_biqbaboplfbrettd7655fr4n2y
   zod: 3.20.6
 
@@ -78,8 +72,6 @@ devDependencies:
   '@types/prettier': 2.7.2
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
-  '@types/try-catch': 3.0.0
-  '@types/try-to-catch': 3.0.0
   '@typescript-eslint/eslint-plugin': 5.53.0_cjo54hduev4bqhpjw5znwiokqu
   '@typescript-eslint/parser': 5.53.0_ycpbpc6yetojsgtrx3mwntkhsu
   autoprefixer: 10.4.13_postcss@8.4.21
@@ -485,14 +477,6 @@ packages:
 
   /@types/semver/7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
-    dev: true
-
-  /@types/try-catch/3.0.0:
-    resolution: {integrity: sha512-ntvNORMfhE1PR+Vyqgg3rQBBINZ0b+6TzF6HM/d7taMZjuJBma9qJKT3evAHRQhRSCayvFbpFFZVuE1otn497w==}
-    dev: true
-
-  /@types/try-to-catch/3.0.0:
-    resolution: {integrity: sha512-I4CMNTY3t0zTdxejm8FS6q9+mxDHMqb1I+VxGsrR1e1LaSyY2eqlBPILxjRR/b0gkWP5zE5vCvDqXbUP2kMF2Q==}
     dev: true
 
   /@typescript-eslint/eslint-plugin/5.53.0_cjo54hduev4bqhpjw5znwiokqu:
@@ -2805,16 +2789,6 @@ packages:
     engines: {node: '>=8.0'}
     dependencies:
       is-number: 7.0.0
-
-  /try-catch/3.0.1:
-    resolution: {integrity: sha512-91yfXw1rr/P6oLpHSyHDOHm0vloVvUoo9FVdw8YwY05QjJQG9OT0LUxe2VRAzmHG+0CUOmI3nhxDUMLxDN/NEQ==}
-    engines: {node: '>=6'}
-    dev: false
-
-  /try-to-catch/3.0.1:
-    resolution: {integrity: sha512-hOY83V84Hx/1sCzDSaJA+Xz2IIQOHRvjxzt+F0OjbQGPZ6yLPLArMA0gw/484MlfUkQbCpKYMLX3VDCAjWKfzQ==}
-    engines: {node: '>=6'}
-    dev: false
 
   /tsconfig-paths/3.14.2:
     resolution: {integrity: sha512-o/9iXgCYc5L/JxCHPe3Hvh8Q/2xm5Z+p18PESBU6Ff33695QnCHBEjcytY2q19ua7Mbl/DavtBOLq+oG0RCL+g==}

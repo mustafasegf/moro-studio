@@ -1,8 +1,20 @@
 import { User } from "@prisma/client";
-import Link from "next/link";
+import { GetServerSidePropsContext } from "next";
 import router from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "~/utils/api";
+import { getServerAuthSession } from "~/utils/session";
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = getServerAuthSession(ctx)
+  if (!session) {
+    return { redirect: { destination: "/login" } };
+  }
+  if (session.role !== "admin") {
+    return { redirect: { destination: "/" } };
+  }
+  return {props: {}}
+}
 
 export default function AddUser() {
   const [user, setUser] = useState<
@@ -14,7 +26,6 @@ export default function AddUser() {
     hp: "",
   });
   const addUser = api.user.addUser.useMutation()
-  const { data:session, isLoading } = api.auth.getSession.useQuery();
 
   useEffect(function(){
     if (addUser.isSuccess) {
@@ -35,14 +46,6 @@ export default function AddUser() {
   function handleSubmit(e: FormEvent) { 
     e.preventDefault()
     addUser.mutate(user)
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-  if (!session) {
-    router.push('/login')
   }
 
   return (

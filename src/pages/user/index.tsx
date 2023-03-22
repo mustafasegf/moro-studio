@@ -3,11 +3,22 @@ import { useState } from "react";
 import { api } from "~/utils/api";
 import { Modal } from "~/component/modal"
 import Link from "next/link";
-import router from "next/router";
+import { GetServerSidePropsContext } from "next";
+import { getServerAuthSession } from "~/utils/session";
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = getServerAuthSession(ctx)
+  if (!session) {
+    return { redirect: { destination: "/login" } };
+  }
+  if (session.role !== "admin") {
+    return { redirect: { destination: "/" } };
+  }
+  return {props: {}}
+}
 
 export default function ListUser() {
   const { data } = api.user.getAllUser.useQuery();
-  const { data:session, isLoading } = api.auth.getSession.useQuery();
 
   const [user, setUser] = useState<User | null>(null)
   const [open, setOpen] = useState(false);
@@ -30,14 +41,6 @@ export default function ListUser() {
     }
 
     setOpen(false)
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-  if (!session) {
-    router.push('/login')
   }
 
   return <>
