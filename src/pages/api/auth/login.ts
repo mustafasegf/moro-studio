@@ -71,9 +71,9 @@ export default async function handler(
   setCookie({ res }, "token", token, {
     secure: env.NODE_ENV === "production",
     httpOnly: true,
+    maxAge: 365 * 24 * 60 * 60,
     path: "/"
   });
 
   return res.redirect("/");
-  // return res.status(200).json({ data: "ok" });
 }

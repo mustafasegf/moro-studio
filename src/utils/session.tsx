@@ -1,4 +1,4 @@
-import { parseCookies, destroyCookie } from "nookies";
+import { parseCookies, destroyCookie, setCookie } from "nookies";
 import { createContext, useContext, useState } from "react";
 import router from "next/router";
 import { Session } from "~/server/api/trpc";
@@ -40,7 +40,14 @@ export const AuthProvider = ({ session, children  }: AuthProviderProps) => {
 
   const changeUser = (token: string) => {
     const user = parseToken(token);
+    if (user) {
+      setCookie(null, "token", token, {
+        path: "/",
+      });
+    }
     setUser(user);
+    router.reload()
+
   }
 
   return <AuthContext.Provider value={{ session: user, logout, changeUser }} > {children} </AuthContext.Provider>;

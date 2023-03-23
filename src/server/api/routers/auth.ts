@@ -44,6 +44,22 @@ export const authRouter = createTRPCRouter({
       });
     }),
 
+    token : publicProcedure.query(async ({ctx}) => {
+      // get user by email
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          email: "user@example.com",
+        },
+      });
+      if (!user) {
+        throw new Error("User not found");
+      }
+      const payload = { id: user.id, nama: user.nama, role: user.role };
+      const token = sign(payload, env.NEXTAUTH_SECRET, {});
+      return token
+    })
+
+
 });
 
 function text({ url, host }: Record<"url" | "host", string>) {
