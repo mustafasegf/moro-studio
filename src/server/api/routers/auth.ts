@@ -4,15 +4,10 @@ import { sign } from "jsonwebtoken";
 import {
   createTRPCRouter,
   publicProcedure,
-  // protectedProcedure,
 } from "~/server/api/trpc";
 import { env } from "~/env.mjs";
 
 export const authRouter = createTRPCRouter({
-  getSession: publicProcedure.query(({ ctx }) => {
-    return ctx.session;
-  }),
-
   login: publicProcedure
     .input(
       z.object({

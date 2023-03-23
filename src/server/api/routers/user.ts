@@ -3,11 +3,11 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   publicProcedure,
-  // protectedProcedure,
+  adminProcedure
 } from "~/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
-  addUser: publicProcedure
+  addUser: adminProcedure
     .input(
       z.object({
         email: z.string().email(),
@@ -27,7 +27,7 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
-    deleteUser: publicProcedure
+    deleteUser: adminProcedure
     .input(z.object({
       id: z.string()
     }))
@@ -39,7 +39,7 @@ export const userRouter = createTRPCRouter({
       })
     }),
 
-  getAllUser: publicProcedure.query(({ ctx }) => {
+  getAllUser: adminProcedure.query(({ ctx }) => {
     return ctx.prisma.user.findMany();
   }),
 });
