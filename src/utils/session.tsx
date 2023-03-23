@@ -45,6 +45,10 @@ export const AuthProvider = ({ session, children  }: AuthProviderProps) => {
         path: "/",
         maxAge: 365 * 24 * 60 * 60,
       });
+    } else {
+      destroyCookie(null, "token", {
+        path: "/",
+      });
     }
     setUser(user);
     router.reload()

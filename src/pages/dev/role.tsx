@@ -1,12 +1,7 @@
-import { destroyCookie, setCookie } from "nookies";
-import { api } from "~/utils/api";
 import { useAuth } from "~/utils/session";
-import { useRouter } from 'next/router'
 
 export default function DevChangeRole() {
   const { changeUser } = useAuth()
-  const {data} = api.auth.token.useQuery()
-  console.log(data)
 
   function handleAdmin() {
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsZmtzMmVhMDAwMDB0YmwxcWFrdWxnbTMiLCJuYW1hIjoiQWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2Nzk1NjY5MTJ9.C2619IzwL1avFzCgzgsWSjz2A-J9jaxQ7kcjoXKWoXE"
@@ -29,9 +24,6 @@ export default function DevChangeRole() {
   }
 
   function handleLogout() {
-    destroyCookie(null, "token", {
-      path: "/",
-    });
     changeUser("")
   }
 
