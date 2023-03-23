@@ -29,9 +29,10 @@ export const authRouter = createTRPCRouter({
       const token = sign(payload, env.NEXTAUTH_SECRET, {
         expiresIn: "1d",
       });
+
       const emailPayload = {
         url: `${env.NEXTAUTH_URL}/api/auth/login?token=${token}`,
-        email: env.EMAIL_FROM,
+        email: input.email,
         host: env.NEXTAUTH_URL,
       };
 

@@ -29,11 +29,10 @@ export default function AddUser() {
   const addUser = api.user.addUser.useMutation()
 
   useEffect(function(){
-    console.log("addUser.isSuccess", addUser.isSuccess)
     if (addUser.isSuccess) {
-      // setInterval(async () => {
-      //   await router.push("/user")
-      // }, 1000)
+      setInterval(async () => {
+        await router.push("/user")
+      }, 1000)
     }
   }, [addUser.isSuccess])
 
