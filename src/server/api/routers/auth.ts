@@ -15,7 +15,6 @@ export const authRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      //check if user exist
       const user = await ctx.prisma.user.findUnique({
         where: {
           email: input.email,
@@ -44,6 +43,7 @@ export const authRouter = createTRPCRouter({
         text: text(emailPayload),
       });
     }),
+
 });
 
 function text({ url, host }: Record<"url" | "host", string>) {

@@ -73,9 +73,6 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 
 export const createTRPCRouter = t.router;
 
-export const publicProcedure = t.procedure;
-
-
 function enforceUserIsAuthed(
   role: "admin" | "studioManager" | "blogManager" | "user"
 ) {
@@ -97,6 +94,7 @@ function enforceUserIsAuthed(
   });
 }
 
+export const publicProcedure = t.procedure;
 export const userProcedure = t.procedure.use(enforceUserIsAuthed("user"));
 export const studioManagerProcedure = t.procedure.use(enforceUserIsAuthed("studioManager"));
 export const blogManagerProcedure = t.procedure.use(enforceUserIsAuthed("blogManager"));

@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
 import { GetServerSidePropsContext } from "next";
+import Link from "next/link";
 import router from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "~/utils/api";
@@ -28,10 +29,11 @@ export default function AddUser() {
   const addUser = api.user.addUser.useMutation()
 
   useEffect(function(){
+    console.log("addUser.isSuccess", addUser.isSuccess)
     if (addUser.isSuccess) {
-      setInterval(() => {
-        void router.push("/user")
-      }, 1000)
+      // setInterval(async () => {
+      //   await router.push("/user")
+      // }, 1000)
     }
   }, [addUser.isSuccess])
 
@@ -72,6 +74,7 @@ export default function AddUser() {
       )}
 
       <div className="m-8">
+        <Link href="/user" className="btn">kemabli</Link>
         <div className="flex justify-center">
           <form className="bg-base-200 p-8 rounded-3xl max-w-lg grow" onSubmit={handleSubmit}>
             <div>
@@ -142,7 +145,7 @@ export default function AddUser() {
                 >
                   {["admin", "studioManager", "blogManager", "user"].map(
                     (role) => (
-                      <option>{role}</option>
+                      <option key={role}>{role}</option>
                     )
                   )}
                 </select>

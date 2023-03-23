@@ -69,6 +69,8 @@ export default async function handler(
   const token = sign(payload, env.NEXTAUTH_SECRET, {});
 
   setCookie({ res }, "token", token, {
+    secure: env.NODE_ENV === "production",
+    httpOnly: true,
     path: "/"
   });
 

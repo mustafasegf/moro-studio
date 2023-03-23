@@ -92,7 +92,7 @@ export default function ListUser() {
           </thead>
           <tbody>
             {data?.map((item, i) => (
-              <tr>
+              <tr key={item.id}>
                 <th>{i+1}</th>
                 <td>{item.nama}</td>
                 <td>{item.email}</td>
