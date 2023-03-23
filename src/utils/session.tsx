@@ -43,6 +43,7 @@ export const AuthProvider = ({ session, children  }: AuthProviderProps) => {
     if (user) {
       setCookie(null, "token", token, {
         path: "/",
+        maxAge: 365 * 24 * 60 * 60,
       });
     }
     setUser(user);
