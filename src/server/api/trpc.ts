@@ -7,7 +7,6 @@ import { email } from "~/server/nodemailer";
 import { tryCatch } from "~/utils/trycatch";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { User } from "@prisma/client";
 import { z } from "zod";
 import { decode } from "jsonwebtoken";
 
@@ -17,7 +16,7 @@ const sessionSchema = z.object({
   role: z.enum(["admin", "studioManager", "blogManager", "user"]),
 });
 
-type Session = z.infer<typeof sessionSchema>;
+export type Session = z.infer<typeof sessionSchema>;
 
 type CreateContextOptions = {
   session: Session | null;
@@ -58,7 +57,7 @@ function getServerAuthSession({
 
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
-  const session = await getServerAuthSession({ req, res });
+  const session = getServerAuthSession({ req, res });
 
   return createInnerTRPCContext({
     session,
@@ -74,17 +73,29 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 
 export const createTRPCRouter = t.router;
 
-export const publicProcedure = t.procedure;
+function enforceUserIsAuthed(
+  role: "admin" | "studioManager" | "blogManager" | "user"
+) {
 
-const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.session) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
-  }
-  return next({
-    ctx: {
-      session: { ...ctx.session },
-    },
+  return t.middleware(({ ctx, next }) => {
+    if (!ctx.session) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    if (ctx.session.role !== role && ctx.session.role !== "admin") {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    return next({
+      ctx: {
+        session: { ...ctx.session },
+      },
+    });
   });
-});
+}
 
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const publicProcedure = t.procedure;
+export const userProcedure = t.procedure.use(enforceUserIsAuthed("user"));
+export const studioManagerProcedure = t.procedure.use(enforceUserIsAuthed("studioManager"));
+export const blogManagerProcedure = t.procedure.use(enforceUserIsAuthed("blogManager"));
+export const adminProcedure = t.procedure.use(enforceUserIsAuthed("admin"));

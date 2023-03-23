@@ -1,8 +1,21 @@
 import { User } from "@prisma/client";
+import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import router from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "~/utils/api";
+import { getServerAuthSession } from "~/utils/session";
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = getServerAuthSession(ctx)
+  if (!session) {
+    return { redirect: { destination: "/login" } };
+  }
+  if (session.role !== "admin") {
+    return { redirect: { destination: "/" } };
+  }
+  return {props: {}}
+}
 
 export default function AddUser() {
   const [user, setUser] = useState<
@@ -14,13 +27,13 @@ export default function AddUser() {
     hp: "",
   });
   const addUser = api.user.addUser.useMutation()
-  const { data:session, isLoading } = api.auth.getSession.useQuery();
 
   useEffect(function(){
+    console.log("addUser.isSuccess", addUser.isSuccess)
     if (addUser.isSuccess) {
-      setInterval(() => {
-        void router.push("/user")
-      }, 1000)
+      // setInterval(async () => {
+      //   await router.push("/user")
+      // }, 1000)
     }
   }, [addUser.isSuccess])
 
@@ -35,14 +48,6 @@ export default function AddUser() {
   function handleSubmit(e: FormEvent) { 
     e.preventDefault()
     addUser.mutate(user)
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-  if (!session) {
-    router.push('/login')
   }
 
   return (
@@ -69,6 +74,7 @@ export default function AddUser() {
       )}
 
       <div className="m-8">
+        <Link href="/user" className="btn">kemabli</Link>
         <div className="flex justify-center">
           <form className="bg-base-200 p-8 rounded-3xl max-w-lg grow" onSubmit={handleSubmit}>
             <div>
@@ -139,7 +145,7 @@ export default function AddUser() {
                 >
                   {["admin", "studioManager", "blogManager", "user"].map(
                     (role) => (
-                      <option>{role}</option>
+                      <option key={role}>{role}</option>
                     )
                   )}
                 </select>

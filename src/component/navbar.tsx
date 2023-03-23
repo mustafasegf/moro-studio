@@ -1,15 +1,8 @@
 import Link from "next/link";
-import { destroyCookie } from "nookies";
-import { api } from "~/utils/api";
+import { useAuth } from "~/utils/session";
 
-function Navbar() {
-  const { data } = api.auth.getSession.useQuery();
-  const utils = api.useContext();
-
-  function logoutHandler() {
-    destroyCookie(null, "token");
-    utils.auth.getSession.invalidate();
-  }
+export function Navbar() {
+  const { session, logout } = useAuth();
 
   return (
     <>
@@ -50,18 +43,25 @@ function Navbar() {
         </div>
         <div className="flex-none">
           <ul className="menu menu-horizontal px-1">
-            <li>
-              {data && (
-                <p className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800">
-                  login as: {data?.nama}
+            {session && session?.role !== "user" && (
+              <li>
+                <p className="mr-2 text-white">
+                  role: {session?.role}
                 </p>
-              )}
-            </li>
+              </li>
+            )}
+            {session && (
+              <li>
+                <p className="mr-2 text-white">
+                  login as: {session?.nama}
+                </p>
+              </li>
+            )}
 
             <li>
-              {data ? (
+              {session ? (
                 <p
-                  onClick={logoutHandler}
+                  onClick={logout}
                   className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
                 >
                   Logout
@@ -81,5 +81,3 @@ function Navbar() {
     </>
   );
 }
-
-export { Navbar };

@@ -4,15 +4,10 @@ import { sign } from "jsonwebtoken";
 import {
   createTRPCRouter,
   publicProcedure,
-  // protectedProcedure,
 } from "~/server/api/trpc";
 import { env } from "~/env.mjs";
 
 export const authRouter = createTRPCRouter({
-  getSession: publicProcedure.query(({ ctx }) => {
-    return ctx.session;
-  }),
-
   login: publicProcedure
     .input(
       z.object({
@@ -20,7 +15,6 @@ export const authRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      //check if user exist
       const user = await ctx.prisma.user.findUnique({
         where: {
           email: input.email,
@@ -49,6 +43,21 @@ export const authRouter = createTRPCRouter({
         text: text(emailPayload),
       });
     }),
+
+    // token : publicProcedure.query(async ({ctx}) => {
+    //   // get user by email
+    //   const user = await ctx.prisma.user.findUnique({
+    //     where: {
+    //       email: "user@example.com",
+    //     },
+    //   });
+    //   if (!user) {
+    //     throw new Error("User not found");
+    //   }
+    //   const payload = { id: user.id, nama: user.nama, role: user.role };
+    //   const token = sign(payload, env.NEXTAUTH_SECRET, {});
+    //   return token
+    // })
 });
 
 function text({ url, host }: Record<"url" | "host", string>) {
