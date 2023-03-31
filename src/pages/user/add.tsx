@@ -39,7 +39,7 @@ export default function AddUser() {
   useEffect(
     function() {
       if (addUser.isSuccess) {
-        const timeout = setTimeout(async () => {
+        const timeout = setTimeout(() => {
           void router.push("/user");
         }, 1000);
         return () => clearTimeout(timeout);
