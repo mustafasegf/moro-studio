@@ -109,21 +109,22 @@ export default function ListUser() {
       />
 
       <div className="m-8">
-        <div className="flex flex-row items-center justify-end gap-4">
-          <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-col md:flex-row items-end md:items-center justify-end gap-4">
+          <div className="flex flex-row items-center justify-end gap-2 w-full">
             <label htmlFor="search" className="text-lg">
               cari
             </label>
             <input
               type="text"
               id="search"
-              className="input-bordered input w-full max-w-xs"
+              className="input-bordered input w-full max-w-[15rem] "
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+
           <select
-            className="input-bordered input w-full max-w-[10rem]"
+            className="input-bordered input w-full max-w-[15rem]"
             onChange={handleChangeRole}
           >
             {["all", ...roles].map((role) => (

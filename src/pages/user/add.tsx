@@ -83,8 +83,8 @@ export default function AddUser() {
       )}
 
       <div className="m-8">
-        <Link href="/user" className="btn">
-          kemabli
+        <Link href="/user" className="btn mb-4">
+          kembali
         </Link>
         <div className="flex justify-center">
           <form
