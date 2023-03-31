@@ -1,10 +1,14 @@
-import { User } from "@prisma/client";
 import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import router from "next/router";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { api } from "~/utils/api";
 import { getServerAuthSession } from "~/utils/session";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { roles } from "~/utils/roles";
+import cn from "classnames";
+import { addUserSchema, AddUserSchema } from "~/utils/schemas";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = getServerAuthSession(ctx);
@@ -18,15 +22,19 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 export default function AddUser() {
-  const [user, setUser] = useState<
-    Omit<User, "id" | "createdAt" | "updatedAt" | "instagram">
-  >({
-    nama: "",
-    email: "",
-    role: "user",
-    hp: "",
-  });
   const addUser = api.user.addUser.useMutation();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<AddUserSchema>({
+    resolver: zodResolver(addUserSchema),
+  });
+
+  function onSubmit(val: AddUserSchema) {
+    addUser.mutate(val);
+  }
 
   useEffect(
     function() {
@@ -51,12 +59,6 @@ export default function AddUser() {
     },
     [addUser.isError]
   );
-
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    addUser.mutate(user);
-    // void router.push("/user")
-  }
 
   return (
     <>
@@ -87,10 +89,10 @@ export default function AddUser() {
         <div className="flex justify-center">
           <form
             className="max-w-lg grow rounded-3xl bg-base-200 p-8"
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <div>
-              <div className="">
+              <div className="mb-4">
                 <label
                   htmlFor="nama"
                   className="block text-sm font-medium leading-6"
@@ -99,15 +101,22 @@ export default function AddUser() {
                 </label>
                 <input
                   required
-                  value={user.nama}
                   type="text"
                   id="nama"
-                  className="input-bordered input mt-1 mb-4 w-full max-w-md"
-                  onChange={(e) => setUser({ ...user, nama: e.target.value })}
+                  className={cn(
+                    "input-bordered input mt-1 mb-2 w-full max-w-md",
+                    { "input-error": errors.nama }
+                  )}
+                  {...register("nama")}
                 />
+                {errors.nama && (
+                  <span className={cn("mb-4", { "text-error": errors.nama })}>
+                    {errors.nama.message}
+                  </span>
+                )}
               </div>
 
-              <div className="">
+              <div className="mb-4">
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium leading-6"
@@ -115,16 +124,23 @@ export default function AddUser() {
                   Email
                 </label>
                 <input
-                  value={user.email}
                   required
                   type="text"
                   id="email"
-                  className="input-bordered input mt-1 mb-4 w-full max-w-md"
-                  onChange={(e) => setUser({ ...user, email: e.target.value })}
+                  className={cn(
+                    "input-bordered input mt-1 mb-2 w-full max-w-md",
+                    { "input-error": errors.email }
+                  )}
+                  {...register("email")}
                 />
+                {errors.email && (
+                  <span className={cn("mb-4", { "text-error": errors.email })}>
+                    {errors.email.message}
+                  </span>
+                )}
               </div>
 
-              <div className="">
+              <div className="mb-4">
                 <label
                   htmlFor="hp"
                   className="block text-sm font-medium leading-6"
@@ -132,12 +148,19 @@ export default function AddUser() {
                   Hp
                 </label>
                 <input
-                  value={user.hp}
                   type="text"
                   id="hp"
-                  className="input-bordered input mt-1 mb-4 w-full max-w-md"
-                  onChange={(e) => setUser({ ...user, hp: e.target.value })}
+                  className={cn(
+                    "input-bordered input mt-1 mb-2 w-full max-w-md",
+                    { "input-error": errors.hp }
+                  )}
+                  {...register("hp")}
                 />
+                {errors.hp && (
+                  <span className={cn("mb-4", { "text-error": errors.hp })}>
+                    {errors.hp.message}
+                  </span>
+                )}
               </div>
 
               <div className="">
@@ -148,23 +171,18 @@ export default function AddUser() {
                   Role
                 </label>
                 <select
-                  value={user.role}
                   required
                   id="role"
                   className="input-bordered input mt-1 mb-4 w-full max-w-xs"
-                  // @ts-ignore
-                  onChange={(e) => setUser({ ...user, role: e.target.value })}
+                  {...register("role")}
                 >
-                  {["admin", "studioManager", "blogManager", "user"].map(
-                    (role) => (
-                      <option key={role}>{role}</option>
-                    )
-                  )}
+                  {roles.map((role) => (
+                    <option key={role}>{role}</option>
+                  ))}
                 </select>
               </div>
-              <div>
-                <input className="btn mt-4" type="submit" />
-              </div>
+
+              <input className="btn mt-4" type="submit" value="kirim" />
             </div>
           </form>
         </div>

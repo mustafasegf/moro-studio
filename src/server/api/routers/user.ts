@@ -5,16 +5,13 @@ import {
   publicProcedure,
   adminProcedure
 } from "~/server/api/trpc";
+import { addUserSchema } from "~/utils/schemas";
+
 
 export const userRouter = createTRPCRouter({
   addUser: adminProcedure
     .input(
-      z.object({
-        email: z.string().email(),
-        nama: z.string(),
-        hp: z.string(),
-        role: z.enum(["admin", "studioManager", "blogManager", "user"]),
-      })
+      addUserSchema
     )
     .mutation(({ input, ctx }) => {
       return ctx.prisma.user.create({
@@ -39,7 +36,7 @@ export const userRouter = createTRPCRouter({
       })
     }),
 
-  getAllUser: adminProcedure.query(({ ctx }) => {
+  getAllUser: adminProcedure.query( async ({ ctx }) => {
     return ctx.prisma.user.findMany();
   }),
 });
