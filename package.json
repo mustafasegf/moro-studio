@@ -14,9 +14,10 @@
         "reset": "prisma db push --accept-data-loss --schema=./prisma/reset.prisma; prisma db push --accept-data-loss"
     },
     "prisma": {
-      "seed": "node prisma/seed.mjs"
+        "seed": "node prisma/seed.mjs"
     },
     "dependencies": {
+        "@hookform/resolvers": "^3.0.0",
         "@prisma/client": "^4.9.0",
         "@splidejs/react-splide": "^0.7.12",
         "@tailwindui/react": "^0.1.1",
@@ -33,10 +34,12 @@
         "nookies": "^2.5.2",
         "react": "18.2.0",
         "react-dom": "18.2.0",
+        "react-hook-form": "^7.43.9",
         "react-icons": "^4.8.0",
         "react-modal": "^3.16.1",
         "superjson": "1.9.1",
         "usehooks-ts": "^2.9.1",
+        "validator": "^13.9.0",
         "zod": "^3.20.2"
     },
     "devDependencies": {
@@ -47,6 +50,7 @@
         "@types/prettier": "^2.7.2",
         "@types/react": "^18.0.26",
         "@types/react-dom": "^18.0.10",
+        "@types/validator": "^13.7.14",
         "@typescript-eslint/eslint-plugin": "^5.47.1",
         "@typescript-eslint/parser": "^5.47.1",
         "autoprefixer": "^10.4.7",
