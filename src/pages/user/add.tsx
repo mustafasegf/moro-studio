@@ -7,14 +7,14 @@ import { api } from "~/utils/api";
 import { getServerAuthSession } from "~/utils/session";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const session = getServerAuthSession(ctx)
+  const session = getServerAuthSession(ctx);
   if (!session) {
     return { redirect: { destination: "/login" } };
   }
   if (session.role !== "admin") {
     return { redirect: { destination: "/" } };
   }
-  return {props: {}}
+  return { props: {} };
 }
 
 export default function AddUser() {
@@ -26,32 +26,40 @@ export default function AddUser() {
     role: "user",
     hp: "",
   });
-  const addUser = api.user.addUser.useMutation()
+  const addUser = api.user.addUser.useMutation();
 
-  useEffect(function(){
-    if (addUser.isSuccess) {
-      setInterval(async () => {
-        await router.push("/user")
-      }, 1000)
-    }
-  }, [addUser.isSuccess])
+  useEffect(
+    function() {
+      if (addUser.isSuccess) {
+        const timeout = setTimeout(async () => {
+          void router.push("/user");
+        }, 1000);
+        return () => clearTimeout(timeout);
+      }
+    },
+    [addUser.isSuccess]
+  );
 
-  useEffect(function(){
-    if (addUser.isError) {
-      setInterval(() => {
-        addUser.reset()
-      }, 5000)
-    }
-  }, [addUser.isError])
+  useEffect(
+    function() {
+      if (addUser.isError) {
+        const timeout = setTimeout(() => {
+          addUser.reset();
+        }, 5000);
+        return () => clearTimeout(timeout);
+      }
+    },
+    [addUser.isError]
+  );
 
-  function handleSubmit(e: FormEvent) { 
-    e.preventDefault()
-    addUser.mutate(user)
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    addUser.mutate(user);
+    // void router.push("/user")
   }
 
   return (
     <>
-
       {addUser.isError && (
         <div className="toast">
           <div className="alert alert-error">
@@ -73,9 +81,14 @@ export default function AddUser() {
       )}
 
       <div className="m-8">
-        <Link href="/user" className="btn">kemabli</Link>
+        <Link href="/user" className="btn">
+          kemabli
+        </Link>
         <div className="flex justify-center">
-          <form className="bg-base-200 p-8 rounded-3xl max-w-lg grow" onSubmit={handleSubmit}>
+          <form
+            className="max-w-lg grow rounded-3xl bg-base-200 p-8"
+            onSubmit={handleSubmit}
+          >
             <div>
               <div className="">
                 <label
@@ -89,7 +102,7 @@ export default function AddUser() {
                   value={user.nama}
                   type="text"
                   id="nama"
-                  className="input w-full max-w-md mt-1 mb-4 input-bordered"
+                  className="input-bordered input mt-1 mb-4 w-full max-w-md"
                   onChange={(e) => setUser({ ...user, nama: e.target.value })}
                 />
               </div>
@@ -106,7 +119,7 @@ export default function AddUser() {
                   required
                   type="text"
                   id="email"
-                  className="input w-full max-w-md mt-1 mb-4 input-bordered"
+                  className="input-bordered input mt-1 mb-4 w-full max-w-md"
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
                 />
               </div>
@@ -122,7 +135,7 @@ export default function AddUser() {
                   value={user.hp}
                   type="text"
                   id="hp"
-                  className="input w-full max-w-md mt-1 mb-4 input-bordered"
+                  className="input-bordered input mt-1 mb-4 w-full max-w-md"
                   onChange={(e) => setUser({ ...user, hp: e.target.value })}
                 />
               </div>
@@ -138,7 +151,7 @@ export default function AddUser() {
                   value={user.role}
                   required
                   id="role"
-                  className="input w-full max-w-xs mt-1 mb-4 input-bordered"
+                  className="input-bordered input mt-1 mb-4 w-full max-w-xs"
                   // @ts-ignore
                   onChange={(e) => setUser({ ...user, role: e.target.value })}
                 >
