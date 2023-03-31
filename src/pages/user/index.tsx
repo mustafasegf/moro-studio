@@ -5,6 +5,7 @@ import { Modal, ModalAction } from "~/component/modal"
 import Link from "next/link";
 import { GetServerSidePropsContext } from "next";
 import { getServerAuthSession } from "~/utils/session";
+import { LoadingPage, LoadingSpiner } from "~/component/loading";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = getServerAuthSession(ctx)
@@ -18,7 +19,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 export default function ListUser() {
-  const { data } = api.user.getAllUser.useQuery();
+  const { data, isLoading } = api.user.getAllUser.useQuery();
   const [user, setUser] = useState<User | null>(null)
   const [open, setOpen] = useState(false);
   const utils = api.useContext();
@@ -58,7 +59,10 @@ export default function ListUser() {
         <Link href="/user/add" className="my-4 btn">Add Account +</Link>
       </div>
       <div className="overflow-x-auto">
-        <TableUser users={data} openModal={openModal} />
+        {isLoading 
+          ? <LoadingPage />
+          : <TableUser users={data} openModal={openModal} />
+        }
       </div>
     </div>
   </>
