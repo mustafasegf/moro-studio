@@ -51,32 +51,39 @@ export const userRouter = createTRPCRouter({
       z.object({
         limit: z.number().min(1).max(100).nullish(),
         page: z.number().nullish(),
+        role: z.enum(["admin", "user"]).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 100;
       const { page } = input;
 
-      const items = await ctx.prisma.user.findMany({
+      const users = await ctx.prisma.user.findMany({
         take: limit + 1,
         skip: page ? (page - 1) * limit : 0,
         where: {
           deleted: false,
+          role: input.role,
         },
         orderBy: {
           id: "desc",
         },
       });
 
-      let hasNextPage = false
-      if (items.length > limit) {
-        hasNextPage = true
-        items.pop()
+      const userCount = await ctx.prisma.user.count({
+        where: { deleted: false },
+      });
+      const maxPage = Math.ceil(userCount / limit);
+      let hasNextPage = false;
+      if (users.length > limit) {
+        hasNextPage = true;
+        users.pop();
       }
 
       return {
-        items,
+        users,
         hasNextPage,
+        maxPage,
       };
     }),
 });

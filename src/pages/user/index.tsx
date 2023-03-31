@@ -22,32 +22,34 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
 export default function ListUser() {
   const router = useRouter();
-  const { page: pageQuery } = router.query;
-  const parsedPageQuery = z.preprocess(
+  const { page: pageQuery, limit: limitQuery } = router.query;
+  const schema = z.preprocess(
     (val) => parseInt(val as string, 10),
     z.number().min(1)
-  ).safeParse(pageQuery); 
+  );
 
+  const parsedPageQuery = schema.safeParse(pageQuery);
   const initialPage = parsedPageQuery.success ? parsedPageQuery.data : 1;
   const [page, setPage] = useState(initialPage);
 
-  const { data, isLoading } = api.user.getAllUser.useQuery({ page });
+  const parsedLimitQuery = schema.safeParse(limitQuery);
+  const limit = parsedLimitQuery.success ? parsedLimitQuery.data : 100;
+  const { data, isLoading } = api.user.getAllUser.useQuery({ page, limit });
 
-  const users = data?.items 
-  const hasNextPage = data?.hasNextPage;
+  const { users, hasNextPage, maxPage } = data || {};
 
   function fetchNextPage() {
     setPage((prev) => prev + 1);
     router.replace({
-      query: { page: page + 1 }
-    })
+      query: { page: page + 1, limit },
+    });
   }
 
   function fetchPrevPage() {
     setPage((prev) => prev - 1);
     router.replace({
-      query: { page: page - 1 }
-    })
+      query: { page: page - 1, limit },
+    });
   }
 
   const [user, setUser] = useState<User | null>(null);
@@ -95,71 +97,62 @@ export default function ListUser() {
           {isLoading ? (
             <LoadingPage />
           ) : (
-            <> 
-              <TableUser users={users} openModal={openModal} />
-                <div className="flex items-center justify-center gap-4 my-4">
-                  {page > 1 && (
-                    <button onClick={() => fetchPrevPage()} className="btn">
-                      prev
-                    </button>
-                  )}
-                  halaman {page}
-                  {hasNextPage && (
-                    <button onClick={() => fetchNextPage()} className="btn">
-                      next
-                    </button>
-                  )}
+            <>
+              <table className="table-zebra table w-full">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>No hp</th>
+                    <th>instagram</th>
+                    <th>Role</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users?.map((item, i) => (
+                    <tr key={item.id}>
+                      <th>{i + 1 + (page - 1) * limit}</th>
+                      <td>{item.nama}</td>
+                      <td>{item.email}</td>
+                      <td>{item.hp}</td>
+                      <td>{item?.instagram ?? ""}</td>
+                      <td>{item.role}</td>
+                      <td>
+                        <button
+                          onClick={() => openModal(item)}
+                          className="btn-error btn"
+                        >
+                          Hapus
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-                </div>
+              <div className="my-4 flex items-center justify-center gap-4">
+                <button
+                  onClick={() => fetchPrevPage()}
+                  className="btn-sm btn"
+                  disabled={page <= 1}
+                >
+                  &lt;
+                </button>
+                halaman {page} dari {maxPage}
+                <button
+                  onClick={() => fetchNextPage()}
+                  className="btn-sm btn"
+                  disabled={!hasNextPage}
+                >
+                  &gt;
+                </button>
+              </div>
             </>
           )}
         </div>
       </div>
-    </>
-  );
-}
-
-interface TableUserProps {
-  users?: User[];
-  openModal: (user: User) => void;
-}
-
-function TableUser({ users, openModal }: TableUserProps) {
-  return (
-    <>
-      <table className="table-zebra table w-full">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Nama</th>
-            <th>Email</th>
-            <th>No hp</th>
-            <th>instagram</th>
-            <th>Role</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {users?.map((item, i) => (
-            <tr key={item.id}>
-              <th>{i + 1}</th>
-              <td>{item.nama}</td>
-              <td>{item.email}</td>
-              <td>{item.hp}</td>
-              <td>{item?.instagram ?? ""}</td>
-              <td>{item.role}</td>
-              <td>
-                <button
-                  onClick={() => openModal(item)}
-                  className="btn-error btn"
-                >
-                  Hapus
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </>
   );
 }
