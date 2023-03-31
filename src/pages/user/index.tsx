@@ -27,6 +27,8 @@ export default function ListUser() {
   const [filteredRole, setFilteredRole] = useState<Role | undefined>(undefined);
   const [search, setSearch] = useState("");
   const debounceSearch = useDebounce(search, 350)
+  const [user, setUser] = useState<User | null>(null);
+  const [open, setOpen] = useState(false);
 
   const { page: pageQuery, limit: limitQuery } = router.query;
   const schema = z.preprocess(
@@ -64,7 +66,6 @@ export default function ListUser() {
   }
 
   function handleChangeRole(e: React.ChangeEvent<HTMLSelectElement>) {
-    e.preventDefault();
     const role = e.target.value as Role | "all";
 
     if (role === "all") {
@@ -74,8 +75,6 @@ export default function ListUser() {
     }
   }
 
-  const [user, setUser] = useState<User | null>(null);
-  const [open, setOpen] = useState(false);
   const utils = api.useContext();
 
   const deleteUser = api.user.deleteUser.useMutation({
