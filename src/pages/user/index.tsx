@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import { useState } from "react";
 import { api } from "~/utils/api";
 import { ModalAction } from "~/component/modal";
@@ -8,6 +8,7 @@ import { getServerAuthSession } from "~/utils/session";
 import { LoadingPage } from "~/component/loading";
 import { useRouter } from "next/router";
 import { z } from "zod";
+import { roles } from "~/utils/roles";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = getServerAuthSession(ctx);
@@ -22,6 +23,8 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
 export default function ListUser() {
   const router = useRouter();
+  const [filteredRole, setFilteredRole] = useState< Role | undefined>(undefined);
+
   const { page: pageQuery, limit: limitQuery } = router.query;
   const schema = z.preprocess(
     (val) => parseInt(val as string, 10),
@@ -34,8 +37,8 @@ export default function ListUser() {
 
   const parsedLimitQuery = schema.safeParse(limitQuery);
   const limit = parsedLimitQuery.success ? parsedLimitQuery.data : 100;
-  const { data, isLoading } = api.user.getAllUser.useQuery({ page, limit });
 
+  const { data, isLoading } = api.user.getAllUser.useQuery({ page, limit, role: filteredRole });
   const { users, hasNextPage, maxPage } = data || {};
 
   function fetchNextPage() {
@@ -50,6 +53,18 @@ export default function ListUser() {
     router.replace({
       query: { page: page - 1, limit },
     });
+  }
+  
+  function handleChangeRole(e: React.ChangeEvent<HTMLSelectElement>) {
+    e.preventDefault()
+    const role = e.target.value as Role | "all"
+
+    if (role === "all") {
+      setFilteredRole(undefined)
+    } else {
+      setFilteredRole(role)
+    }
+
   }
 
   const [user, setUser] = useState<User | null>(null);
@@ -88,7 +103,18 @@ export default function ListUser() {
       />
 
       <div className="m-8">
-        <div className="flex flex-row-reverse">
+        <div className="flex flex-row items-center justify-end gap-4">
+          <select className="input-bordered input w-full max-w-[10rem]"
+            onChange={handleChangeRole}
+          >
+            {["all", ...roles].map((role) => (
+              <option
+                key={role}
+              >
+                {role}
+              </option>
+            ))}
+          </select>
           <Link href="/user/add" className="btn my-4">
             Add Account +
           </Link>

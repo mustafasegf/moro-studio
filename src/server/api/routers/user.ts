@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
+import { roles } from "~/utils/roles";
 import { addUserSchema } from "~/utils/schemas";
 
 export const userRouter = createTRPCRouter({
@@ -51,7 +52,7 @@ export const userRouter = createTRPCRouter({
       z.object({
         limit: z.number().min(1).max(100).nullish(),
         page: z.number().nullish(),
-        role: z.enum(["admin", "user"]).optional(),
+        role: z.enum(roles).optional(),
       })
     )
     .query(async ({ ctx, input }) => {
