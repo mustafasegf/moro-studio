@@ -53,6 +53,7 @@ export const userRouter = createTRPCRouter({
         limit: z.number().min(1).max(100).nullish(),
         page: z.number().nullish(),
         role: z.enum(roles).optional(),
+        search: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -65,6 +66,32 @@ export const userRouter = createTRPCRouter({
         where: {
           deleted: false,
           role: input.role,
+          OR: [
+            {
+              nama: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              email: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              instagram: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+            {
+              hp: {
+                contains: input.search,
+                mode: 'insensitive',
+              },
+            },
+          ],
         },
         orderBy: {
           id: "desc",

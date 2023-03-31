@@ -9,6 +9,7 @@ import { LoadingPage } from "~/component/loading";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import { roles } from "~/utils/roles";
+import { useDebounce } from "usehooks-ts";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = getServerAuthSession(ctx);
@@ -23,7 +24,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 
 export default function ListUser() {
   const router = useRouter();
-  const [filteredRole, setFilteredRole] = useState< Role | undefined>(undefined);
+  const [filteredRole, setFilteredRole] = useState<Role | undefined>(undefined);
+  const [search, setSearch] = useState("");
+  const debounceSearch = useDebounce(search, 350)
 
   const { page: pageQuery, limit: limitQuery } = router.query;
   const schema = z.preprocess(
@@ -38,7 +41,12 @@ export default function ListUser() {
   const parsedLimitQuery = schema.safeParse(limitQuery);
   const limit = parsedLimitQuery.success ? parsedLimitQuery.data : 100;
 
-  const { data, isLoading } = api.user.getAllUser.useQuery({ page, limit, role: filteredRole });
+  const { data, isLoading } = api.user.getAllUser.useQuery({
+    page,
+    limit,
+    role: filteredRole,
+    search: debounceSearch,
+  });
   const { users, hasNextPage, maxPage } = data || {};
 
   function fetchNextPage() {
@@ -54,17 +62,16 @@ export default function ListUser() {
       query: { page: page - 1, limit },
     });
   }
-  
+
   function handleChangeRole(e: React.ChangeEvent<HTMLSelectElement>) {
-    e.preventDefault()
-    const role = e.target.value as Role | "all"
+    e.preventDefault();
+    const role = e.target.value as Role | "all";
 
     if (role === "all") {
-      setFilteredRole(undefined)
+      setFilteredRole(undefined);
     } else {
-      setFilteredRole(role)
+      setFilteredRole(role);
     }
-
   }
 
   const [user, setUser] = useState<User | null>(null);
@@ -104,15 +111,24 @@ export default function ListUser() {
 
       <div className="m-8">
         <div className="flex flex-row items-center justify-end gap-4">
-          <select className="input-bordered input w-full max-w-[10rem]"
+          <div className="flex flex-row items-center gap-2">
+            <label htmlFor="search" className="text-lg">
+              cari
+            </label>
+            <input
+              type="text"
+              id="search"
+              className="input-bordered input w-full max-w-xs"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <select
+            className="input-bordered input w-full max-w-[10rem]"
             onChange={handleChangeRole}
           >
             {["all", ...roles].map((role) => (
-              <option
-                key={role}
-              >
-                {role}
-              </option>
+              <option key={role}>{role}</option>
             ))}
           </select>
           <Link href="/user/add" className="btn my-4">
