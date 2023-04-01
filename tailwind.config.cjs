@@ -14,5 +14,8 @@ module.exports = {
         //     'blue': '#5885DD'
         // },
     },
+    daisyui: { 
+      themes: ["cupcake"]
+    },
     plugins: [require('daisyui')],
 };
