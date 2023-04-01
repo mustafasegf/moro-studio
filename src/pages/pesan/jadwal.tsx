@@ -2,7 +2,17 @@ import { GetServerSidePropsContext } from "next/types";
 import { CenterContainer } from "~/component/centercontainer";
 import { createSSG } from "~/server/SSGHelper";
 import { api } from "~/utils/api";
-import { format, addDays, eachDayOfInterval, set, addMinutes, isAfter, setMinutes, setHours } from "date-fns";
+import {
+  format,
+  addDays,
+  eachDayOfInterval,
+  set,
+  addMinutes,
+  isAfter,
+  setMinutes,
+  setHours,
+  getDay,
+} from "date-fns";
 import { id, enUS } from "date-fns/locale";
 import cn from "classnames";
 
@@ -42,7 +52,7 @@ export default function Jadwal({ katalog }: { katalog: string }) {
   const dates = eachDayOfInterval({
     start,
     end,
-  }).map(d => setHours(d, startHour))
+  }).map((d) => setHours(d, startHour));
 
   // dates.forEach(d => console.log(format(d, "PPpp")))
 
@@ -50,20 +60,8 @@ export default function Jadwal({ katalog }: { katalog: string }) {
     <>
       <CenterContainer>
         <div className=" flex flex-row justify-between">
-          {dates.map((date) => (
-            <div key={date.toISOString()}>
-              <div className="text-center text-lg font-bold">
-                {format(date, "eeee", { locale: id })}
-              </div>
-              <div className="text-center text-2xl font-bold">
-                {format(date, "ee")}
-              </div>
-              {[...Array(interval)].map((_, i) => (
-                <div key={i} className="flex flex-row justify-between">
-                  <DatesButton now={now} content={addMinutes(date, i * 40)} />
-                </div>
-              ))}
-            </div>
+          {dates.map((date, i) => (
+            <DatesRow now={now} date={date} interval={interval} />
           ))}
         </div>
       </CenterContainer>
@@ -71,33 +69,58 @@ export default function Jadwal({ katalog }: { katalog: string }) {
   );
 }
 
-interface DatesButtonProps {
+interface DatesRowProps {
   now: Date;
-  content: Date;
+  date: Date;
+  interval: number;
 }
 
-function DatesButton({ now, content }: DatesButtonProps) {
-  const enabled = isAfter(content, now)
-  // console.log(now, content)
+function DatesRow({ now, date, interval }: DatesRowProps) {
+  const today = getDay(now) == getDay(date);
 
-  const buttonClass = cn(
-    "mt-3 rounded-xl border-2 py-3 px-2 text-center text-lg  ",
+
+  const rowClass = cn(
+    "mt-4 mb-8 rounded-xl py-3 px-4 text-center text-lg  ",
     {
-    "border-neutral-400 transition duration-75 ease-in-out hover:-translate-y-[2px] hover:bg-neutral-300": enabled,
-    "border-neutral-200 text-neutral-500": !enabled,
-  });
+      "relative bg-base-300 rounded-lg": today,
+    }
+  );
+
+  return (
+    <div key={date.toISOString()} className={rowClass}>
+      {today && <p className="absolute inline-block -top-3 left-8 py-0.5 px-1 rounded-2xl text-sm bg-[#595959] text-neutral-50">Today</p>}
+      <p className="text-center text-lg font-bold">
+        {format(date, "eeee", { locale: id })}
+      </p>
+      <p className="text-center text-2xl font-bold">{format(date, "ee")}</p>
+      {[...Array(interval)].map((_, i) => (
+        <DatesButton now={now} date={addMinutes(date, i * 40)} />
+      ))}
+    </div>
+  );
+}
+
+interface DatesButtonProps {
+  now: Date;
+  date: Date;
+}
+
+function DatesButton({ now, date: content }: DatesButtonProps) {
+  const enabled = isAfter(content, now);
+  const buttonClass = cn(
+    "mt-3 rounded-xl bg-base-100 border-2 py-3 px-2 text-center text-lg",
+    {
+      "border-neutral-400 transition duration-75 ease-in-out hover:-translate-y-[2px] hover:bg-neutral-300":
+        enabled,
+      "border-neutral-200 text-neutral-500 opacity-70": !enabled,
+    }
+  );
 
   return (
     <div className={buttonClass}>
-      {/* {String(enabled)} */}
-      {/* <p>{format(now, "PPpp")}</p> */}
-      {/* <p> -</p> */}
-      {/* <p>{format(content, "PPpp")}</p> */}
-
       {format(content, "hh:mm aa", {
         locale: enUS,
       })}
-
     </div>
   );
 }
