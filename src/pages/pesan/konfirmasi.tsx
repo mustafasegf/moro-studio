@@ -3,16 +3,13 @@ import { CenterContainer } from "~/component/centercontainer";
 import { createSSG } from "~/server/SSGHelper";
 import { api } from "~/utils/api";
 import { format, isAfter, getDay } from "date-fns";
-import { id } from "date-fns/locale";
 import cn from "classnames";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { atom, useAtom } from "jotai";
 import { addBookingSchema, AddBookingSchema } from "~/utils/schemas";
 
-const katalogAtom = atom("");
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const ssg = createSSG();
@@ -48,6 +45,9 @@ export default function Jadwal({
   dateStr,
 }: Record<"katalog" | "dateStr", string>) {
   const { data } = api.catalogue.getCatalogueById.useQuery({ id: katalog });
+  if (!data) {
+    return 
+  }
 
   const date = new Date(dateStr);
   const {
@@ -62,16 +62,16 @@ export default function Jadwal({
     }
   });
 
-  function onSubmit(val: AddBookingSchema) {
-    console.log(val)
-  }
+  const addBooking = api.booking.addBooking.useMutation()
 
-  console.log(errors)
+  function onSubmit(val: AddBookingSchema) {
+    addBooking.mutate(val);
+  }
 
   return (
     <>
       <CenterContainer>
-        <div>
+        <div className="flex justify-center">
           <form
             className="max-w-lg grow rounded-3xl bg-base-200 p-8"
             onSubmit={handleSubmit(onSubmit)}
@@ -84,7 +84,6 @@ export default function Jadwal({
                 Nama
               </label>
               <input
-                required
                 type="text"
                 id="nama"
                 className={cn(
@@ -108,7 +107,6 @@ export default function Jadwal({
                 Email
               </label>
               <input
-                required
                 type="text"
                 id="email"
                 className={cn(
@@ -182,11 +180,13 @@ export default function Jadwal({
               <input
                 type="number"
                 id="jumlah"
+                min={1}
+                inputMode="numeric"
                 className={cn(
                   "input-bordered input mt-1 mb-2 w-full max-w-md",
                   { "input-error": errors.jumlah }
                 )}
-                {...register("jumlah")}  
+                {...register("jumlah", { setValueAs: (v) => !v ? 0 : parseInt(v, 10), })}  
               />
               {errors.jumlah && (
                 <span className={cn("mb-4", { "text-error": errors.jumlah })}>
@@ -227,13 +227,12 @@ export default function Jadwal({
                 Saya datang dengan hewan peliharaan (hewan kecil)
               </label>
               <select
-                required
                 id="peliharaan"
                 className="input-bordered input mt-1 mb-4 w-full max-w-xs"
-                {...register("peliharaan")}
+                {...register("peliharaan", { setValueAs: (v) => v === "true"})}
               >
-                <option value="true">ya</option>
                 <option value="false">tidak</option>
+                <option value="true">ya</option>
               </select>
               {errors.peliharaan && (
                 <span className={cn("mb-4", { "text-error": errors.peliharaan })}>
@@ -264,10 +263,10 @@ export default function Jadwal({
                 </span>
               )}
             </div>
-            <input type="hidden" {...register(`tanggal`)} />
+            <input type="hidden" {...register(`tanggal`, { valueAsDate: true })} />
             <input type="hidden" {...register(`katalog`)} />
 
-            <input className="btn mt-4" type="submit" value="kirim" />
+            <input className="btn btn-primary mt-4" type="submit" value="kirim" />
           </form>
         </div>
       </CenterContainer>

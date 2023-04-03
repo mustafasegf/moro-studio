@@ -19,25 +19,15 @@ export const addBookingSchema = z.object({
   nama: z.string().min(1, "nama perlu diisi"),
   email: z.string().min(1, "email perlu diisi").email("email tidak valid"),
   hp: z
-    .string()
-    .optional()
+    .string().min(1, "nomor hp perlu diisi")
     .refine((val) => !val || isMobilePhone(val), "nomor hp tidak valid"),
-  jumlah: z.preprocess(
-    (val) => parseInt(val as string, 10),
-    z.number().min(1), { description: "jumlah perlu diisi" }
-  ),
+  jumlah: z.number().min(1, "jumlah harus diisi"),
   instagram: z.string().min(1, "instagram perlu diisi"),
   warna: z.string().min(1, "warna perlu diisi"),
-  peliharaan: z.preprocess(
-    (val) => val == "true",
-    z.boolean(), { description: "peliharaan perlu diisi" }
-  ),
+  peliharaan: z.boolean(),
   voucher: z.string().optional(),
 
-  tanggal: z.preprocess(
-    val => new Date(val as string),
-    z.date(), { description: "tanggal perlu diisi" }
-  ),
+  tanggal: z.date(),
   katalog: KatalogSchema,
 })
 
