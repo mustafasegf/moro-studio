@@ -7,7 +7,7 @@ generator client {
 
 generator zod {
   provider = "zod-prisma-types"
-  output =  "../src/utils/zod-prisma"
+  output   = "../src/utils/zod-prisma"
 }
 
 datasource db {
@@ -52,16 +52,17 @@ enum Role {
   user
 }
 
-// todo: add jumlah orang optional
 model Katalog {
-  id        String    @id @default(cuid())
-  nama      String
-  durasi    String
-  harga     Int
-  deskripsi String    @db.Text
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Booking   Booking[]
+  id          String    @id @default(cuid())
+  nama        String
+  durasi      Int
+  harga       Int
+  jumlahOrang Int?
+  deskripsi   String    @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Booking     Booking[]
+  deleted     Boolean   @default(false)
 }
 
 model Kupon {
@@ -78,12 +79,12 @@ model Kupon {
   updatedAt      DateTime  @updatedAt
 }
 
-// todo: add deleted
 model BackgroundFoto {
   warna     String    @id
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Booking   Booking[]
+  deleted   Boolean   @default(false)
 }
 
 enum BookinStatus {
@@ -92,7 +93,6 @@ enum BookinStatus {
   lunas
 }
 
-// todo: add jumlah orang
 model Booking {
   id              String         @id @default(cuid())
   userId          String
@@ -102,6 +102,8 @@ model Booking {
   peliharaan      Boolean
   harga           Int
   jadwal          DateTime
+  durasi          Int
+  jumlahOrang     Int
   katalogId       String
   katalog         Katalog        @relation(fields: [katalogId], references: [id])
   detail          String         @db.Text
@@ -113,6 +115,7 @@ model Booking {
   FotoUser        FotoUser[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
+  deleted         Boolean        @default(false)
 }
 
 model Pembayaran {
