@@ -32,3 +32,25 @@ export const addBookingSchema = z.object({
 })
 
 export type AddBookingSchema = z.infer<typeof addBookingSchema>;
+
+export const addCatalogueSchema =  z.object({
+  nama: z.string().min(1, "nama perlu diisi"),
+  durasi: z.number().min(1, "durasi perlu diisi"),
+  jumlahOrang: z.number().min(1, "jumlah orang harus positif").optional(),
+  harga: z.number().min(1, "harga harus diisi"),
+  deskripsi: z.string().min(1, "deskripsi perlu diisi"),
+})
+
+export type AddCatalogueSchema = z.infer<typeof addCatalogueSchema>;
+
+
+export const updateCatalogueSchema =  z.object({
+  id: z.string().cuid().min(1, "id perlu diisi"),
+  nama: z.string().min(1, "nama perlu diisi"),
+  durasi: z.number().min(1, "durasi perlu diisi"),
+  jumlahOrang: z.number().min(1, "jumlah orang harus positif").optional(),
+  harga: z.number().min(1, "harga harus diisi"),
+  deskripsi: z.string().min(1, "deskripsi perlu diisi"),
+})
+
+export type UpdateCatalogueSchema = z.infer<typeof updateCatalogueSchema>;

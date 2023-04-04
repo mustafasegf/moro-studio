@@ -15,9 +15,9 @@ export function Navbar() {
       role: "user",
     },
     {
-      name: "Catalogue",
-      path: "/list-catalogue",
-      role: undefined,
+      name: "Katalog",
+      path: "/katalog",
+      role: "admin",
     },
     {
       name: "Edit Homepage",

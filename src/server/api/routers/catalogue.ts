@@ -5,22 +5,17 @@ import {
   publicProcedure,
   // protectedProcedure,
 } from "~/server/api/trpc";
+import { addCatalogueSchema, updateCatalogueSchema } from "~/utils/schemas";
 
 export const catalogueRouter = createTRPCRouter({
   addCatalogue: publicProcedure
-    .input(
-      z.object({
-        nama: z.string(),
-        durasi: z.string(),
-        harga: z.number(),
-        deskripsi: z.string(),
-      })
-    )
+    .input(addCatalogueSchema)
     .mutation(({ input, ctx }) => {
       return ctx.prisma.katalog.create({
         data: {
           nama: input.nama,
           durasi: input.durasi,
+          jumlahOrang: input.jumlahOrang,
           harga: input.harga,
           deskripsi: input.deskripsi,
         },
@@ -28,7 +23,11 @@ export const catalogueRouter = createTRPCRouter({
     }),
 
   getAllCatalogue: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.katalog.findMany();
+    return ctx.prisma.katalog.findMany({
+      where: {
+        deleted: false,
+      },
+    });
   }),
 
   getCatalogueById: publicProcedure
@@ -46,15 +45,7 @@ export const catalogueRouter = createTRPCRouter({
     }),
 
   updateCatalogue: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        nama: z.string(),
-        durasi: z.string(),
-        harga: z.number(),
-        deskripsi: z.string(),
-      })
-    )
+    .input(updateCatalogueSchema)
     .mutation(({ input, ctx }) => {
       return ctx.prisma.katalog.update({
         where: {
@@ -63,6 +54,7 @@ export const catalogueRouter = createTRPCRouter({
         data: {
           nama: input.nama,
           durasi: input.durasi,
+          jumlahOrang: input.jumlahOrang,
           harga: input.harga,
           deskripsi: input.deskripsi,
         },
