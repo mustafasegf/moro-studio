@@ -1,20 +1,32 @@
 import { api } from "~/utils/api";
 
 import { BiTimeFive } from "react-icons/bi";
-import { IoIosPricetag } from "react-icons/io";
+import { IoIosPricetag, IoMdPeople } from "react-icons/io";
 import { LoadingPage } from "~/component/loading";
 import Link from "next/link";
+import { GetServerSidePropsContext } from "next";
 import { CenterContainer } from "~/component/centercontainer";
+import { createSSG } from "~/server/SSGHelper";
 
+export async function getServerSideProps(_ctx: GetServerSidePropsContext) {
+  const ssg = createSSG();
+  await ssg.catalogue.getAllCatalogue.prefetch();
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+  };
+}
 export default function Book() {
-  const { data, isLoading, error } = api.catalogue.getAllCatalogue.useQuery();
+  const { data, isError, error } = api.catalogue.getAllCatalogue.useQuery();
 
   return (
     <>
       <CenterContainer>
         <div className="flex flex-wrap justify-center">
-          {isLoading ? (
-            <LoadingPage />
+          {isError ? (
+            <p> {error.message} </p>
           ) : (
             data?.map((item) => (
               <Link
@@ -25,14 +37,17 @@ export default function Book() {
                 <div>
                   <h3 className="text-left text-lg font-bold">{item.nama}</h3>
                   <div className="mt-4 rounded-md bg-base-300 p-4">
-                    <pre>{item.deskripsi}</pre>
+                    <p className="whitespace-pre-line">{item.deskripsi}</p>
                   </div>
 
                   <div className="mt-6 flex items-center justify-between">
-                    <div className="flex flex-row gap-4">
+                    <div className="flex flex-col md:flex-row gap-4">
                       <div className="flex items-center">
                         <BiTimeFive className="mr-2 text-2xl text-gray-600" />
-                        <span>{item.durasi}</span>
+                        <span> 
+                          {item.durasi > 60 && Math.floor(item.durasi/60) + " Jam" } 
+                          {item.durasi % 60 + " Menit" } 
+                        </span>
                       </div>
                       <div className="flex items-center">
                         <IoIosPricetag className="mr-2 text-2xl text-gray-600" />
@@ -45,6 +60,12 @@ export default function Book() {
                           })}
                         </span>
                       </div>
+                      {item.jumlahOrang &&
+                        <div className="flex items-center">
+                        <IoMdPeople className="mr-2 text-2xl text-gray-600" />
+                          <span>{item.jumlahOrang} orang</span>
+                        </div>
+                      }
                     </div>
                   </div>
                 </div>

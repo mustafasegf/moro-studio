@@ -29,7 +29,10 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     return { redirect: { destination: `/pesan/jadwal?katalog=${katalog}` } };
   }
 
-  await ssg.catalogue.getCatalogueById.prefetch({ id: katalog });
+  const data = await ssg.catalogue.getCatalogueById.fetch({ id: katalog });
+  if (!data) {
+    return { redirect: { destination: "/pesan" } };
+  }
 
   return {
     props: {

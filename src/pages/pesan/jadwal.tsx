@@ -16,9 +16,9 @@ import {
 import { id, enUS } from "date-fns/locale";
 import cn from "classnames";
 import Link from "next/link";
-import { atom, useAtom } from 'jotai'
+import { atom, useAtom } from "jotai";
 
-const katalogAtom = atom('')
+const katalogAtom = atom("");
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const ssg = createSSG();
@@ -27,7 +27,10 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   if (typeof katalog !== "string") {
     return { redirect: { destination: "/pesan" } };
   }
-  await ssg.catalogue.getCatalogueById.prefetch({ id: katalog });
+  const data = await ssg.catalogue.getCatalogueById.fetch({ id: katalog });
+  if (!data) {
+    return { redirect: { destination: "/pesan" } };
+  }
 
   return {
     props: {
@@ -38,10 +41,14 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 export default function Jadwal({ katalog }: { katalog: string }) {
-  const [_, setKatalog] = useAtom(katalogAtom)
-  setKatalog(katalog)
+  const [_, setKatalog] = useAtom(katalogAtom);
+  setKatalog(katalog);
 
   const { data } = api.catalogue.getCatalogueById.useQuery({ id: katalog });
+  if (!data) {
+    return;
+  }
+
   const startHour = 10;
   const endHour = 21;
   const duration = 40;
@@ -64,43 +71,42 @@ export default function Jadwal({ katalog }: { katalog: string }) {
   return (
     <>
       <CenterContainer>
+        <p>{data?.durasi / 40}</p>
         <div className=" flex flex-row justify-between">
-          {dates.map((date, i) => (
-            <DatesRow key={i} now={now} date={date} interval={interval} />
+          {dates.map((date, rowIdx) => (
+            <div
+              key={date.toISOString()}
+              className={cn(
+                "mt-4 mb-8 rounded-xl py-3 px-4 text-center text-lg  ",
+                {
+                  "relative rounded-lg bg-base-300":
+                    getDay(now) == getDay(date),
+                }
+              )}
+            >
+              {getDay(now) == getDay(date) && (
+                <p className="absolute -top-3 left-8 inline-block rounded-2xl bg-[#595959] py-0.5 px-1 text-sm text-neutral-50">
+                  Today
+                </p>
+              )}
+              <p className="text-center text-lg font-bold">
+                {format(date, "eeee", { locale: id })}
+              </p>
+              <p className="text-center text-2xl font-bold">
+                {format(date, "ee")}
+              </p>
+              {[...Array(interval)].map((_, colIdx) => (
+                <DatesButton
+                  key={colIdx}
+                  now={now}
+                  date={addMinutes(date, colIdx * 40)}
+                />
+              ))}
+            </div>
           ))}
         </div>
       </CenterContainer>
     </>
-  );
-}
-
-interface DatesRowProps {
-  now: Date;
-  date: Date;
-  interval: number;
-}
-
-function DatesRow({ now, date, interval }: DatesRowProps) {
-  const today = getDay(now) == getDay(date);
-
-  const rowClass = cn(
-    "mt-4 mb-8 rounded-xl py-3 px-4 text-center text-lg  ",
-    {
-      "relative bg-base-300 rounded-lg": today,
-    }
-  );
-
-  return (
-    <div key={date.toISOString()} className={rowClass}>
-      {today && <p className="absolute inline-block -top-3 left-8 py-0.5 px-1 rounded-2xl text-sm bg-[#595959] text-neutral-50">Today</p>}
-      <p className="text-center text-lg font-bold">
-        {format(date, "eeee", { locale: id })}
-      </p>
-      <p className="text-center text-2xl font-bold">{format(date, "ee")}</p>
-      {[...Array(interval)].map((_, i) => (
-        <DatesButton key={i} now={now} date={addMinutes(date, i * 40)} />
-      ))}
-    </div>
   );
 }
 
@@ -110,7 +116,7 @@ interface DatesButtonProps {
 }
 
 function DatesButton({ now, date }: DatesButtonProps) {
-  const [katalog] = useAtom(katalogAtom)
+  const [katalog] = useAtom(katalogAtom);
 
   const enabled = isAfter(date, now);
   const buttonClass = cn(
@@ -122,18 +128,27 @@ function DatesButton({ now, date }: DatesButtonProps) {
     }
   );
 
+  function handleEnter() { }
+  function handleLeave() { }
   const Child = () => (
-    <div className={buttonClass}>
+    <div
+      className={buttonClass}
+      onMouseEnter={() => handleEnter()}
+      onMouseLeave={() => handleLeave()}
+    >
       {format(date, "hh:mm aa", {
         locale: enUS,
       })}
     </div>
-  )
-  const dateStr = format(date, "yyyy-MM-dd'T'HH:mm:ss")
-
-  if (enabled) return ( <Link href={`/pesan/konfirmasi?katalog=${katalog}&date=${dateStr}`}><Child /></Link> )
-
-  return (
-    <Child />
   );
+  const dateStr = format(date, "yyyy-MM-dd'T'HH:mm:ss");
+
+  if (enabled)
+    return (
+      <Link href={`/pesan/konfirmasi?katalog=${katalog}&date=${dateStr}`}>
+        <Child />
+      </Link>
+    );
+
+  return <Child />;
 }
