@@ -10,6 +10,7 @@ export const bookingRouter = createTRPCRouter({
   addBooking: publicProcedure
     .input(addBookingSchema)
     .mutation(({ input, ctx }) => {
+      console.log(input)
       // check if booking exist on that date
       // const booking = await ctx.prisma.booking.findFirst({
       //   where: {

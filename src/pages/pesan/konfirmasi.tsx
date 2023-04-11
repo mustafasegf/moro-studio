@@ -10,7 +10,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { addBookingSchema, AddBookingSchema } from "~/utils/schemas";
 
-
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const ssg = createSSG();
   const { katalog, date } = ctx.query;
@@ -49,7 +48,7 @@ export default function Jadwal({
 }: Record<"katalog" | "dateStr", string>) {
   const { data } = api.catalogue.getCatalogueById.useQuery({ id: katalog });
   if (!data) {
-    return 
+    return;
   }
 
   const date = new Date(dateStr);
@@ -61,11 +60,12 @@ export default function Jadwal({
     resolver: zodResolver(addBookingSchema),
     defaultValues: {
       tanggal: date,
-      katalog: data
-    }
+      katalog: data,
+      jumlahOrang: data.jumlahOrang ?? undefined,
+    },
   });
 
-  const addBooking = api.booking.addBooking.useMutation()
+  const addBooking = api.booking.addBooking.useMutation();
 
   function onSubmit(val: AddBookingSchema) {
     addBooking.mutate(val);
@@ -76,7 +76,7 @@ export default function Jadwal({
       <CenterContainer>
         <div className="flex justify-center">
           <form
-            className="max-w-lg grow rounded-3xl bg-base-200 p-8"
+            className="max-w-lg mt-4 mb-8 grow rounded-3xl bg-base-200 p-8"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="mb-4">
@@ -148,7 +148,6 @@ export default function Jadwal({
               )}
             </div>
 
-
             <div className="mb-4">
               <label
                 htmlFor="instagram"
@@ -163,37 +162,44 @@ export default function Jadwal({
                   "input-bordered input mt-1 mb-2 w-full max-w-md",
                   { "input-error": errors.instagram }
                 )}
-                {...register("instagram")}  
+                {...register("instagram")}
               />
               {errors.instagram && (
-                <span className={cn("mb-4", { "text-error": errors.instagram })}>
+                <span
+                  className={cn("mb-4", { "text-error": errors.instagram })}
+                >
                   {errors.instagram.message}
                 </span>
               )}
             </div>
 
-
             <div className="mb-4">
               <label
-                htmlFor="jumlah"
+                htmlFor="jumlahOrang"
                 className="block text-sm font-medium leading-6"
               >
                 Jumlah Orang
               </label>
               <input
+                disabled={!!data.jumlahOrang}
+                defaultValue={data.jumlahOrang ?? undefined}
                 type="number"
-                id="jumlah"
+                id="jumlahOrang"
                 min={1}
                 inputMode="numeric"
                 className={cn(
                   "input-bordered input mt-1 mb-2 w-full max-w-md",
-                  { "input-error": errors.jumlah }
+                  { "input-error": errors.jumlahOrang }
                 )}
-                {...register("jumlah", { setValueAs: (v) => !v ? 0 : parseInt(v, 10), })}  
+                {...register("jumlahOrang", {
+                  setValueAs: (v) => (!v ? 0 : parseInt(v, 10)),
+                })}
               />
-              {errors.jumlah && (
-                <span className={cn("mb-4", { "text-error": errors.jumlah })}>
-                  {errors.jumlah.message}
+              {errors.jumlahOrang && (
+                <span
+                  className={cn("mb-4", { "text-error": errors.jumlahOrang })}
+                >
+                  {errors.jumlahOrang.message}
                 </span>
               )}
             </div>
@@ -212,7 +218,7 @@ export default function Jadwal({
                   "input-bordered input mt-1 mb-2 w-full max-w-md",
                   { "input-error": errors.warna }
                 )}
-                {...register("warna")}  
+                {...register("warna")}
               />
               {errors.warna && (
                 <span className={cn("mb-4", { "text-error": errors.warna })}>
@@ -220,7 +226,6 @@ export default function Jadwal({
                 </span>
               )}
             </div>
-
 
             <div className="mb-4">
               <label
@@ -232,13 +237,15 @@ export default function Jadwal({
               <select
                 id="peliharaan"
                 className="input-bordered input mt-1 mb-4 w-full max-w-xs"
-                {...register("peliharaan", { setValueAs: (v) => v === "true"})}
+                {...register("peliharaan", { setValueAs: (v) => v === "true" })}
               >
                 <option value="false">tidak</option>
                 <option value="true">ya</option>
               </select>
               {errors.peliharaan && (
-                <span className={cn("mb-4", { "text-error": errors.peliharaan })}>
+                <span
+                  className={cn("mb-4", { "text-error": errors.peliharaan })}
+                >
                   {errors.peliharaan.message}
                 </span>
               )}
@@ -249,7 +256,7 @@ export default function Jadwal({
                 htmlFor="voucher"
                 className="block text-sm font-medium leading-6"
               >
-               Voucher 
+                Voucher
               </label>
               <input
                 type="text"
@@ -258,7 +265,7 @@ export default function Jadwal({
                   "input-bordered input mt-1 mb-2 w-full max-w-md",
                   { "input-error": errors.voucher }
                 )}
-                {...register("voucher")}  
+                {...register("voucher")}
               />
               {errors.voucher && (
                 <span className={cn("mb-4", { "text-error": errors.voucher })}>
@@ -266,10 +273,17 @@ export default function Jadwal({
                 </span>
               )}
             </div>
-            <input type="hidden" {...register(`tanggal`, { valueAsDate: true })} />
+            <input
+              type="hidden"
+              {...register(`tanggal`, { valueAsDate: true })}
+            />
             <input type="hidden" {...register(`katalog`)} />
 
-            <input className="btn btn-primary mt-4" type="submit" value="kirim" />
+            <input
+              className="btn-primary btn mt-4"
+              type="submit"
+              value="kirim"
+            />
           </form>
         </div>
       </CenterContainer>

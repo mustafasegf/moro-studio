@@ -21,7 +21,7 @@ export const addBookingSchema = z.object({
   hp: z
     .string().min(1, "nomor hp perlu diisi")
     .refine((val) => !val || isMobilePhone(val), "nomor hp tidak valid"),
-  jumlah: z.number().min(1, "jumlah harus diisi"),
+  jumlahOrang: z.number().min(1, "jumlah harus diisi"),
   instagram: z.string().min(1, "instagram perlu diisi"),
   warna: z.string().min(1, "warna perlu diisi"),
   peliharaan: z.boolean(),
