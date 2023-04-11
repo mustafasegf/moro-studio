@@ -68,11 +68,11 @@ model Katalog {
 model Kupon {
   id             String    @id @default(cuid())
   nama           String
-  kode           String
+  kode           String    @unique
   diskon         Float
-  kuotaPemakaian Int
-  kuotaTerpakai  Int
-  status         Boolean
+  kuotaPemakaian Int       @default(0)
+  kuotaTerpakai  Int       @default(0)
+  active         Boolean   @default(true)
   tanggal        DateTime
   Booking        Booking[]
   createdAt      DateTime  @default(now())
@@ -99,16 +99,16 @@ model Booking {
   user            User           @relation(fields: [userId], references: [id])
   backgroundWarna String
   background      BackgroundFoto @relation(fields: [backgroundWarna], references: [warna])
-  peliharaan      Boolean
+  peliharaan      Boolean        @default(false)
   harga           Int
   jadwal          DateTime
   durasi          Int
   jumlahOrang     Int
   katalogId       String
   katalog         Katalog        @relation(fields: [katalogId], references: [id])
-  detail          String         @db.Text
-  kuponId         String
-  kupon           Kupon          @relation(fields: [kuponId], references: [id])
+  // detail          String         @db.Text
+  kuponId         String?
+  kupon           Kupon?          @relation(fields: [kuponId], references: [id])
   status          BookinStatus
   // foto FotoUser[]
   Pembayaran      Pembayaran[]

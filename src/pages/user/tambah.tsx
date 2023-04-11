@@ -42,7 +42,7 @@ export default function AddUser() {
       if (addUser.isSuccess) {
         makeToast("user berhasil ditambah")
         const timeout = setTimeout(() => {
-          void router.push("/user");
+          void router.push("/");
         }, 1000);
         return () => clearTimeout(timeout);
       }

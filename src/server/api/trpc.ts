@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parseCookies } from "nookies";
 
 import { prisma } from "~/server/db";
-import { email } from "~/server/nodemailer";
+import { transport } from "~/server/nodemailer";
 import { tryCatch } from "~/utils/trycatch";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
@@ -26,7 +26,7 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
     prisma,
-    email,
+    transport,
   };
 };
 

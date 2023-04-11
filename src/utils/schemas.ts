@@ -25,7 +25,7 @@ export const addBookingSchema = z.object({
   instagram: z.string().min(1, "instagram perlu diisi"),
   warna: z.string().min(1, "warna perlu diisi"),
   peliharaan: z.boolean(),
-  voucher: z.string().optional(),
+  kupon: z.string().optional(),
 
   tanggal: z.date(),
   katalog: KatalogSchema,

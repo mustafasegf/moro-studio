@@ -1,22 +1,33 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router'
-import { ParsedUrlQuery } from 'querystring';
+import { GetServerSidePropsContext } from "next/types";
+import Link from "next/link";
+import { ParsedUrlQuery } from "querystring";
 
 interface Query extends ParsedUrlQuery {
   data?: string;
 }
 
-export default function ErrorPage(){
-  const router = useRouter()
-  const { data } = router.query as Query
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  let { data } = ctx.query;
 
+  if (typeof data !== "string") {
+    data = "ada masalah pada server";
+  }
+
+  return {
+    props: {
+      data,
+    },
+  };
+}
+export default function ErrorPage({ data }: { data: string }) {
   return (
     <div className="m-4 flex flex-col justify-center">
       <div className="flex justify-center">
-        <h3 className="text-2xl my-8 justify-center">Error: {data ?? "ada masalah pada server"} </h3>
-
+        <h3 className="my-8 justify-center text-2xl">Error: {data}</h3>
       </div>
-      <Link className="btn max-w-xs" href="/">Pergi ke Halaman Utama</Link>
+      <Link className="btn max-w-xs" href="/">
+        Pergi ke Halaman Utama
+      </Link>
     </div>
-  )
+  );
 }

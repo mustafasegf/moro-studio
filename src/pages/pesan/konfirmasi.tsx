@@ -9,6 +9,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { addBookingSchema, AddBookingSchema } from "~/utils/schemas";
+import { LoadingPage } from "~/component/loading";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import makeToast from "~/component/toast";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const ssg = createSSG();
@@ -47,9 +51,12 @@ export default function Jadwal({
   dateStr,
 }: Record<"katalog" | "dateStr", string>) {
   const { data } = api.catalogue.getCatalogueById.useQuery({ id: katalog });
+  const router = useRouter()
   if (!data) {
     return;
   }
+
+  
 
   const date = new Date(dateStr);
   const {
@@ -66,6 +73,32 @@ export default function Jadwal({
   });
 
   const addBooking = api.booking.addBooking.useMutation();
+
+  useEffect(
+    function() {
+      if (addBooking.isSuccess) {
+        makeToast("pesanan berhasil ditambah")
+        const timeout = setTimeout(() => {
+          void router.push("/user");
+        }, 1000);
+        return () => clearTimeout(timeout);
+      }
+    },
+    [addBooking.isSuccess]
+  );
+
+  useEffect(
+    function() {
+      if (addBooking.isError) {
+        makeToast(`Eror: ${addBooking.error.message}`, {type: "error"})
+        const timeout = setTimeout(() => {
+          addBooking.reset();
+        }, 5000);
+        return () => clearTimeout(timeout);
+      }
+    },
+    [addBooking.isError]
+  );
 
   function onSubmit(val: AddBookingSchema) {
     addBooking.mutate(val);
@@ -253,23 +286,23 @@ export default function Jadwal({
 
             <div className="mb-4">
               <label
-                htmlFor="voucher"
+                htmlFor="kupon"
                 className="block text-sm font-medium leading-6"
               >
-                Voucher
+                Kupon
               </label>
               <input
                 type="text"
-                id="voucher"
+                id="kupon"
                 className={cn(
                   "input-bordered input mt-1 mb-2 w-full max-w-md",
-                  { "input-error": errors.voucher }
+                  { "input-error": errors.kupon }
                 )}
-                {...register("voucher")}
+                {...register("kupon")}
               />
-              {errors.voucher && (
-                <span className={cn("mb-4", { "text-error": errors.voucher })}>
-                  {errors.voucher.message}
+              {errors.kupon && (
+                <span className={cn("mb-4", { "text-error": errors.kupon })}>
+                  {errors.kupon.message}
                 </span>
               )}
             </div>
@@ -285,6 +318,7 @@ export default function Jadwal({
               value="kirim"
             />
           </form>
+          {addBooking.isLoading && <LoadingPage />}
         </div>
       </CenterContainer>
     </>
