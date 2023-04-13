@@ -1,32 +1,9 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
-
-import { Section } from "@prisma/client";
-import React, { useState } from "react";
-import { Splide, SplideSlide } from "@splidejs/react-splide";
 
 import "@splidejs/react-splide/css";
 
-import { api } from "~/utils/api";
-
 const Home: NextPage = () => {
-  const homepage = api.homepage.getSortedSections.useQuery();
-  const homepageArray: JSX.Element[] = [];
-  console.log(homepage);
-
-  homepage.data?.forEach((section) => {
-    if (section.order != 0) {
-      if (section.type == "hero") {
-        homepageArray.push(HeroSection(section));
-      } else if (section.type == "carousel") {
-        homepageArray.push(CarouselSection(section));
-      } else if (section.type == "CTA") {
-        homepageArray.push(CTA(section));
-      }
-    }
-  });
-
   return (
     <>
       <Head>
@@ -35,64 +12,51 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="">
-        <div>{homepageArray}</div>
+        <div className="hero min-h-[52rem] bg-base-200">
+          <div className="hero-content flex-col lg:flex-row-reverse">
+            <img
+              src="https://cdn.discordapp.com/attachments/969010712993210468/1053220321408340048/319299519_854372009230180_9152505096078625298_n.png"
+              className="max-w-sm rounded-lg shadow-2xl"
+            />
+            <div>
+              <h1 className="text-5xl font-bold">Moro Studio</h1>
+              <p className="py-6">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Sapiente, corrupti quia. Deserunt, exercitationem porro iusto
+                quisquam eos harum dolorum veniam, soluta aliquid reiciendis
+                quis aliquam quaerat quidem ullam nisi modi.
+              </p>
+              <button className="btn gap-2">
+                Pesan Sekarang!
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="carousel-center carousel rounded-box max-w-md space-x-4 bg-neutral p-4">
+          <div className="carousel-item">
+            <img
+              src="https://cdn.discordapp.com/attachments/969010712993210468/1053220321408340048/319299519_854372009230180_9152505096078625298_n.png"
+              className="rounded-box"
+            />
+          </div>
+        </div>
       </main>
     </>
   );
 };
-
-export function HeroSection(hero: Section) {
-  const image = hero.image[0];
-
-  return (
-    <div className="max-h-fit">
-      <img className="object-contain" src={image} alt="" />
-    </div>
-  );
-}
-
-export function CarouselSection(carousel: Section) {
-  const images = carousel.image;
-
-  return (
-    <>
-      <div className=" snap-y snap-proximity">
-        <div className="snap-center snap-always">
-          <Splide
-            options={{
-              type: "loop",
-              height: "90vh",
-              padding: "5rem",
-              focus: "center",
-              autoWidth: true,
-              drag: "free",
-            }}
-            aria-label="My Favorite Images"
-          >
-            {images.map((image) => (
-              <>
-                <SplideSlide>
-                  <img
-                    className="h-full w-full object-contain"
-                    src={image}
-                    alt="Image"
-                  />
-                </SplideSlide>
-              </>
-            ))}
-          </Splide>
-        </div>
-      </div>
-    </>
-  );
-}
-
-export function CTA(cta: Section) {
-  return (
-    <div>
-      <p>CTA</p>
-    </div>
-  );
-}
 
 export default Home;
