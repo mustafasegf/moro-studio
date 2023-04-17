@@ -4,6 +4,8 @@ import { parseCookies } from "nookies";
 
 import { prisma } from "~/server/db";
 import { transport } from "~/server/nodemailer";
+import { email } from "~/server/nodemailer";
+import { s3 } from "~/server/s3";
 import { tryCatch } from "~/utils/trycatch";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
@@ -27,6 +29,8 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
     session: opts.session,
     prisma,
     transport,
+    email,
+    s3,
   };
 };
 
