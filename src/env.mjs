@@ -19,9 +19,6 @@ const server = z.object({
   EMAIL_SERVER: z.string(),
   EMAIL_FROM: z.string(),
   HOST_URL: z.string().optional(),
-  AWS_ACCESS_KEY_ID: z.string(),
-  AWS_SECRET_ACCESS_KEY: z.string(),
-  AWS_REGION: z.string(),
   BUCKET_NAME: z.string(),
 });
 
@@ -47,9 +44,6 @@ const processEnv = {
   EMAIL_SERVER: process.env.EMAIL_SERVER,
   EMAIL_FROM: process.env.EMAIL_FROM,
   HOST_URL: process.env.HOST_URL,
-  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-  AWS_REGION: process.env.AWS_REGION,
   BUCKET_NAME: process.env.BUCKET_NAME,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
