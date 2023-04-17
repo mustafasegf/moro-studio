@@ -131,7 +131,7 @@ export default function ListUser() {
               <option key={role}>{role}</option>
             ))}
           </select>
-          <Link href="/user/add" className="btn my-4">
+          <Link href="/user/tambah" className="btn my-4">
             Add Account +
           </Link>
         </div>

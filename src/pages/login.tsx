@@ -1,11 +1,38 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useState, useEffect } from "react";
+import { LoadingPage } from "~/component/loading";
+import makeToast from "~/component/toast";
 import { api } from "~/utils/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const login = api.auth.login.useMutation();
 
-  function handleSubmit(e: FormEvent)  {
+  useEffect(
+    function() {
+      if (login.isSuccess) {
+        makeToast("link login berhasil dikirim");
+        const timeout = setTimeout(() => {
+          login.reset();
+        }, 1500);
+        return () => clearTimeout(timeout);
+      }
+    },
+    [login.isSuccess]
+  );
+
+  useEffect(
+    function() {
+      if (login.isError) {
+        makeToast(`Eror: ${login.error.message}`, { type: "error" });
+        const timeout = setTimeout(() => {
+          login.reset();
+        }, 5000);
+        return () => clearTimeout(timeout);
+      }
+    },
+    [login.isError]
+  );
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     login.mutate({ email });
@@ -13,28 +40,8 @@ export default function Login() {
 
   return (
     <>
-      {login.isSuccess && (
-        <div className="toast">
-          <div className="alert alert-info">
-            <div>
-              <span>link terkirim</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {login.error && (
-        <div className="toast">
-          <div className="alert alert-error">
-            <div>
-              <span>Something went wrong. {login.error.message}</span>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="flex content-center justify-center">
-        <div className="border border-white p-[10%] m-4">
+        <div className="m-4 flex flex-col gap-2 border border-white p-[10%]">
           <h1>Login</h1>
           <form onSubmit={handleSubmit}>
             <label className="label">
@@ -47,9 +54,9 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
             />
 
-            
             <input type="submit" className="btn" />
           </form>
+          {login.isLoading && <LoadingPage />}
         </div>
       </div>
     </>
