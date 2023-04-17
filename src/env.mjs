@@ -20,6 +20,7 @@ const server = z.object({
   EMAIL_FROM: z.string(),
   HOST_URL: z.string().optional(),
   BUCKET_NAME: z.string(),
+  AWS_REGION: z.string(),
 });
 
 /**
@@ -45,6 +46,7 @@ const processEnv = {
   EMAIL_FROM: process.env.EMAIL_FROM,
   HOST_URL: process.env.HOST_URL,
   BUCKET_NAME: process.env.BUCKET_NAME,
+  AWS_REGION: process.env.AWS_REGION,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
