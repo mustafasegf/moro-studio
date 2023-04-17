@@ -4,6 +4,7 @@ import { parseCookies } from "nookies";
 
 import { prisma } from "~/server/db";
 import { email } from "~/server/nodemailer";
+import { s3 } from "~/server/s3";
 import { tryCatch } from "~/utils/trycatch";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
@@ -27,6 +28,7 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
     session: opts.session,
     prisma,
     email,
+    s3,
   };
 };
 

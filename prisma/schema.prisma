@@ -30,6 +30,7 @@ model User {
   updatedAt      DateTime         @updatedAt
   deleted        Boolean          @default(false)
   // feedback       Feedback[]
+  ContohImage    ContohImage[]
 }
 
 // model VerificationToken {
@@ -222,4 +223,10 @@ model Feedback {
 model Contoh {
   id    String @id @default(cuid())
   email String
+}
+
+model ContohImage {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 }
