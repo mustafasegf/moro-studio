@@ -22,6 +22,8 @@ export const ChatScalarFieldEnumSchema = z.enum(['id','chatRoomId','chat','admin
 
 export const CommentBlogScalarFieldEnumSchema = z.enum(['id','kontenBlogId','nama','isi','like','dislike','createdAt','updatedAt']);
 
+export const ContohImageScalarFieldEnumSchema = z.enum(['id','userId']);
+
 export const ContohScalarFieldEnumSchema = z.enum(['id','email']);
 
 export const FeedbackScalarFieldEnumSchema = z.enum(['Id','namaPenulis','isiFeedback','createdAt','updatedAt']);
@@ -314,6 +316,17 @@ export const ContohSchema = z.object({
 export type Contoh = z.infer<typeof ContohSchema>
 
 /////////////////////////////////////////
+// CONTOH IMAGE SCHEMA
+/////////////////////////////////////////
+
+export const ContohImageSchema = z.object({
+  id: z.string().cuid(),
+  userId: z.string(),
+})
+
+export type ContohImage = z.infer<typeof ContohImageSchema>
+
+/////////////////////////////////////////
 // SELECT & INCLUDE
 /////////////////////////////////////////
 
@@ -325,6 +338,7 @@ export const UserIncludeSchema: z.ZodType<Prisma.UserInclude> = z.object({
   blastMarketing: z.union([z.boolean(),z.lazy(() => BlastMarketingFindManyArgsSchema)]).optional(),
   chatRoomAdmin: z.union([z.boolean(),z.lazy(() => ChatRoomFindManyArgsSchema)]).optional(),
   chatRoomUser: z.union([z.boolean(),z.lazy(() => ChatRoomFindManyArgsSchema)]).optional(),
+  ContohImage: z.union([z.boolean(),z.lazy(() => ContohImageFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -342,6 +356,7 @@ export const UserCountOutputTypeSelectSchema: z.ZodType<Prisma.UserCountOutputTy
   blastMarketing: z.boolean().optional(),
   chatRoomAdmin: z.boolean().optional(),
   chatRoomUser: z.boolean().optional(),
+  ContohImage: z.boolean().optional(),
 }).strict();
 
 export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
@@ -358,6 +373,7 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   deleted: z.boolean().optional(),
+  ContohImage: z.union([z.boolean(),z.lazy(() => ContohImageFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -786,6 +802,24 @@ export const ContohSelectSchema: z.ZodType<Prisma.ContohSelect> = z.object({
   email: z.boolean().optional(),
 }).strict()
 
+// CONTOH IMAGE
+//------------------------------------------------------
+
+export const ContohImageIncludeSchema: z.ZodType<Prisma.ContohImageInclude> = z.object({
+  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+}).strict()
+
+export const ContohImageArgsSchema: z.ZodType<Prisma.ContohImageArgs> = z.object({
+  select: z.lazy(() => ContohImageSelectSchema).optional(),
+  include: z.lazy(() => ContohImageIncludeSchema).optional(),
+}).strict();
+
+export const ContohImageSelectSchema: z.ZodType<Prisma.ContohImageSelect> = z.object({
+  id: z.boolean().optional(),
+  userId: z.boolean().optional(),
+  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+}).strict()
+
 
 /////////////////////////////////////////
 // INPUT TYPES
@@ -808,6 +842,7 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   deleted: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
+  ContohImage: z.lazy(() => ContohImageListRelationFilterSchema).optional()
 }).strict();
 
 export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWithRelationInput> = z.object({
@@ -823,7 +858,8 @@ export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWit
   chatRoomUser: z.lazy(() => ChatRoomOrderByRelationAggregateInputSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  deleted: z.lazy(() => SortOrderSchema).optional()
+  deleted: z.lazy(() => SortOrderSchema).optional(),
+  ContohImage: z.lazy(() => ContohImageOrderByRelationAggregateInputSchema).optional()
 }).strict();
 
 export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> = z.object({
@@ -1690,6 +1726,41 @@ export const ContohScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Contoh
   email: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
 }).strict();
 
+export const ContohImageWhereInputSchema: z.ZodType<Prisma.ContohImageWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => ContohImageWhereInputSchema),z.lazy(() => ContohImageWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ContohImageWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ContohImageWhereInputSchema),z.lazy(() => ContohImageWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+}).strict();
+
+export const ContohImageOrderByWithRelationInputSchema: z.ZodType<Prisma.ContohImageOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional(),
+  user: z.lazy(() => UserOrderByWithRelationInputSchema).optional()
+}).strict();
+
+export const ContohImageWhereUniqueInputSchema: z.ZodType<Prisma.ContohImageWhereUniqueInput> = z.object({
+  id: z.string().cuid().optional()
+}).strict();
+
+export const ContohImageOrderByWithAggregationInputSchema: z.ZodType<Prisma.ContohImageOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => ContohImageCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => ContohImageMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => ContohImageMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const ContohImageScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.ContohImageScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => ContohImageScalarWhereWithAggregatesInputSchema),z.lazy(() => ContohImageScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ContohImageScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ContohImageScalarWhereWithAggregatesInputSchema),z.lazy(() => ContohImageScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  userId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+}).strict();
+
 export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object({
   id: z.string().cuid().optional(),
   nama: z.string(),
@@ -1703,7 +1774,8 @@ export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional()
+  deleted: z.boolean().optional(),
+  ContohImage: z.lazy(() => ContohImageCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreateInput> = z.object({
@@ -1719,7 +1791,8 @@ export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreat
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional()
+  deleted: z.boolean().optional(),
+  ContohImage: z.lazy(() => ContohImageUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object({
@@ -1736,6 +1809,7 @@ export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  ContohImage: z.lazy(() => ContohImageUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdateInput> = z.object({
@@ -1752,6 +1826,7 @@ export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdat
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  ContohImage: z.lazy(() => ContohImageUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserCreateManyInputSchema: z.ZodType<Prisma.UserCreateManyInput> = z.object({
@@ -2835,6 +2910,40 @@ export const ContohUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ContohUnchec
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
+export const ContohImageCreateInputSchema: z.ZodType<Prisma.ContohImageCreateInput> = z.object({
+  id: z.string().cuid().optional(),
+  user: z.lazy(() => UserCreateNestedOneWithoutContohImageInputSchema)
+}).strict();
+
+export const ContohImageUncheckedCreateInputSchema: z.ZodType<Prisma.ContohImageUncheckedCreateInput> = z.object({
+  id: z.string().cuid().optional(),
+  userId: z.string()
+}).strict();
+
+export const ContohImageUpdateInputSchema: z.ZodType<Prisma.ContohImageUpdateInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  user: z.lazy(() => UserUpdateOneRequiredWithoutContohImageNestedInputSchema).optional()
+}).strict();
+
+export const ContohImageUncheckedUpdateInputSchema: z.ZodType<Prisma.ContohImageUncheckedUpdateInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ContohImageCreateManyInputSchema: z.ZodType<Prisma.ContohImageCreateManyInput> = z.object({
+  id: z.string().cuid().optional(),
+  userId: z.string()
+}).strict();
+
+export const ContohImageUpdateManyMutationInputSchema: z.ZodType<Prisma.ContohImageUpdateManyMutationInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ContohImageUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ContohImageUncheckedUpdateManyInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
 export const StringFilterSchema: z.ZodType<Prisma.StringFilter> = z.object({
   equals: z.string().optional(),
   in: z.string().array().optional(),
@@ -2906,6 +3015,12 @@ export const BoolFilterSchema: z.ZodType<Prisma.BoolFilter> = z.object({
   not: z.union([ z.boolean(),z.lazy(() => NestedBoolFilterSchema) ]).optional(),
 }).strict();
 
+export const ContohImageListRelationFilterSchema: z.ZodType<Prisma.ContohImageListRelationFilter> = z.object({
+  every: z.lazy(() => ContohImageWhereInputSchema).optional(),
+  some: z.lazy(() => ContohImageWhereInputSchema).optional(),
+  none: z.lazy(() => ContohImageWhereInputSchema).optional()
+}).strict();
+
 export const BookingOrderByRelationAggregateInputSchema: z.ZodType<Prisma.BookingOrderByRelationAggregateInput> = z.object({
   _count: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -2915,6 +3030,10 @@ export const BlastMarketingOrderByRelationAggregateInputSchema: z.ZodType<Prisma
 }).strict();
 
 export const ChatRoomOrderByRelationAggregateInputSchema: z.ZodType<Prisma.ChatRoomOrderByRelationAggregateInput> = z.object({
+  _count: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ContohImageOrderByRelationAggregateInputSchema: z.ZodType<Prisma.ContohImageOrderByRelationAggregateInput> = z.object({
   _count: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -3730,6 +3849,21 @@ export const ContohMinOrderByAggregateInputSchema: z.ZodType<Prisma.ContohMinOrd
   email: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
+export const ContohImageCountOrderByAggregateInputSchema: z.ZodType<Prisma.ContohImageCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ContohImageMaxOrderByAggregateInputSchema: z.ZodType<Prisma.ContohImageMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const ContohImageMinOrderByAggregateInputSchema: z.ZodType<Prisma.ContohImageMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  userId: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
 export const BookingCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.BookingCreateNestedManyWithoutUserInput> = z.object({
   create: z.union([ z.lazy(() => BookingCreateWithoutUserInputSchema),z.lazy(() => BookingCreateWithoutUserInputSchema).array(),z.lazy(() => BookingUncheckedCreateWithoutUserInputSchema),z.lazy(() => BookingUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => BookingCreateOrConnectWithoutUserInputSchema),z.lazy(() => BookingCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
@@ -3757,6 +3891,13 @@ export const ChatRoomCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.Ch
   connect: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
+export const ContohImageCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.ContohImageCreateNestedManyWithoutUserInput> = z.object({
+  create: z.union([ z.lazy(() => ContohImageCreateWithoutUserInputSchema),z.lazy(() => ContohImageCreateWithoutUserInputSchema).array(),z.lazy(() => ContohImageUncheckedCreateWithoutUserInputSchema),z.lazy(() => ContohImageUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ContohImageCreateOrConnectWithoutUserInputSchema),z.lazy(() => ContohImageCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ContohImageCreateManyUserInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ContohImageWhereUniqueInputSchema),z.lazy(() => ContohImageWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
 export const BookingUncheckedCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.BookingUncheckedCreateNestedManyWithoutUserInput> = z.object({
   create: z.union([ z.lazy(() => BookingCreateWithoutUserInputSchema),z.lazy(() => BookingCreateWithoutUserInputSchema).array(),z.lazy(() => BookingUncheckedCreateWithoutUserInputSchema),z.lazy(() => BookingUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => BookingCreateOrConnectWithoutUserInputSchema),z.lazy(() => BookingCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
@@ -3782,6 +3923,13 @@ export const ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema: z.ZodType<
   connectOrCreate: z.union([ z.lazy(() => ChatRoomCreateOrConnectWithoutUserInputSchema),z.lazy(() => ChatRoomCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
   createMany: z.lazy(() => ChatRoomCreateManyUserInputEnvelopeSchema).optional(),
   connect: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const ContohImageUncheckedCreateNestedManyWithoutUserInputSchema: z.ZodType<Prisma.ContohImageUncheckedCreateNestedManyWithoutUserInput> = z.object({
+  create: z.union([ z.lazy(() => ContohImageCreateWithoutUserInputSchema),z.lazy(() => ContohImageCreateWithoutUserInputSchema).array(),z.lazy(() => ContohImageUncheckedCreateWithoutUserInputSchema),z.lazy(() => ContohImageUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ContohImageCreateOrConnectWithoutUserInputSchema),z.lazy(() => ContohImageCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ContohImageCreateManyUserInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => ContohImageWhereUniqueInputSchema),z.lazy(() => ContohImageWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
 export const StringFieldUpdateOperationsInputSchema: z.ZodType<Prisma.StringFieldUpdateOperationsInput> = z.object({
@@ -3859,6 +4007,20 @@ export const BoolFieldUpdateOperationsInputSchema: z.ZodType<Prisma.BoolFieldUpd
   set: z.boolean().optional()
 }).strict();
 
+export const ContohImageUpdateManyWithoutUserNestedInputSchema: z.ZodType<Prisma.ContohImageUpdateManyWithoutUserNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ContohImageCreateWithoutUserInputSchema),z.lazy(() => ContohImageCreateWithoutUserInputSchema).array(),z.lazy(() => ContohImageUncheckedCreateWithoutUserInputSchema),z.lazy(() => ContohImageUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ContohImageCreateOrConnectWithoutUserInputSchema),z.lazy(() => ContohImageCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ContohImageUpsertWithWhereUniqueWithoutUserInputSchema),z.lazy(() => ContohImageUpsertWithWhereUniqueWithoutUserInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ContohImageCreateManyUserInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ContohImageWhereUniqueInputSchema),z.lazy(() => ContohImageWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ContohImageWhereUniqueInputSchema),z.lazy(() => ContohImageWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ContohImageWhereUniqueInputSchema),z.lazy(() => ContohImageWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ContohImageWhereUniqueInputSchema),z.lazy(() => ContohImageWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ContohImageUpdateWithWhereUniqueWithoutUserInputSchema),z.lazy(() => ContohImageUpdateWithWhereUniqueWithoutUserInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ContohImageUpdateManyWithWhereWithoutUserInputSchema),z.lazy(() => ContohImageUpdateManyWithWhereWithoutUserInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ContohImageScalarWhereInputSchema),z.lazy(() => ContohImageScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
 export const BookingUncheckedUpdateManyWithoutUserNestedInputSchema: z.ZodType<Prisma.BookingUncheckedUpdateManyWithoutUserNestedInput> = z.object({
   create: z.union([ z.lazy(() => BookingCreateWithoutUserInputSchema),z.lazy(() => BookingCreateWithoutUserInputSchema).array(),z.lazy(() => BookingUncheckedCreateWithoutUserInputSchema),z.lazy(() => BookingUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => BookingCreateOrConnectWithoutUserInputSchema),z.lazy(() => BookingCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
@@ -3912,6 +4074,20 @@ export const ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema: z.ZodType<
   update: z.union([ z.lazy(() => ChatRoomUpdateWithWhereUniqueWithoutUserInputSchema),z.lazy(() => ChatRoomUpdateWithWhereUniqueWithoutUserInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => ChatRoomUpdateManyWithWhereWithoutUserInputSchema),z.lazy(() => ChatRoomUpdateManyWithWhereWithoutUserInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => ChatRoomScalarWhereInputSchema),z.lazy(() => ChatRoomScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const ContohImageUncheckedUpdateManyWithoutUserNestedInputSchema: z.ZodType<Prisma.ContohImageUncheckedUpdateManyWithoutUserNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ContohImageCreateWithoutUserInputSchema),z.lazy(() => ContohImageCreateWithoutUserInputSchema).array(),z.lazy(() => ContohImageUncheckedCreateWithoutUserInputSchema),z.lazy(() => ContohImageUncheckedCreateWithoutUserInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ContohImageCreateOrConnectWithoutUserInputSchema),z.lazy(() => ContohImageCreateOrConnectWithoutUserInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ContohImageUpsertWithWhereUniqueWithoutUserInputSchema),z.lazy(() => ContohImageUpsertWithWhereUniqueWithoutUserInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ContohImageCreateManyUserInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => ContohImageWhereUniqueInputSchema),z.lazy(() => ContohImageWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => ContohImageWhereUniqueInputSchema),z.lazy(() => ContohImageWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => ContohImageWhereUniqueInputSchema),z.lazy(() => ContohImageWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => ContohImageWhereUniqueInputSchema),z.lazy(() => ContohImageWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ContohImageUpdateWithWhereUniqueWithoutUserInputSchema),z.lazy(() => ContohImageUpdateWithWhereUniqueWithoutUserInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ContohImageUpdateManyWithWhereWithoutUserInputSchema),z.lazy(() => ContohImageUpdateManyWithWhereWithoutUserInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => ContohImageScalarWhereInputSchema),z.lazy(() => ContohImageScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
 export const BookingCreateNestedManyWithoutKatalogInputSchema: z.ZodType<Prisma.BookingCreateNestedManyWithoutKatalogInput> = z.object({
@@ -4530,6 +4706,20 @@ export const PertanyaanFeedbackUncheckedUpdateManyWithoutFeedbackNestedInputSche
   deleteMany: z.union([ z.lazy(() => PertanyaanFeedbackScalarWhereInputSchema),z.lazy(() => PertanyaanFeedbackScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
+export const UserCreateNestedOneWithoutContohImageInputSchema: z.ZodType<Prisma.UserCreateNestedOneWithoutContohImageInput> = z.object({
+  create: z.union([ z.lazy(() => UserCreateWithoutContohImageInputSchema),z.lazy(() => UserUncheckedCreateWithoutContohImageInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutContohImageInputSchema).optional(),
+  connect: z.lazy(() => UserWhereUniqueInputSchema).optional()
+}).strict();
+
+export const UserUpdateOneRequiredWithoutContohImageNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutContohImageNestedInput> = z.object({
+  create: z.union([ z.lazy(() => UserCreateWithoutContohImageInputSchema),z.lazy(() => UserUncheckedCreateWithoutContohImageInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutContohImageInputSchema).optional(),
+  upsert: z.lazy(() => UserUpsertWithoutContohImageInputSchema).optional(),
+  connect: z.lazy(() => UserWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => UserUpdateWithoutContohImageInputSchema),z.lazy(() => UserUncheckedUpdateWithoutContohImageInputSchema) ]).optional(),
+}).strict();
+
 export const NestedStringFilterSchema: z.ZodType<Prisma.NestedStringFilter> = z.object({
   equals: z.string().optional(),
   in: z.string().array().optional(),
@@ -4875,6 +5065,24 @@ export const ChatRoomCreateManyUserInputEnvelopeSchema: z.ZodType<Prisma.ChatRoo
   skipDuplicates: z.boolean().optional()
 }).strict();
 
+export const ContohImageCreateWithoutUserInputSchema: z.ZodType<Prisma.ContohImageCreateWithoutUserInput> = z.object({
+  id: z.string().optional()
+}).strict();
+
+export const ContohImageUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.ContohImageUncheckedCreateWithoutUserInput> = z.object({
+  id: z.string().optional()
+}).strict();
+
+export const ContohImageCreateOrConnectWithoutUserInputSchema: z.ZodType<Prisma.ContohImageCreateOrConnectWithoutUserInput> = z.object({
+  where: z.lazy(() => ContohImageWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => ContohImageCreateWithoutUserInputSchema),z.lazy(() => ContohImageUncheckedCreateWithoutUserInputSchema) ]),
+}).strict();
+
+export const ContohImageCreateManyUserInputEnvelopeSchema: z.ZodType<Prisma.ContohImageCreateManyUserInputEnvelope> = z.object({
+  data: z.lazy(() => ContohImageCreateManyUserInputSchema).array(),
+  skipDuplicates: z.boolean().optional()
+}).strict();
+
 export const BookingUpsertWithWhereUniqueWithoutUserInputSchema: z.ZodType<Prisma.BookingUpsertWithWhereUniqueWithoutUserInput> = z.object({
   where: z.lazy(() => BookingWhereUniqueInputSchema),
   update: z.union([ z.lazy(() => BookingUpdateWithoutUserInputSchema),z.lazy(() => BookingUncheckedUpdateWithoutUserInputSchema) ]),
@@ -4979,6 +5187,30 @@ export const ChatRoomUpdateWithWhereUniqueWithoutUserInputSchema: z.ZodType<Pris
 export const ChatRoomUpdateManyWithWhereWithoutUserInputSchema: z.ZodType<Prisma.ChatRoomUpdateManyWithWhereWithoutUserInput> = z.object({
   where: z.lazy(() => ChatRoomScalarWhereInputSchema),
   data: z.union([ z.lazy(() => ChatRoomUpdateManyMutationInputSchema),z.lazy(() => ChatRoomUncheckedUpdateManyWithoutChatRoomUserInputSchema) ]),
+}).strict();
+
+export const ContohImageUpsertWithWhereUniqueWithoutUserInputSchema: z.ZodType<Prisma.ContohImageUpsertWithWhereUniqueWithoutUserInput> = z.object({
+  where: z.lazy(() => ContohImageWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => ContohImageUpdateWithoutUserInputSchema),z.lazy(() => ContohImageUncheckedUpdateWithoutUserInputSchema) ]),
+  create: z.union([ z.lazy(() => ContohImageCreateWithoutUserInputSchema),z.lazy(() => ContohImageUncheckedCreateWithoutUserInputSchema) ]),
+}).strict();
+
+export const ContohImageUpdateWithWhereUniqueWithoutUserInputSchema: z.ZodType<Prisma.ContohImageUpdateWithWhereUniqueWithoutUserInput> = z.object({
+  where: z.lazy(() => ContohImageWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => ContohImageUpdateWithoutUserInputSchema),z.lazy(() => ContohImageUncheckedUpdateWithoutUserInputSchema) ]),
+}).strict();
+
+export const ContohImageUpdateManyWithWhereWithoutUserInputSchema: z.ZodType<Prisma.ContohImageUpdateManyWithWhereWithoutUserInput> = z.object({
+  where: z.lazy(() => ContohImageScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => ContohImageUpdateManyMutationInputSchema),z.lazy(() => ContohImageUncheckedUpdateManyWithoutContohImageInputSchema) ]),
+}).strict();
+
+export const ContohImageScalarWhereInputSchema: z.ZodType<Prisma.ContohImageScalarWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => ContohImageScalarWhereInputSchema),z.lazy(() => ContohImageScalarWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => ContohImageScalarWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => ContohImageScalarWhereInputSchema),z.lazy(() => ContohImageScalarWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
 }).strict();
 
 export const BookingCreateWithoutKatalogInputSchema: z.ZodType<Prisma.BookingCreateWithoutKatalogInput> = z.object({
@@ -5179,7 +5411,8 @@ export const UserCreateWithoutBookingInputSchema: z.ZodType<Prisma.UserCreateWit
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional()
+  deleted: z.boolean().optional(),
+  ContohImage: z.lazy(() => ContohImageCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserUncheckedCreateWithoutBookingInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutBookingInput> = z.object({
@@ -5194,7 +5427,8 @@ export const UserUncheckedCreateWithoutBookingInputSchema: z.ZodType<Prisma.User
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional()
+  deleted: z.boolean().optional(),
+  ContohImage: z.lazy(() => ContohImageUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserCreateOrConnectWithoutBookingInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutBookingInput> = z.object({
@@ -5349,6 +5583,7 @@ export const UserUpdateWithoutBookingInputSchema: z.ZodType<Prisma.UserUpdateWit
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  ContohImage: z.lazy(() => ContohImageUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserUncheckedUpdateWithoutBookingInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutBookingInput> = z.object({
@@ -5364,6 +5599,7 @@ export const UserUncheckedUpdateWithoutBookingInputSchema: z.ZodType<Prisma.User
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  ContohImage: z.lazy(() => ContohImageUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const BackgroundFotoUpsertWithoutBookingInputSchema: z.ZodType<Prisma.BackgroundFotoUpsertWithoutBookingInput> = z.object({
@@ -5790,7 +6026,8 @@ export const UserCreateWithoutBlastMarketingInputSchema: z.ZodType<Prisma.UserCr
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional()
+  deleted: z.boolean().optional(),
+  ContohImage: z.lazy(() => ContohImageCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserUncheckedCreateWithoutBlastMarketingInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutBlastMarketingInput> = z.object({
@@ -5805,7 +6042,8 @@ export const UserUncheckedCreateWithoutBlastMarketingInputSchema: z.ZodType<Pris
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional()
+  deleted: z.boolean().optional(),
+  ContohImage: z.lazy(() => ContohImageUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserCreateOrConnectWithoutBlastMarketingInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutBlastMarketingInput> = z.object({
@@ -5856,7 +6094,8 @@ export const UserCreateWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserCre
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional()
+  deleted: z.boolean().optional(),
+  ContohImage: z.lazy(() => ContohImageCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserUncheckedCreateWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutChatRoomAdminInput> = z.object({
@@ -5871,7 +6110,8 @@ export const UserUncheckedCreateWithoutChatRoomAdminInputSchema: z.ZodType<Prism
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional()
+  deleted: z.boolean().optional(),
+  ContohImage: z.lazy(() => ContohImageUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserCreateOrConnectWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutChatRoomAdminInput> = z.object({
@@ -5891,7 +6131,8 @@ export const UserCreateWithoutChatRoomUserInputSchema: z.ZodType<Prisma.UserCrea
   chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional()
+  deleted: z.boolean().optional(),
+  ContohImage: z.lazy(() => ContohImageCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserUncheckedCreateWithoutChatRoomUserInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutChatRoomUserInput> = z.object({
@@ -5906,7 +6147,8 @@ export const UserUncheckedCreateWithoutChatRoomUserInputSchema: z.ZodType<Prisma
   chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional()
+  deleted: z.boolean().optional(),
+  ContohImage: z.lazy(() => ContohImageUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
 export const UserCreateOrConnectWithoutChatRoomUserInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutChatRoomUserInput> = z.object({
@@ -5958,6 +6200,7 @@ export const UserUpdateWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserUpd
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  ContohImage: z.lazy(() => ContohImageUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserUncheckedUpdateWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutChatRoomAdminInput> = z.object({
@@ -5973,6 +6216,7 @@ export const UserUncheckedUpdateWithoutChatRoomAdminInputSchema: z.ZodType<Prism
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  ContohImage: z.lazy(() => ContohImageUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserUpsertWithoutChatRoomUserInputSchema: z.ZodType<Prisma.UserUpsertWithoutChatRoomUserInput> = z.object({
@@ -5993,6 +6237,7 @@ export const UserUpdateWithoutChatRoomUserInputSchema: z.ZodType<Prisma.UserUpda
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  ContohImage: z.lazy(() => ContohImageUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserUncheckedUpdateWithoutChatRoomUserInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutChatRoomUserInput> = z.object({
@@ -6008,6 +6253,7 @@ export const UserUncheckedUpdateWithoutChatRoomUserInputSchema: z.ZodType<Prisma
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  ContohImage: z.lazy(() => ContohImageUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const ChatUpsertWithWhereUniqueWithoutChatRoomInputSchema: z.ZodType<Prisma.ChatUpsertWithWhereUniqueWithoutChatRoomInput> = z.object({
@@ -6173,6 +6419,80 @@ export const PertanyaanFeedbackScalarWhereInputSchema: z.ZodType<Prisma.Pertanya
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
+export const UserCreateWithoutContohImageInputSchema: z.ZodType<Prisma.UserCreateWithoutContohImageInput> = z.object({
+  id: z.string().optional(),
+  nama: z.string(),
+  email: z.string(),
+  hp: z.string().optional().nullable(),
+  instagram: z.string().optional().nullable(),
+  role: z.lazy(() => RoleSchema).optional(),
+  booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
+  blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
+  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  deleted: z.boolean().optional()
+}).strict();
+
+export const UserUncheckedCreateWithoutContohImageInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutContohImageInput> = z.object({
+  id: z.string().optional(),
+  nama: z.string(),
+  email: z.string(),
+  hp: z.string().optional().nullable(),
+  instagram: z.string().optional().nullable(),
+  role: z.lazy(() => RoleSchema).optional(),
+  booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
+  blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
+  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  deleted: z.boolean().optional()
+}).strict();
+
+export const UserCreateOrConnectWithoutContohImageInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutContohImageInput> = z.object({
+  where: z.lazy(() => UserWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => UserCreateWithoutContohImageInputSchema),z.lazy(() => UserUncheckedCreateWithoutContohImageInputSchema) ]),
+}).strict();
+
+export const UserUpsertWithoutContohImageInputSchema: z.ZodType<Prisma.UserUpsertWithoutContohImageInput> = z.object({
+  update: z.union([ z.lazy(() => UserUpdateWithoutContohImageInputSchema),z.lazy(() => UserUncheckedUpdateWithoutContohImageInputSchema) ]),
+  create: z.union([ z.lazy(() => UserCreateWithoutContohImageInputSchema),z.lazy(() => UserUncheckedCreateWithoutContohImageInputSchema) ]),
+}).strict();
+
+export const UserUpdateWithoutContohImageInputSchema: z.ZodType<Prisma.UserUpdateWithoutContohImageInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  nama: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  hp: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  instagram: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
+  booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
+  blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
+  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const UserUncheckedUpdateWithoutContohImageInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutContohImageInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  nama: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  hp: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  instagram: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
+  booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
+  blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
+  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
 export const BookingCreateManyUserInputSchema: z.ZodType<Prisma.BookingCreateManyUserInput> = z.object({
   id: z.string().cuid().optional(),
   backgroundWarna: z.string(),
@@ -6201,6 +6521,10 @@ export const ChatRoomCreateManyUserInputSchema: z.ZodType<Prisma.ChatRoomCreateM
   adminId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const ContohImageCreateManyUserInputSchema: z.ZodType<Prisma.ContohImageCreateManyUserInput> = z.object({
+  id: z.string().cuid().optional()
 }).strict();
 
 export const BookingUpdateWithoutUserInputSchema: z.ZodType<Prisma.BookingUpdateWithoutUserInput> = z.object({
@@ -6323,6 +6647,18 @@ export const ChatRoomUncheckedUpdateManyWithoutChatRoomUserInputSchema: z.ZodTyp
   adminId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ContohImageUpdateWithoutUserInputSchema: z.ZodType<Prisma.ContohImageUpdateWithoutUserInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ContohImageUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.ContohImageUncheckedUpdateWithoutUserInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const ContohImageUncheckedUpdateManyWithoutContohImageInputSchema: z.ZodType<Prisma.ContohImageUncheckedUpdateManyWithoutContohImageInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const BookingCreateManyKatalogInputSchema: z.ZodType<Prisma.BookingCreateManyKatalogInput> = z.object({
@@ -6594,6 +6930,7 @@ export const UserUpdateWithoutBlastMarketingInputSchema: z.ZodType<Prisma.UserUp
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  ContohImage: z.lazy(() => ContohImageUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserUncheckedUpdateWithoutBlastMarketingInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutBlastMarketingInput> = z.object({
@@ -6609,6 +6946,7 @@ export const UserUncheckedUpdateWithoutBlastMarketingInputSchema: z.ZodType<Pris
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  ContohImage: z.lazy(() => ContohImageUncheckedUpdateManyWithoutUserNestedInputSchema).optional()
 }).strict();
 
 export const UserUncheckedUpdateManyWithoutPenerimaInputSchema: z.ZodType<Prisma.UserUncheckedUpdateManyWithoutPenerimaInput> = z.object({
@@ -7686,6 +8024,68 @@ export const ContohFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.ContohFindUniqu
   where: ContohWhereUniqueInputSchema,
 }).strict()
 
+export const ContohImageFindFirstArgsSchema: z.ZodType<Prisma.ContohImageFindFirstArgs> = z.object({
+  select: ContohImageSelectSchema.optional(),
+  include: ContohImageIncludeSchema.optional(),
+  where: ContohImageWhereInputSchema.optional(),
+  orderBy: z.union([ ContohImageOrderByWithRelationInputSchema.array(),ContohImageOrderByWithRelationInputSchema ]).optional(),
+  cursor: ContohImageWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: ContohImageScalarFieldEnumSchema.array().optional(),
+}).strict()
+
+export const ContohImageFindFirstOrThrowArgsSchema: z.ZodType<Prisma.ContohImageFindFirstOrThrowArgs> = z.object({
+  select: ContohImageSelectSchema.optional(),
+  include: ContohImageIncludeSchema.optional(),
+  where: ContohImageWhereInputSchema.optional(),
+  orderBy: z.union([ ContohImageOrderByWithRelationInputSchema.array(),ContohImageOrderByWithRelationInputSchema ]).optional(),
+  cursor: ContohImageWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: ContohImageScalarFieldEnumSchema.array().optional(),
+}).strict()
+
+export const ContohImageFindManyArgsSchema: z.ZodType<Prisma.ContohImageFindManyArgs> = z.object({
+  select: ContohImageSelectSchema.optional(),
+  include: ContohImageIncludeSchema.optional(),
+  where: ContohImageWhereInputSchema.optional(),
+  orderBy: z.union([ ContohImageOrderByWithRelationInputSchema.array(),ContohImageOrderByWithRelationInputSchema ]).optional(),
+  cursor: ContohImageWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: ContohImageScalarFieldEnumSchema.array().optional(),
+}).strict()
+
+export const ContohImageAggregateArgsSchema: z.ZodType<Prisma.ContohImageAggregateArgs> = z.object({
+  where: ContohImageWhereInputSchema.optional(),
+  orderBy: z.union([ ContohImageOrderByWithRelationInputSchema.array(),ContohImageOrderByWithRelationInputSchema ]).optional(),
+  cursor: ContohImageWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict()
+
+export const ContohImageGroupByArgsSchema: z.ZodType<Prisma.ContohImageGroupByArgs> = z.object({
+  where: ContohImageWhereInputSchema.optional(),
+  orderBy: z.union([ ContohImageOrderByWithAggregationInputSchema.array(),ContohImageOrderByWithAggregationInputSchema ]).optional(),
+  by: ContohImageScalarFieldEnumSchema.array(),
+  having: ContohImageScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict()
+
+export const ContohImageFindUniqueArgsSchema: z.ZodType<Prisma.ContohImageFindUniqueArgs> = z.object({
+  select: ContohImageSelectSchema.optional(),
+  include: ContohImageIncludeSchema.optional(),
+  where: ContohImageWhereUniqueInputSchema,
+}).strict()
+
+export const ContohImageFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.ContohImageFindUniqueOrThrowArgs> = z.object({
+  select: ContohImageSelectSchema.optional(),
+  include: ContohImageIncludeSchema.optional(),
+  where: ContohImageWhereUniqueInputSchema,
+}).strict()
+
 export const UserCreateArgsSchema: z.ZodType<Prisma.UserCreateArgs> = z.object({
   select: UserSelectSchema.optional(),
   include: UserIncludeSchema.optional(),
@@ -8332,4 +8732,45 @@ export const ContohUpdateManyArgsSchema: z.ZodType<Prisma.ContohUpdateManyArgs> 
 
 export const ContohDeleteManyArgsSchema: z.ZodType<Prisma.ContohDeleteManyArgs> = z.object({
   where: ContohWhereInputSchema.optional(),
+}).strict()
+
+export const ContohImageCreateArgsSchema: z.ZodType<Prisma.ContohImageCreateArgs> = z.object({
+  select: ContohImageSelectSchema.optional(),
+  include: ContohImageIncludeSchema.optional(),
+  data: z.union([ ContohImageCreateInputSchema,ContohImageUncheckedCreateInputSchema ]),
+}).strict()
+
+export const ContohImageUpsertArgsSchema: z.ZodType<Prisma.ContohImageUpsertArgs> = z.object({
+  select: ContohImageSelectSchema.optional(),
+  include: ContohImageIncludeSchema.optional(),
+  where: ContohImageWhereUniqueInputSchema,
+  create: z.union([ ContohImageCreateInputSchema,ContohImageUncheckedCreateInputSchema ]),
+  update: z.union([ ContohImageUpdateInputSchema,ContohImageUncheckedUpdateInputSchema ]),
+}).strict()
+
+export const ContohImageCreateManyArgsSchema: z.ZodType<Prisma.ContohImageCreateManyArgs> = z.object({
+  data: ContohImageCreateManyInputSchema.array(),
+  skipDuplicates: z.boolean().optional(),
+}).strict()
+
+export const ContohImageDeleteArgsSchema: z.ZodType<Prisma.ContohImageDeleteArgs> = z.object({
+  select: ContohImageSelectSchema.optional(),
+  include: ContohImageIncludeSchema.optional(),
+  where: ContohImageWhereUniqueInputSchema,
+}).strict()
+
+export const ContohImageUpdateArgsSchema: z.ZodType<Prisma.ContohImageUpdateArgs> = z.object({
+  select: ContohImageSelectSchema.optional(),
+  include: ContohImageIncludeSchema.optional(),
+  data: z.union([ ContohImageUpdateInputSchema,ContohImageUncheckedUpdateInputSchema ]),
+  where: ContohImageWhereUniqueInputSchema,
+}).strict()
+
+export const ContohImageUpdateManyArgsSchema: z.ZodType<Prisma.ContohImageUpdateManyArgs> = z.object({
+  data: z.union([ ContohImageUpdateManyMutationInputSchema,ContohImageUncheckedUpdateManyInputSchema ]),
+  where: ContohImageWhereInputSchema.optional(),
+}).strict()
+
+export const ContohImageDeleteManyArgsSchema: z.ZodType<Prisma.ContohImageDeleteManyArgs> = z.object({
+  where: ContohImageWhereInputSchema.optional(),
 }).strict()
