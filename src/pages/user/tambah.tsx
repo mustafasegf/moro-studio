@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { roles } from "~/utils/roles";
 import cn from "classnames";
 import { addUserSchema, AddUserSchema } from "~/utils/schemas";
+import makeToast from "~/component/toast";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = getServerAuthSession(ctx);
@@ -39,8 +40,9 @@ export default function AddUser() {
   useEffect(
     function() {
       if (addUser.isSuccess) {
+        makeToast("user berhasil ditambah")
         const timeout = setTimeout(() => {
-          void router.push("/user");
+          void router.push("/");
         }, 1000);
         return () => clearTimeout(timeout);
       }
@@ -51,6 +53,7 @@ export default function AddUser() {
   useEffect(
     function() {
       if (addUser.isError) {
+        makeToast(`Eror: ${addUser.error.message}`, {type: "error"})
         const timeout = setTimeout(() => {
           addUser.reset();
         }, 5000);
@@ -62,26 +65,6 @@ export default function AddUser() {
 
   return (
     <>
-      {addUser.isError && (
-        <div className="toast">
-          <div className="alert alert-error">
-            <div>
-              <span>Error: {addUser.error.message}</span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {addUser.isSuccess && (
-        <div className="toast">
-          <div className="alert alert-info">
-            <div>
-              <span>user tertambah</span>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="m-8">
         <Link href="/user" className="btn mb-4">
           kembali
@@ -100,7 +83,6 @@ export default function AddUser() {
                   Nama
                 </label>
                 <input
-                  required
                   type="text"
                   id="nama"
                   className={cn(
@@ -124,7 +106,6 @@ export default function AddUser() {
                   Email
                 </label>
                 <input
-                  required
                   type="text"
                   id="email"
                   className={cn(
@@ -171,7 +152,6 @@ export default function AddUser() {
                   Role
                 </label>
                 <select
-                  required
                   id="role"
                   className="input-bordered input mt-1 mb-4 w-full max-w-xs"
                   {...register("role")}
