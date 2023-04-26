@@ -21,7 +21,7 @@ export default function UpdateCatalogue() {
   useEffect(
     function () {
       if (updateCatalogue.isSuccess) {
-        void router.push("/list-catalogue");
+        void router.push("/catalogue/list-catalogue");
       }
     },
     [updateCatalogue.isSuccess]
@@ -151,7 +151,7 @@ export default function UpdateCatalogue() {
 
               <div className="bg-gray-300 px-4 py-3 text-right sm:px-6">
                 <Link
-                  href="/list-catalogue"
+                  href="/catalogue/list-catalogue"
                   type="button"
                   className="inline-flex w-full justify-center rounded-md border border-gray-600 px-3 py-2 text-sm font-semibold text-gray-600 transition duration-300 ease-in-out hover:border-gray-700 hover:bg-gray-700 hover:text-gray-200 sm:mr-3 sm:w-auto"
                 >

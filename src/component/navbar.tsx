@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "~/utils/session";
 
 export function Navbar() {
@@ -6,7 +7,7 @@ export function Navbar() {
 
   return (
     <>
-      <div className="navbar bg-[#595959]">
+      <div className="navbar bg-dark-grey">
         <div className="flex-1">
           <div className="dropdown">
             <label tabIndex={0} className="btn-ghost btn lg:hidden">
@@ -15,7 +16,7 @@ export function Navbar() {
                 className="h-5 w-5"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke="currentColor"
+                stroke="white"
               >
                 <path
                   strokeLinecap="round"
@@ -27,74 +28,97 @@ export function Navbar() {
             </label>
             <ul
               tabIndex={0}
-              className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
+              className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-dark-grey p-2 shadow"
             >
-            <li>
-              <Link
-                href="/listfeedback"
-                className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
-              >
-                Feedback
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/list-catalogue"
-                className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
-              >
-                Catalogue
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/homepage/edit"
-                className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
-              >
-                Edit Homepage
-              </Link>
-            </li>
-            <li>
-              {session ? (
-                <p
-                  onClick={logout}
-                  className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
-                >
-                  Logout
-                </p>
-              ) : (
+              <li>
                 <Link
-                  href="/login"
-                  className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
+                  href="/listfeedback"
+                  className="text-white-grey hover:bg-light-grey hover:text-black"
                 >
-                  Login
+                  Feedback
                 </Link>
-              )}
-            </li>
-
+              </li>
+              <li>
+                <Link
+                  href="/catalogue/list-catalogue"
+                  className="text-white-grey hover:bg-light-grey hover:text-black"
+                >
+                  Catalogue
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/homepage/edit"
+                  className="text-white-grey hover:bg-light-grey hover:text-black"
+                >
+                  Edit Homepage
+                </Link>
+              </li>
+              <li>
+                {session ? (
+                  <p
+                    onClick={logout}
+                    className="text-white-grey hover:bg-light-grey hover:text-black"
+                  >
+                    Logout
+                  </p>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="text-white-grey hover:bg-light-grey hover:text-black"
+                  >
+                    Login
+                  </Link>
+                )}
+              </li>
             </ul>
           </div>
 
-          <Link
-            href="/"
-            className="btn-ghost btn text-xl normal-case text-white  hover:bg-gray-200 hover:text-gray-800"
-          >
-            Moro Studio
-          </Link>
+          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+            <div className="flex flex-shrink-0 items-center">
+              <Link href="/">
+                <Image
+                  className="block h-12 w-auto lg:hidden"
+                  src="/Logo Morostudio.png"
+                  alt="Logo Morostudio"
+                  width={50}
+                  height={50}
+                />
+              </Link>
+              <Link href="/">
+                <Image
+                  className="ml-6 hidden h-12 w-auto lg:block"
+                  src="/Logo Morostudio.png"
+                  alt="Logo Morostudio"
+                  width={50}
+                  height={50}
+                />
+              </Link>
+            </div>
 
+            <Link
+              href="/"
+              className="text-white-grey btn-ghost btn text-xl normal-case"
+            >
+              Moro Studio
+            </Link>
+          </div>
+        </div>
 
+        <div className="flex-none">
           <ul className="menu menu-horizontal hidden px-1 lg:flex">
             <li>
               <Link
                 href="/listfeedback"
-                className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
+                className="text-white-grey mr-2 underline-offset-8 hover:underline"
               >
                 Feedback
               </Link>
             </li>
             <li>
               <Link
-                href="/list-catalogue"
-                className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
+                href="/catalogue/list-catalogue"
+                className="text-white-grey mr-2 underline-offset-8 hover:underline"
               >
                 Catalogue
               </Link>
@@ -102,9 +126,17 @@ export function Navbar() {
             <li>
               <Link
                 href="/homepage/edit"
-                className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
+                className="text-white-grey mr-2 underline-offset-8 hover:underline"
               >
                 Edit Homepage
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/kupon/list-kupon"
+                className="text-white-grey mr-2 underline-offset-8 hover:underline"
+              >
+                Kupon
               </Link>
             </li>
           </ul>
@@ -113,12 +145,12 @@ export function Navbar() {
           <ul className="menu menu-horizontal px-1">
             {session && session?.role !== "user" && (
               <li className="hidden sm:block">
-                <p className="mr-2 text-white">role: {session?.role}</p>
+                <p className="text-white mr-2">role: {session?.role}</p>
               </li>
             )}
             {session && (
               <li className="hidden sm:block">
-                <p className="mr-2 text-white">Hi {session?.nama}!</p>
+                <p className="text-white mr-2">Hi {session?.nama}!</p>
               </li>
             )}
 
@@ -126,14 +158,14 @@ export function Navbar() {
               {session ? (
                 <p
                   onClick={logout}
-                  className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
+                  className="text-white-grey mr-3 border-2 border-white-grey bg-transparent py-2 px-4 font-semibold transition duration-300 ease-in-out hover:bg-light-grey hover:text-black hover:border-light-grey"
                 >
                   Logout
                 </p>
               ) : (
                 <Link
                   href="/login"
-                  className="mr-2 text-white hover:bg-gray-200 hover:text-gray-800"
+                  className="text-white-grey mr-3 border-2 border-white-grey bg-transparent py-2 px-4 font-semibold transition duration-300 ease-in-out hover:bg-light-grey hover:text-black hover:border-light-grey"
                 >
                   Login
                 </Link>
@@ -145,93 +177,3 @@ export function Navbar() {
     </>
   );
 }
-
-<div className="navbar bg-base-100">
-  <div className="navbar-start">
-    <div className="dropdown">
-      <label tabIndex={0} className="btn-ghost btn lg:hidden">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M4 6h16M4 12h8m-8 6h16"
-          />
-        </svg>
-      </label>
-      <ul
-        tabIndex={0}
-        className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
-      >
-        <li>
-          <a>Item 1</a>
-        </li>
-        <li tabIndex={0}>
-          <a className="justify-between">
-            Parent
-            <svg
-              className="fill-current"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
-            </svg>
-          </a>
-          <ul className="p-2">
-            <li>
-              <a>Submenu 1</a>
-            </li>
-            <li>
-              <a>Submenu 2</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <a>Item 3</a>
-        </li>
-      </ul>
-    </div>
-    <a className="btn-ghost btn text-xl normal-case">daisyUI</a>
-  </div>
-
-  <div className="navbar-center hidden lg:flex">
-    <ul className="menu menu-horizontal px-1">
-      <li>
-        <a>Item 1</a>
-      </li>
-      <li tabIndex={0}>
-        <a>
-          Parent
-          <svg
-            className="fill-current"
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-          >
-            <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
-          </svg>
-        </a>
-        <ul className="p-2">
-          <li>
-            <a>Submenu 1</a>
-          </li>
-          <li>
-            <a>Submenu 2</a>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <a>Item 3</a>
-      </li>
-    </ul>
-  </div>
-</div>;

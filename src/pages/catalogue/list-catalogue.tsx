@@ -46,7 +46,7 @@ export default function ListCatalogue() {
 
       <div className="mb-4 flex justify-end">
         <Link
-          href="/create-catalogue"
+          href="/catalogue/create-catalogue"
           className="mr-4 rounded-md bg-gray-600 px-6 py-2 text-white hover:bg-gray-700"
         >
           + Tambah Paket Foto
@@ -113,7 +113,7 @@ export default function ListCatalogue() {
             </div>
             <div className="text-right">
               <Link
-                href={`/update-catalogue/${item.id}`}
+                href={`/catalogue/update-catalogue/${item.id}`}
                 className="mr-2 rounded-md border border-gray-600 px-6 py-2 text-gray-600 transition duration-300 ease-in-out hover:border-gray-700 hover:bg-gray-700 hover:text-gray-200"
               >
                 Ubah
