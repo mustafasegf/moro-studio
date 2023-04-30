@@ -21,6 +21,8 @@ const server = z.object({
   HOST_URL: z.string().optional(),
   BUCKET_NAME: z.string(),
   AWS_REGION: z.string(),
+  AWS_ACCESS_KEY_ID: z.string(),
+  AWS_SECRET_ACCESS_KEY: z.string(),
 });
 
 /**
@@ -47,6 +49,8 @@ const processEnv = {
   HOST_URL: process.env.HOST_URL,
   BUCKET_NAME: process.env.BUCKET_NAME,
   AWS_REGION: process.env.AWS_REGION,
+  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

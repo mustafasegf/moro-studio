@@ -7,6 +7,8 @@ import {
   userProcedure,
 } from "~/server/api/trpc";
 import { env } from "~/env.mjs";
+import { tryToCatch } from "~/utils/trycatch";
+import { TRPCError } from "@trpc/server";
 
 export const imageRouter = createTRPCRouter({
   createPresignedUrl: userProcedure.mutation(async ({ ctx }) => {
@@ -22,19 +24,36 @@ export const imageRouter = createTRPCRouter({
       },
     });
 
-    const post = ctx.s3.createPresignedPost({
-      Fields: {
-        key: `${ctx.session.id}/${gambarRow.id}`,
-      },
-      Conditions: [
-        ["starts-with", "$Content-Type", "image/"],
-        ["content-length-range", 0, 10_000_000],
-      ],
-      Expires: 60,
-      Bucket: env.BUCKET_NAME,
-    });
+    try {
+      const post = ctx.s3.createPresignedPost({
+        Fields: {
+          key: `${ctx.session.id}/${gambarRow.id}`,
+        },
+        Conditions: [
+          ["starts-with", "$Content-Type", "image/"],
+          ["content-length-range", 0, 10_000_000],
+        ],
+        Expires: 60,
+        Bucket: env.BUCKET_NAME,
+      });
 
-    return { ...post, imageId: gambarRow.id };
+      return { ...post, imageId: gambarRow.id };
+
+    } catch (err) {
+      console.error(err);
+      console.log(env);
+
+      await ctx.prisma.contohImage.delete({
+        where: {
+          id: gambarRow.id,
+        },
+      });
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Failed to create presigned url",
+      });
+    }
   }),
 
   getAllImages: userProcedure.query(async ({ ctx }) => {
