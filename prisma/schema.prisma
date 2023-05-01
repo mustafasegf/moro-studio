@@ -109,7 +109,7 @@ model Booking {
   katalog         Katalog        @relation(fields: [katalogId], references: [id])
   // detail          String         @db.Text
   kuponId         String?
-  kupon           Kupon?          @relation(fields: [kuponId], references: [id])
+  kupon           Kupon?         @relation(fields: [kuponId], references: [id])
   status          BookinStatus
   // foto FotoUser[]
   Pembayaran      Pembayaran[]
