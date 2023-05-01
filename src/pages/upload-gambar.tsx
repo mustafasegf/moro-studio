@@ -1,5 +1,5 @@
-import { useState } from "react"
 import { api } from "~/utils/api"
+import { tryToCatch } from "~/utils/trycatch"
 
 export default function Upload() {
   
@@ -13,7 +13,15 @@ export default function Upload() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    const {url, fields, imageId} = await upload.mutateAsync();
+    const [err, dataS3] = await tryToCatch(upload.mutateAsync)
+    if (err) {
+      console.log("cant get presigned url")
+      console.error(err)
+      return
+    }
+
+    const {url, fields, imageId} = dataS3
+    // const {url, fields, imageId} = await upload.mutateAsync();
     const data = {
       ...fields,
       'Content-Type': file.type,
@@ -68,29 +76,3 @@ export default function Upload() {
   )
 }
 
-async function olduploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
-  const file = e.target.files?.[0]!
-  const filename = encodeURIComponent(file.name)
-  const fileType = encodeURIComponent(file.type)
-
-  const res = await fetch(
-    `/api/upload-url?file=${filename}&fileType=${fileType}`
-  )
-  const { url, fields } = await res.json()
-  const formData = new FormData()
-
-  Object.entries({ ...fields, file }).forEach(([key, value]) => {
-    formData.append(key, value as string)
-  })
-
-  const upload = await fetch(url, {
-    method: 'POST',
-    body: formData,
-  })
-
-  if (upload.ok) {
-    console.log('Uploaded successfully!')
-  } else {
-    console.error('Upload failed.')
-  }
-}
