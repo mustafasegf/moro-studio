@@ -39,7 +39,29 @@ export const userRouter = createTRPCRouter({
         id: z.string(),
       })
     )
-    .mutation(({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (user && user.role === "admin") {
+        const adminCount = await ctx.prisma.user.count({
+          where: {
+            role: "admin",
+            deleted: false,
+          },
+        });
+        if (adminCount === 1) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Tidak bisa menghapus admin terakhir",
+          });
+        }
+      }
+
+      
       return ctx.prisma.user.delete({
         where: {
           id: input.id,
