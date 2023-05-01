@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
@@ -44,7 +45,7 @@ export const bookingRouter = createTRPCRouter({
           },
         });
       }
-      console.log({user})
+      console.log({ user });
 
       // if not, create booking with booked status
       booking = await ctx.prisma.booking.create({
@@ -64,11 +65,13 @@ export const bookingRouter = createTRPCRouter({
               id: input.katalog.id,
             },
           },
-          kupon: input.kupon ? {
-            connect: {
-              kode: input.kupon,
-            },
-          } : undefined,
+          kupon: input.kupon
+            ? {
+              connect: {
+                kode: input.kupon,
+              },
+            }
+            : undefined,
           peliharaan: input.peliharaan,
           harga: input.katalog.harga,
           jadwal: input.tanggal,
@@ -81,5 +84,32 @@ export const bookingRouter = createTRPCRouter({
 
       //send email to user
       return sendEmail(user.email, ctx.transport);
+    }),
+
+  getAllBooking: publicProcedure
+    .input(
+      z.object({
+        from: z.date(),
+        to: z.date(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      return ctx.prisma.booking.findMany({
+        where: {
+          deleted: false,
+          AND: [
+            {
+              jadwal: {
+                gte: input.from,
+              },
+            },
+            {
+              jadwal: {
+                lte: input.to,
+              },
+            },
+          ],
+        },
+      });
     }),
 });

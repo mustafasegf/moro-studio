@@ -59,6 +59,7 @@ export default function Jadwal({
   
 
   const date = new Date(dateStr);
+  console.log(date, dateStr)
   const {
     handleSubmit,
     register,

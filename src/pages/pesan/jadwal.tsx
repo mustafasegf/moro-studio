@@ -12,13 +12,21 @@ import {
   setMinutes,
   setHours,
   getDay,
+  differenceInMinutes,
+  differenceInDays,
+  getMinutes,
+  getHours,
 } from "date-fns";
 import { id, enUS } from "date-fns/locale";
 import cn from "classnames";
 import Link from "next/link";
 import { atom, useAtom } from "jotai";
+import { useEffect } from "react";
+import { Katalog } from "@prisma/client";
 
-const katalogAtom = atom("");
+const katalogAtom = atom<Katalog | undefined>(undefined);
+const hoverIndexAtom = atom(-1);
+const bookedAtom = atom<Set<number>>(new Set<number>());
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const ssg = createSSG();
@@ -32,23 +40,33 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     return { redirect: { destination: "/pesan" } };
   }
 
+  const startHour = 10;
+  const endHour = 21;
+  const start = set(new Date(), {
+    hours: startHour,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+  });
+
+  const end = setHours(addDays(start, 6), endHour);
+
+  await ssg.booking.getAllBooking.prefetch({
+    from: start,
+    to: end,
+  });
+
+  console.log("DATA", { start, end })
+
   return {
     props: {
-      katalog,
+      katalogId: katalog,
       trpcState: ssg.dehydrate(),
     },
   };
 }
 
-export default function Jadwal({ katalog }: { katalog: string }) {
-  const [_, setKatalog] = useAtom(katalogAtom);
-  setKatalog(katalog);
-
-  const { data } = api.catalogue.getCatalogueById.useQuery({ id: katalog });
-  if (!data) {
-    return;
-  }
-
+export default function Jadwal({ katalogId }: { katalogId: string }) {
   const startHour = 10;
   const endHour = 21;
   const duration = 40;
@@ -61,17 +79,59 @@ export default function Jadwal({ katalog }: { katalog: string }) {
     seconds: 0,
     milliseconds: 0,
   });
-  const end = addDays(start, 6);
+
+  const end = setHours(addDays(start, 6), endHour);
 
   const dates = eachDayOfInterval({
     start,
     end,
   }).map((d) => setHours(d, startHour));
+  const [katalog, setKatalog] = useAtom(katalogAtom);
+  const [booked, setBooked] = useAtom(bookedAtom); 
+
+  useEffect(() => console.log({ booked }), [booked]);
+
+  // const [hoverIndex] = useAtom(hoverIndexAtom);
+  // useEffect(() => console.log({ hoverIndex }), [hoverIndex]);
+
+  const { data } = api.catalogue.getCatalogueById.useQuery({ id: katalogId });
+  if (!data) {
+    return;
+  }
+  const range = (data?.durasi ?? 40) / 40;
+
+  useEffect(() => {
+    setKatalog(data);
+  }, [katalog]);
+
+  const { data: listBooking } = api.booking.getAllBooking.useQuery({
+    from: start,
+    to: end,
+  });
+
+  useEffect(() => {
+    listBooking?.forEach((booking) => {
+
+      const row = differenceInDays(booking.jadwal, start);
+      const col =
+        (getHours(booking.jadwal) * 60 +
+          getMinutes(booking.jadwal) -
+          startHour * 60) /
+        40;
+
+      for (let i = 0; i < range; i++) {
+        const idx = row * interval + col + i
+        booked.add(idx);
+      }
+    });
+    console.log("book called", { booked });
+
+    setBooked(booked);
+  }, [booked])
 
   return (
     <>
       <CenterContainer>
-        <p>{data?.durasi / 40}</p>
         <div className=" flex flex-row justify-between">
           {dates.map((date, rowIdx) => (
             <div
@@ -98,6 +158,7 @@ export default function Jadwal({ katalog }: { katalog: string }) {
               {[...Array(interval)].map((_, colIdx) => (
                 <DatesButton
                   key={colIdx}
+                  idx={rowIdx * interval + colIdx}
                   now={now}
                   date={addMinutes(date, colIdx * 40)}
                 />
@@ -111,28 +172,49 @@ export default function Jadwal({ katalog }: { katalog: string }) {
 }
 
 interface DatesButtonProps {
+  idx: number;
   now: Date;
   date: Date;
 }
 
-function DatesButton({ now, date }: DatesButtonProps) {
+function DatesButton({ now, date, idx }: DatesButtonProps) {
   const [katalog] = useAtom(katalogAtom);
+  const [hoverIndex, setHoverIndex] = useAtom(hoverIndexAtom);
+  const [booked] = useAtom(bookedAtom); 
+  const interval = 17;
 
-  const enabled = isAfter(date, now);
-  const buttonClass = cn(
-    "mt-3 rounded-xl bg-base-100 border-2 py-3 px-2 text-center text-lg",
-    {
-      "border-neutral-400 transition duration-75 ease-in-out hover:-translate-y-[2px] hover:bg-neutral-300":
-        enabled,
-      "border-neutral-200 text-neutral-500 opacity-70": !enabled,
+  const enabled = isAfter(date, now) && !booked.has(idx);
+
+  const range = (katalog?.durasi ?? 40) / 40;
+  let clickable = interval - (idx % interval) >= range;
+  let hover = idx - hoverIndex < range && idx - hoverIndex >= 0 && hoverIndex != -1;
+
+  for (let i = 0; i < range; i++) {
+    if (booked.has(hoverIndex + i)) {
+      clickable = false;
+      hover = false;
+      break;
     }
-  );
+  }
 
-  function handleEnter() { }
-  function handleLeave() { }
+
+  function handleEnter() {
+    setHoverIndex(enabled ? idx : -1);
+  }
+  function handleLeave() {
+    setHoverIndex(-1);
+  }
+
   const Child = () => (
     <div
-      className={buttonClass}
+      className={cn(
+        "mt-3 rounded-xl border-2 border-neutral-400 bg-base-100 py-3 px-2 text-center text-lg",
+        { "border-neutral-200 text-neutral-500 opacity-70 bg-base-300": !enabled },
+        {
+          "-translate-y-[2px] bg-neutral-300 transition duration-75 ease-in-out":
+            hover && (idx != hoverIndex || clickable),
+        }
+      )}
       onMouseEnter={() => handleEnter()}
       onMouseLeave={() => handleLeave()}
     >
@@ -143,9 +225,9 @@ function DatesButton({ now, date }: DatesButtonProps) {
   );
   const dateStr = format(date, "yyyy-MM-dd'T'HH:mm:ss");
 
-  if (enabled)
+  if (enabled && clickable)
     return (
-      <Link href={`/pesan/konfirmasi?katalog=${katalog}&date=${dateStr}`}>
+      <Link href={`/pesan/konfirmasi?katalog=${katalog?.id}&date=${dateStr}`}>
         <Child />
       </Link>
     );
