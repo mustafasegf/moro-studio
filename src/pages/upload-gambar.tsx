@@ -1,4 +1,5 @@
 import { api } from "~/utils/api"
+import { tryToCatch } from "~/utils/trycatch"
 
 export default function Upload() {
   
@@ -12,7 +13,15 @@ export default function Upload() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    const {url, fields, imageId} = await upload.mutateAsync();
+    const [err, dataS3] = await tryToCatch(upload.mutateAsync)
+    if (err) {
+      console.log("cant get presigned url")
+      console.error(err)
+      return
+    }
+
+    const {url, fields, imageId} = dataS3
+    // const {url, fields, imageId} = await upload.mutateAsync();
     const data = {
       ...fields,
       'Content-Type': file.type,
