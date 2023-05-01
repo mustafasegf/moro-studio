@@ -52,7 +52,23 @@ async function main() {
     },
   });
 
-  console.log({ admin, blogManager, studioManager, user });
+  const homepage = await prisma.home.upsert({
+    where: {
+      id: "clfks6eab0002tbl1vzmqzv9z",
+    },
+    update: {},
+    create: {
+      id: "clfks6eab0002tbl1vzmqzv9z",
+      image: "https://picsum.photos/seed/1/800/600",
+      carousel: [
+        "https://picsum.photos/seed/1/800/600",
+        "https://picsum.photos/seed/2/800/600",
+        "https://picsum.photos/seed/3/800/600",
+      ],
+    },
+  });
+
+  console.log({ admin, blogManager, studioManager, user, homepage });
 }
 
 main()
