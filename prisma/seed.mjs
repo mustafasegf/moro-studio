@@ -52,7 +52,89 @@ async function main() {
     },
   });
 
-  console.log({ admin, blogManager, studioManager, user });
+  const katalogData = [
+    {
+      id: "clgkwzhtc0000tb3hdplev11u",
+      nama: "Basic Self Photo",
+      durasi: 40,
+      harga: 150_000,
+      jumlahOrang: 2,
+      deskripsi: `20 Minutes Photoshoot
+10 Minutes Photo Selection
+Various Properties and Frames
+All digital Soft files`,
+    },
+    {
+      id: "clh4qplik0002tbocyydiby5b",
+      nama: "3 Person",
+      durasi: 40,
+      harga: 180_000,
+      jumlahOrang: 3,
+      deskripsi: `20 Minutes Photoshoot
+10 Minutes Photo Selection
+Various Properties and Frames
+All digital Soft files`,
+    },
+    {
+      id: "clh4qpw7r0004tbocs99rpsja",
+      nama: "4 Person",
+      durasi: 40,
+      harga: 210_000,
+      jumlahOrang: 4,
+      deskripsi: `20 Minutes Photoshoot
+10 Minutes Photo Selection
+Various Properties and Frames
+All digital Soft files`,
+    },
+    {
+      id: "clh4qq6zy0006tboc4no88nyu",
+      nama: "5 Person",
+      durasi: 40,
+      harga: 240_000,
+      jumlahOrang: 5,
+      deskripsi: `20 Minutes Photoshoot
+10 Minutes Photo Selection
+Various Properties and Frames
+All digital Soft files`,
+    },
+    {
+      id: "clh4qqgxl0008tbocttk0ss6d",
+      nama: "6 Person",
+      durasi: 40,
+      harga: 270_000,
+      jumlahOrang: 6,
+      deskripsi: `20 Minutes Photoshoot
+10 Minutes Photo Selection
+Various Properties and Frames
+All digital Soft files`,
+    },
+    {
+      id: "clh4qsenx000atboc3gpfb3tm",
+      nama: "Group of 7 Self Photo",
+      durasi: 80,
+      harga: 350_000,
+      deskripsi: `Additional Person @30.000 (include 1 printed photo each)
+40 Minutes Photoshoot
+20 Minutes Photo Selection
+Various Properties and Frames
+All digital Soft files`,
+    },
+  ];
+
+  const katalog = []
+  for (const data of katalogData) {
+    katalog.push(
+      await prisma.katalog.upsert({
+        where: {
+          id: data.id,
+        },
+        update: {},
+        create: data,
+      })
+    )
+  }
+
+  console.log({ admin, blogManager, studioManager, user, katalog });
 }
 
 main()
