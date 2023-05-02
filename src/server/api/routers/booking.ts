@@ -115,4 +115,12 @@ export const bookingRouter = createTRPCRouter({
         },
       });
     }),
+
+  getAllBackground: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.backgroundFoto.findMany({
+      where: {
+        deleted: false,
+      },
+    });
+  }),
 });

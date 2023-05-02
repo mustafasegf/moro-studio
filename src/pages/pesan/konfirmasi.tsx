@@ -36,6 +36,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   if (!data) {
     return { redirect: { destination: "/pesan" } };
   }
+  await ssg.booking.getAllBackground.prefetch()
 
   return {
     props: {
@@ -56,10 +57,9 @@ export default function Jadwal({
     return;
   }
 
-  
+  const { data:backgrounds } = api.booking.getAllBackground.useQuery()
 
   const date = new Date(dateStr);
-  console.log(date, dateStr)
   const {
     handleSubmit,
     register,
@@ -245,15 +245,13 @@ export default function Jadwal({
               >
                 Warna Background Dan Preset Foto
               </label>
-              <input
-                type="text"
+              <select
                 id="warna"
-                className={cn(
-                  "input-bordered input mt-1 mb-2 w-full max-w-md",
-                  { "input-error": errors.warna }
-                )}
+                className="input-bordered input mt-1 mb-4 w-full max-w-xs"
                 {...register("warna")}
-              />
+              >
+                {backgrounds?.map(({warna}) => <option key={warna} value={warna}>{warna}</option>)}
+              </select>
               {errors.warna && (
                 <span className={cn("mb-4", { "text-error": errors.warna })}>
                   {errors.warna.message}
