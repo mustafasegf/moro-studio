@@ -15,8 +15,11 @@ module.exports = {
             'black': '#000000'
         },
     },
+    // daisyui: {
+    //     themes: ["cupcake"]
+    // },
     daisyui: {
-        themes: ["cupcake"]
+        themes: ["light"]
     },
     plugins: [require('daisyui')],
 };

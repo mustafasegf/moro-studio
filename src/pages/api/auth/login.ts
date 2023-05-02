@@ -6,6 +6,7 @@ import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 import { setCookie } from "nookies";
 import { tryCatch, tryToCatch } from "~/utils/trycatch"
+import {logger} from "~/utils/logger"
 
 const schema = z.object({
   token: z.string(),
@@ -19,49 +20,54 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  logger.info("login")
   const [parseErr, data] = tryCatch(schema.parse, req.query);
   if (parseErr) {
-    // return res.redirect(`/error?data=${encodeURI(parseErr.message)}`);
+    logger.error(parseErr)
     return res.redirect(`/error?data=${encodeURI("Link login bermasalah, silahkan coba lagi")}`);
 
   }
   if (!data) {
+     logger.error("login error: no data") 
     return res.redirect(`/error?data=${encodeURI("Link login bermasalah, silahkan coba lagi")}`);
   }
 
-  let [err] = tryCatch(verify, data.token, env.NEXTAUTH_SECRET);
+  let [verifyErr] = tryCatch(verify, data.token, env.NEXTAUTH_SECRET);
 
-  if (err) {
-    // return res.redirect(`/error?data=${encodeURI(err.message)}`);
+  if (verifyErr) {
+    logger.error(verifyErr)
     return res.redirect(`/error?data=${encodeURI("Link login kadaluarasa, silahkan coba lagi")}`);
   }
 
   let decoded = decode(data.token);
   if (!decoded) {
-    // return res.redirect(`/error?data=${encodeURI("No decoded")}`);
+    logger.error("login error: no decoded")
     return res.redirect(`/error?data=${encodeURI("Link login bermasalah, silahkan coba lagi")}`);
   }
   const [jwtParseErr, jwtPayload] = tryCatch(jwtSchema.parse, decoded);
   if (jwtParseErr) {
-    // return res.redirect(`/error?data=${encodeURI(jwtParseErr.message)}`);
+    logger.error(jwtParseErr)
     return res.redirect(`/error?data=${encodeURI("Link login bermasalah, silahkan coba lagi")}`);
   }
   if (!jwtPayload) {
-    // return res.redirect(`/error?data=${encodeURI("No data")}`);
+    logger.error("login error: no data")
     return res.redirect(`/error?data=${encodeURI("Link login bermasalah, silahkan coba lagi")}`);
   }
 
-  const [errPrisma, user] = await tryToCatch(prisma.user.findUnique, {
+  const [errPrisma, user] = await tryToCatch(prisma.user.findFirst, {
     where: {
       email: jwtPayload.email,
+      deleted: false,
     },
   });
+
   if (errPrisma) {
-    // return res.redirect(`/error?data=${encodeURI(errPrisma.message)}`);
+    logger.error(errPrisma.message)
     return res.redirect(`/error?data=${encodeURI("Database be bermasalah, silahkan coba lagi")}`);
+    
   }
   if (!user) {
-    // return res.redirect(`/error?data=${encodeURI("No User")}`);
+    logger.error("login error: user not found")
     return res.redirect(`/error?data=${encodeURI("User tidak ditemukan, silahkan coba lagi")}`);
   }
 

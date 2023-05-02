@@ -25,7 +25,6 @@ export const kuponRouter = createTRPCRouter({
           diskon: input.diskon,
           kuotaPemakaian: input.kuotaPemakaian,
           kuotaTerpakai: 0,
-          status: true,
           tanggal: input.tanggal,
         },
       });
@@ -71,7 +70,6 @@ export const kuponRouter = createTRPCRouter({
           diskon: input.diskon,
           kuotaPemakaian: input.kuotaPemakaian,
           kuotaTerpakai: 0,
-          status: true,
           tanggal: input.tanggal,
         },
       });

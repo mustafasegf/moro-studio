@@ -9,6 +9,7 @@ export const prisma =
       env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });
 
+// todo: add soft delete to catalogue
 prisma.$use(async (params, next) => {
   if (params.model == "User") {
     if (params.action == "delete") {

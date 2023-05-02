@@ -4,6 +4,28 @@ import { useAuth } from "~/utils/session";
 
 export function Navbar() {
   const { session, logout } = useAuth();
+  const pages = [
+    {
+      name: "Pesan",
+      path: "/pesan",
+      role: undefined,
+    },
+    {
+      name: "Feedback",
+      path: "/listfeedback",
+      role: "user",
+    },
+    {
+      name: "Katalog",
+      path: "/katalog",
+      role: "admin",
+    },
+    {
+      name: "Edit Homepage",
+      path: "/homepage/edit",
+      role: "admin",
+    },
+  ];
 
   return (
     <>
@@ -54,6 +76,20 @@ export function Navbar() {
                   Edit Homepage
                 </Link>
               </li>
+
+            {pages.map(
+              (page) =>
+                (session?.role === page.role || page.role === undefined) && (
+                  <li key={page.path}>
+                    <Link
+                      href={page.path}
+                      className="mr-2 text-base-content hover:bg-base-300"
+                    >
+                      {page.name}
+                    </Link>
+                  </li>
+                )
+            )}
               <li>
                 {session ? (
                   <p
@@ -117,7 +153,7 @@ export function Navbar() {
             </li>
             <li>
               <Link
-                href="/catalogue/list-catalogue"
+                href="/katalog/list-catalogue"
                 className="text-white-grey mr-2 underline-offset-8 hover:underline"
               >
                 Catalogue
@@ -140,6 +176,21 @@ export function Navbar() {
               </Link>
             </li>
           </ul>
+          <ul className="menu menu-horizontal hidden px-1 lg:flex">
+            {pages.map(
+              (page) =>
+                (session?.role === page.role || page.role === undefined) && (
+                  <li key={page.path}>
+                    <Link
+                      href={page.path}
+                      className="mr-2 text-base-100 hover:bg-base-300 hover:text-base-content"
+                    >
+                      {page.name}
+                    </Link>
+                  </li>
+                )
+            )}
+          </ul>
         </div>
         <div className="flex-none">
           <ul className="menu menu-horizontal px-1">
@@ -150,7 +201,7 @@ export function Navbar() {
             )}
             {session && (
               <li className="hidden sm:block">
-                <p className="text-white mr-2">Hi {session?.nama}!</p>
+                <p className="mr-2 text-white bg-[#595959]">Hi {session?.nama}!</p>
               </li>
             )}
 
