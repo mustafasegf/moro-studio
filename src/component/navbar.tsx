@@ -25,6 +25,11 @@ export function Navbar() {
       path: "/homepage/edit",
       role: "admin",
     },
+    {
+      name: "Kupon",
+      path: "/kupon/list-kupon",
+      role: "admin",
+    },
   ];
 
   return (
@@ -52,30 +57,6 @@ export function Navbar() {
               tabIndex={0}
               className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-dark-grey p-2 shadow"
             >
-              <li>
-                <Link
-                  href="/listfeedback"
-                  className="text-white-grey hover:bg-light-grey hover:text-black"
-                >
-                  Feedback
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/catalogue/list-catalogue"
-                  className="text-white-grey hover:bg-light-grey hover:text-black"
-                >
-                  Catalogue
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/homepage/edit"
-                  className="text-white-grey hover:bg-light-grey hover:text-black"
-                >
-                  Edit Homepage
-                </Link>
-              </li>
 
             {pages.map(
               (page) =>
@@ -83,7 +64,7 @@ export function Navbar() {
                   <li key={page.path}>
                     <Link
                       href={page.path}
-                      className="mr-2 text-base-content hover:bg-base-300"
+                      className="mr-2 text-white-grey text-base-content hover:bg-base-300 hover:text-black"
                     >
                       {page.name}
                     </Link>
@@ -143,38 +124,30 @@ export function Navbar() {
 
         <div className="flex-none">
           <ul className="menu menu-horizontal hidden px-1 lg:flex">
-            <li>
+            {/* <li>
               <Link
                 href="/listfeedback"
                 className="text-white-grey mr-2 underline-offset-8 hover:underline"
               >
                 Feedback
               </Link>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <Link
                 href="/katalog/list-catalogue"
                 className="text-white-grey mr-2 underline-offset-8 hover:underline"
               >
                 Catalogue
               </Link>
-            </li>
-            <li>
-              <Link
-                href="/homepage/edit"
-                className="text-white-grey mr-2 underline-offset-8 hover:underline"
-              >
-                Edit Homepage
-              </Link>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <Link
                 href="/kupon/list-kupon"
                 className="text-white-grey mr-2 underline-offset-8 hover:underline"
               >
                 Kupon
               </Link>
-            </li>
+            </li> */}
           </ul>
           <ul className="menu menu-horizontal hidden px-1 lg:flex">
             {pages.map(
@@ -196,12 +169,12 @@ export function Navbar() {
           <ul className="menu menu-horizontal px-1">
             {session && session?.role !== "user" && (
               <li className="hidden sm:block">
-                <p className="text-white mr-2">role: {session?.role}</p>
+                <p className="text-white-grey mr-2">role: {session?.role}</p>
               </li>
             )}
             {session && (
               <li className="hidden sm:block">
-                <p className="mr-2 text-white bg-[#595959]">Hi {session?.nama}!</p>
+                <p className="mr-2 text-white-grey bg-[#595959]">Hi {session?.nama}!</p>
               </li>
             )}
 

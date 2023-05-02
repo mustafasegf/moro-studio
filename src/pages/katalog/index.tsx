@@ -68,7 +68,7 @@ export default function ListCatalogue() {
       <div className="mb-4 flex justify-end">
         <Link
           href="/katalog/tambah"
-          className="mr-4 rounded-md bg-gray-600 px-6 py-2 text-white hover:bg-gray-700"
+          className="mr-4 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]"
         >
           + Tambah Paket Foto
         </Link>
@@ -90,13 +90,13 @@ export default function ListCatalogue() {
           </div>
           <div className="modal-footer flex justify-end py-3 px-4">
             <button
-              className="focus:shadow-outline mr-2 rounded bg-gray-300 py-2 px-4 font-bold text-gray-700 hover:bg-gray-400 focus:outline-none"
+              className="focus:shadow-outline mr-2 rounded bg-light-grey py-2 px-4 font-bold hover:bg-medium-grey hover:text-white-grey focus:outline-none"
               onClick={() => setIsOpen(false)}
             >
               Batal
             </button>
             <button
-              className="focus:shadow-outline rounded bg-red-600 py-2 px-4 text-white hover:bg-red-500 focus:outline-none"
+              className="focus:shadow-outline rounded bg-[#FC182A] py-2 px-4 font-bold text-white-grey hover:bg-red focus:outline-none"
               onClick={onDelete}
             >
               Hapus
@@ -108,10 +108,10 @@ export default function ListCatalogue() {
       {data?.map((item) => (
         <div
           key={item.id}
-          className="mx-4 my-6 rounded-lg bg-gray-200 p-6 shadow-lg md:mx-10 lg:mx-20"
+          className="mx-4 my-6 rounded-lg bg-[#e5e7eb] p-6 shadow-lg md:mx-10 lg:mx-20"
         >
           <h2 className="text-left text-lg font-bold">{item.nama}</h2>
-          <div className="mt-4 rounded-md bg-gray-300 p-4 text-black">
+          <div className="mt-4 rounded-md bg-light-grey p-4 text-black">
             <div className="text">
               <pre>{item.deskripsi}</pre>
             </div>
@@ -146,13 +146,13 @@ export default function ListCatalogue() {
             <div className="text-right">
               <Link
                 href={`/katalog/ubah/${item.id}`}
-                className="mr-2 rounded-md border border-gray-600 px-6 py-2 text-gray-600 transition duration-300 ease-in-out hover:border-gray-700 hover:bg-gray-700 hover:text-gray-200"
+                className="mr-2 rounded-md border border-gray-600 px-6 py-2 text-gray-600 transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey"
               >
                 Ubah
               </Link>
               <button
                 onClick={() => handleDeleteButton(item)}
-                className="rounded-md border border-red-500 bg-red-500 px-6 py-2 text-white transition duration-300 ease-in-out hover:border-red-600 hover:bg-red-600 hover:text-white"
+                className="rounded-md border border-red bg-red px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:border-[#dc2626] hover:bg-[#dc2626] hover:text-white-grey"
               >
                 Hapus
               </button>

@@ -10,7 +10,7 @@ import { env } from "~/env.mjs";
 import { tryToCatch } from "~/utils/trycatch";
 import { TRPCError } from "@trpc/server";
 
-export const imageRouter = createTRPCRouter({
+export const aksesFotoRouter = createTRPCRouter({
   createPresignedUrl: userProcedure.mutation(async ({ ctx }) => {
     console.log("ctx.session.id", ctx.session);
 
@@ -38,11 +38,12 @@ export const imageRouter = createTRPCRouter({
       });
 
       return { ...post, imageId: gambarRow.id };
+
     } catch (err) {
       console.error(err);
       console.log(env);
 
-      await ctx.prisma.contohImage.delete({
+      await ctx.prisma.fotoUser.delete({
         where: {
           id: gambarRow.id,
         },
@@ -55,7 +56,7 @@ export const imageRouter = createTRPCRouter({
     }
   }),
 
-  getAllImages: userProcedure.query(async ({ ctx }) => {
+  getAllFoto: userProcedure.query(async ({ ctx }) => {
     const images = await ctx.prisma.contohImage.findMany({
       where: {
         userId: ctx.session.id,
@@ -75,14 +76,14 @@ export const imageRouter = createTRPCRouter({
     );
   }),
 
-  deleteImage: userProcedure
+  deleteFoto: userProcedure
     .input(
       z.object({
         id: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.contohImage.delete({
+      await ctx.prisma.fotoUser.delete({
         where: {
           id: input.id,
         },
