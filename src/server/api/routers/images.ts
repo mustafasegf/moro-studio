@@ -38,7 +38,6 @@ export const imageRouter = createTRPCRouter({
       });
 
       return { ...post, imageId: gambarRow.id };
-
     } catch (err) {
       console.error(err);
       console.log(env);

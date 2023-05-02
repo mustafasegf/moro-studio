@@ -171,14 +171,10 @@ model BlastMarketing {
   updatedAt DateTime @updatedAt
 }
 
-model Section {
+model Home {
   id        String   @id @default(cuid())
-  image     String[]
-  title     String[]
-  text      String[]
-  link      String[]
-  type      String
-  order     Int
+  image     String
+  carousel  String[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

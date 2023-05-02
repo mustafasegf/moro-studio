@@ -30,6 +30,8 @@ export const FeedbackScalarFieldEnumSchema = z.enum(['Id','namaPenulis','isiFeed
 
 export const FotoUserScalarFieldEnumSchema = z.enum(['id','gambar','bookingId','createdAt','updatedAt']);
 
+export const HomeScalarFieldEnumSchema = z.enum(['id','image','carousel','createdAt','updatedAt']);
+
 export const KatalogScalarFieldEnumSchema = z.enum(['id','nama','durasi','harga','jumlahOrang','deskripsi','createdAt','updatedAt','deleted']);
 
 export const KontenBlogScalarFieldEnumSchema = z.enum(['id','judul','thumbnail','isi','posted','like','createdAt','updatedAt']);
@@ -41,8 +43,6 @@ export const PembayaranScalarFieldEnumSchema = z.enum(['id','bookingId','dp','ju
 export const PertanyaanFeedbackScalarFieldEnumSchema = z.enum(['id','pertanyaan','createdAt','updatedAt']);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
-
-export const SectionScalarFieldEnumSchema = z.enum(['id','image','title','text','link','type','order','createdAt','updatedAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -231,22 +231,18 @@ export const BlastMarketingSchema = z.object({
 export type BlastMarketing = z.infer<typeof BlastMarketingSchema>
 
 /////////////////////////////////////////
-// SECTION SCHEMA
+// HOME SCHEMA
 /////////////////////////////////////////
 
-export const SectionSchema = z.object({
+export const HomeSchema = z.object({
   id: z.string().cuid(),
-  image: z.string().array(),
-  title: z.string().array(),
-  text: z.string().array(),
-  link: z.string().array(),
-  type: z.string(),
-  order: z.number().int(),
+  image: z.string(),
+  carousel: z.string().array(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
 
-export type Section = z.infer<typeof SectionSchema>
+export type Home = z.infer<typeof HomeSchema>
 
 /////////////////////////////////////////
 // CHAT ROOM SCHEMA
@@ -661,17 +657,13 @@ export const BlastMarketingSelectSchema: z.ZodType<Prisma.BlastMarketingSelect> 
   _count: z.union([z.boolean(),z.lazy(() => BlastMarketingCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
-// SECTION
+// HOME
 //------------------------------------------------------
 
-export const SectionSelectSchema: z.ZodType<Prisma.SectionSelect> = z.object({
+export const HomeSelectSchema: z.ZodType<Prisma.HomeSelect> = z.object({
   id: z.boolean().optional(),
   image: z.boolean().optional(),
-  title: z.boolean().optional(),
-  text: z.boolean().optional(),
-  link: z.boolean().optional(),
-  type: z.boolean().optional(),
-  order: z.boolean().optional(),
+  carousel: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
 }).strict()
@@ -1438,65 +1430,47 @@ export const BlastMarketingScalarWhereWithAggregatesInputSchema: z.ZodType<Prism
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
-export const SectionWhereInputSchema: z.ZodType<Prisma.SectionWhereInput> = z.object({
-  AND: z.union([ z.lazy(() => SectionWhereInputSchema),z.lazy(() => SectionWhereInputSchema).array() ]).optional(),
-  OR: z.lazy(() => SectionWhereInputSchema).array().optional(),
-  NOT: z.union([ z.lazy(() => SectionWhereInputSchema),z.lazy(() => SectionWhereInputSchema).array() ]).optional(),
+export const HomeWhereInputSchema: z.ZodType<Prisma.HomeWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => HomeWhereInputSchema),z.lazy(() => HomeWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => HomeWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => HomeWhereInputSchema),z.lazy(() => HomeWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  image: z.lazy(() => StringNullableListFilterSchema).optional(),
-  title: z.lazy(() => StringNullableListFilterSchema).optional(),
-  text: z.lazy(() => StringNullableListFilterSchema).optional(),
-  link: z.lazy(() => StringNullableListFilterSchema).optional(),
-  type: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  order: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  image: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  carousel: z.lazy(() => StringNullableListFilterSchema).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
-export const SectionOrderByWithRelationInputSchema: z.ZodType<Prisma.SectionOrderByWithRelationInput> = z.object({
+export const HomeOrderByWithRelationInputSchema: z.ZodType<Prisma.HomeOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   image: z.lazy(() => SortOrderSchema).optional(),
-  title: z.lazy(() => SortOrderSchema).optional(),
-  text: z.lazy(() => SortOrderSchema).optional(),
-  link: z.lazy(() => SortOrderSchema).optional(),
-  type: z.lazy(() => SortOrderSchema).optional(),
-  order: z.lazy(() => SortOrderSchema).optional(),
+  carousel: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
-export const SectionWhereUniqueInputSchema: z.ZodType<Prisma.SectionWhereUniqueInput> = z.object({
+export const HomeWhereUniqueInputSchema: z.ZodType<Prisma.HomeWhereUniqueInput> = z.object({
   id: z.string().cuid().optional()
 }).strict();
 
-export const SectionOrderByWithAggregationInputSchema: z.ZodType<Prisma.SectionOrderByWithAggregationInput> = z.object({
+export const HomeOrderByWithAggregationInputSchema: z.ZodType<Prisma.HomeOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   image: z.lazy(() => SortOrderSchema).optional(),
-  title: z.lazy(() => SortOrderSchema).optional(),
-  text: z.lazy(() => SortOrderSchema).optional(),
-  link: z.lazy(() => SortOrderSchema).optional(),
-  type: z.lazy(() => SortOrderSchema).optional(),
-  order: z.lazy(() => SortOrderSchema).optional(),
+  carousel: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  _count: z.lazy(() => SectionCountOrderByAggregateInputSchema).optional(),
-  _avg: z.lazy(() => SectionAvgOrderByAggregateInputSchema).optional(),
-  _max: z.lazy(() => SectionMaxOrderByAggregateInputSchema).optional(),
-  _min: z.lazy(() => SectionMinOrderByAggregateInputSchema).optional(),
-  _sum: z.lazy(() => SectionSumOrderByAggregateInputSchema).optional()
+  _count: z.lazy(() => HomeCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => HomeMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => HomeMinOrderByAggregateInputSchema).optional()
 }).strict();
 
-export const SectionScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.SectionScalarWhereWithAggregatesInput> = z.object({
-  AND: z.union([ z.lazy(() => SectionScalarWhereWithAggregatesInputSchema),z.lazy(() => SectionScalarWhereWithAggregatesInputSchema).array() ]).optional(),
-  OR: z.lazy(() => SectionScalarWhereWithAggregatesInputSchema).array().optional(),
-  NOT: z.union([ z.lazy(() => SectionScalarWhereWithAggregatesInputSchema),z.lazy(() => SectionScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+export const HomeScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.HomeScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => HomeScalarWhereWithAggregatesInputSchema),z.lazy(() => HomeScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => HomeScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => HomeScalarWhereWithAggregatesInputSchema),z.lazy(() => HomeScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  image: z.lazy(() => StringNullableListFilterSchema).optional(),
-  title: z.lazy(() => StringNullableListFilterSchema).optional(),
-  text: z.lazy(() => StringNullableListFilterSchema).optional(),
-  link: z.lazy(() => StringNullableListFilterSchema).optional(),
-  type: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  order: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  image: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  carousel: z.lazy(() => StringNullableListFilterSchema).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
@@ -2558,86 +2532,58 @@ export const BlastMarketingUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Blas
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
-export const SectionCreateInputSchema: z.ZodType<Prisma.SectionCreateInput> = z.object({
+export const HomeCreateInputSchema: z.ZodType<Prisma.HomeCreateInput> = z.object({
   id: z.string().cuid().optional(),
-  image: z.union([ z.lazy(() => SectionCreateimageInputSchema),z.string().array() ]).optional(),
-  title: z.union([ z.lazy(() => SectionCreatetitleInputSchema),z.string().array() ]).optional(),
-  text: z.union([ z.lazy(() => SectionCreatetextInputSchema),z.string().array() ]).optional(),
-  link: z.union([ z.lazy(() => SectionCreatelinkInputSchema),z.string().array() ]).optional(),
-  type: z.string(),
-  order: z.number().int(),
+  image: z.string(),
+  carousel: z.union([ z.lazy(() => HomeCreatecarouselInputSchema),z.string().array() ]).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
-export const SectionUncheckedCreateInputSchema: z.ZodType<Prisma.SectionUncheckedCreateInput> = z.object({
+export const HomeUncheckedCreateInputSchema: z.ZodType<Prisma.HomeUncheckedCreateInput> = z.object({
   id: z.string().cuid().optional(),
-  image: z.union([ z.lazy(() => SectionCreateimageInputSchema),z.string().array() ]).optional(),
-  title: z.union([ z.lazy(() => SectionCreatetitleInputSchema),z.string().array() ]).optional(),
-  text: z.union([ z.lazy(() => SectionCreatetextInputSchema),z.string().array() ]).optional(),
-  link: z.union([ z.lazy(() => SectionCreatelinkInputSchema),z.string().array() ]).optional(),
-  type: z.string(),
-  order: z.number().int(),
+  image: z.string(),
+  carousel: z.union([ z.lazy(() => HomeCreatecarouselInputSchema),z.string().array() ]).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
-export const SectionUpdateInputSchema: z.ZodType<Prisma.SectionUpdateInput> = z.object({
+export const HomeUpdateInputSchema: z.ZodType<Prisma.HomeUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  image: z.union([ z.lazy(() => SectionUpdateimageInputSchema),z.string().array() ]).optional(),
-  title: z.union([ z.lazy(() => SectionUpdatetitleInputSchema),z.string().array() ]).optional(),
-  text: z.union([ z.lazy(() => SectionUpdatetextInputSchema),z.string().array() ]).optional(),
-  link: z.union([ z.lazy(() => SectionUpdatelinkInputSchema),z.string().array() ]).optional(),
-  type: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  carousel: z.union([ z.lazy(() => HomeUpdatecarouselInputSchema),z.string().array() ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
-export const SectionUncheckedUpdateInputSchema: z.ZodType<Prisma.SectionUncheckedUpdateInput> = z.object({
+export const HomeUncheckedUpdateInputSchema: z.ZodType<Prisma.HomeUncheckedUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  image: z.union([ z.lazy(() => SectionUpdateimageInputSchema),z.string().array() ]).optional(),
-  title: z.union([ z.lazy(() => SectionUpdatetitleInputSchema),z.string().array() ]).optional(),
-  text: z.union([ z.lazy(() => SectionUpdatetextInputSchema),z.string().array() ]).optional(),
-  link: z.union([ z.lazy(() => SectionUpdatelinkInputSchema),z.string().array() ]).optional(),
-  type: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  carousel: z.union([ z.lazy(() => HomeUpdatecarouselInputSchema),z.string().array() ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
-export const SectionCreateManyInputSchema: z.ZodType<Prisma.SectionCreateManyInput> = z.object({
+export const HomeCreateManyInputSchema: z.ZodType<Prisma.HomeCreateManyInput> = z.object({
   id: z.string().cuid().optional(),
-  image: z.union([ z.lazy(() => SectionCreateimageInputSchema),z.string().array() ]).optional(),
-  title: z.union([ z.lazy(() => SectionCreatetitleInputSchema),z.string().array() ]).optional(),
-  text: z.union([ z.lazy(() => SectionCreatetextInputSchema),z.string().array() ]).optional(),
-  link: z.union([ z.lazy(() => SectionCreatelinkInputSchema),z.string().array() ]).optional(),
-  type: z.string(),
-  order: z.number().int(),
+  image: z.string(),
+  carousel: z.union([ z.lazy(() => HomeCreatecarouselInputSchema),z.string().array() ]).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
-export const SectionUpdateManyMutationInputSchema: z.ZodType<Prisma.SectionUpdateManyMutationInput> = z.object({
+export const HomeUpdateManyMutationInputSchema: z.ZodType<Prisma.HomeUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  image: z.union([ z.lazy(() => SectionUpdateimageInputSchema),z.string().array() ]).optional(),
-  title: z.union([ z.lazy(() => SectionUpdatetitleInputSchema),z.string().array() ]).optional(),
-  text: z.union([ z.lazy(() => SectionUpdatetextInputSchema),z.string().array() ]).optional(),
-  link: z.union([ z.lazy(() => SectionUpdatelinkInputSchema),z.string().array() ]).optional(),
-  type: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  carousel: z.union([ z.lazy(() => HomeUpdatecarouselInputSchema),z.string().array() ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
-export const SectionUncheckedUpdateManyInputSchema: z.ZodType<Prisma.SectionUncheckedUpdateManyInput> = z.object({
+export const HomeUncheckedUpdateManyInputSchema: z.ZodType<Prisma.HomeUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  image: z.union([ z.lazy(() => SectionUpdateimageInputSchema),z.string().array() ]).optional(),
-  title: z.union([ z.lazy(() => SectionUpdatetitleInputSchema),z.string().array() ]).optional(),
-  text: z.union([ z.lazy(() => SectionUpdatetextInputSchema),z.string().array() ]).optional(),
-  link: z.union([ z.lazy(() => SectionUpdatelinkInputSchema),z.string().array() ]).optional(),
-  type: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  order: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  image: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  carousel: z.union([ z.lazy(() => HomeUpdatecarouselInputSchema),z.string().array() ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -3667,40 +3613,26 @@ export const StringNullableListFilterSchema: z.ZodType<Prisma.StringNullableList
   isEmpty: z.boolean().optional()
 }).strict();
 
-export const SectionCountOrderByAggregateInputSchema: z.ZodType<Prisma.SectionCountOrderByAggregateInput> = z.object({
+export const HomeCountOrderByAggregateInputSchema: z.ZodType<Prisma.HomeCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   image: z.lazy(() => SortOrderSchema).optional(),
-  title: z.lazy(() => SortOrderSchema).optional(),
-  text: z.lazy(() => SortOrderSchema).optional(),
-  link: z.lazy(() => SortOrderSchema).optional(),
-  type: z.lazy(() => SortOrderSchema).optional(),
-  order: z.lazy(() => SortOrderSchema).optional(),
+  carousel: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
-export const SectionAvgOrderByAggregateInputSchema: z.ZodType<Prisma.SectionAvgOrderByAggregateInput> = z.object({
-  order: z.lazy(() => SortOrderSchema).optional()
-}).strict();
-
-export const SectionMaxOrderByAggregateInputSchema: z.ZodType<Prisma.SectionMaxOrderByAggregateInput> = z.object({
+export const HomeMaxOrderByAggregateInputSchema: z.ZodType<Prisma.HomeMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  type: z.lazy(() => SortOrderSchema).optional(),
-  order: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
-export const SectionMinOrderByAggregateInputSchema: z.ZodType<Prisma.SectionMinOrderByAggregateInput> = z.object({
+export const HomeMinOrderByAggregateInputSchema: z.ZodType<Prisma.HomeMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
-  type: z.lazy(() => SortOrderSchema).optional(),
-  order: z.lazy(() => SortOrderSchema).optional(),
+  image: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
-}).strict();
-
-export const SectionSumOrderByAggregateInputSchema: z.ZodType<Prisma.SectionSumOrderByAggregateInput> = z.object({
-  order: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const ChatListRelationFilterSchema: z.ZodType<Prisma.ChatListRelationFilter> = z.object({
@@ -4508,38 +4440,11 @@ export const UserUncheckedUpdateManyWithoutBlastMarketingNestedInputSchema: z.Zo
   deleteMany: z.union([ z.lazy(() => UserScalarWhereInputSchema),z.lazy(() => UserScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
-export const SectionCreateimageInputSchema: z.ZodType<Prisma.SectionCreateimageInput> = z.object({
+export const HomeCreatecarouselInputSchema: z.ZodType<Prisma.HomeCreatecarouselInput> = z.object({
   set: z.string().array()
 }).strict();
 
-export const SectionCreatetitleInputSchema: z.ZodType<Prisma.SectionCreatetitleInput> = z.object({
-  set: z.string().array()
-}).strict();
-
-export const SectionCreatetextInputSchema: z.ZodType<Prisma.SectionCreatetextInput> = z.object({
-  set: z.string().array()
-}).strict();
-
-export const SectionCreatelinkInputSchema: z.ZodType<Prisma.SectionCreatelinkInput> = z.object({
-  set: z.string().array()
-}).strict();
-
-export const SectionUpdateimageInputSchema: z.ZodType<Prisma.SectionUpdateimageInput> = z.object({
-  set: z.string().array().optional(),
-  push: z.union([ z.string(),z.string().array() ]).optional(),
-}).strict();
-
-export const SectionUpdatetitleInputSchema: z.ZodType<Prisma.SectionUpdatetitleInput> = z.object({
-  set: z.string().array().optional(),
-  push: z.union([ z.string(),z.string().array() ]).optional(),
-}).strict();
-
-export const SectionUpdatetextInputSchema: z.ZodType<Prisma.SectionUpdatetextInput> = z.object({
-  set: z.string().array().optional(),
-  push: z.union([ z.string(),z.string().array() ]).optional(),
-}).strict();
-
-export const SectionUpdatelinkInputSchema: z.ZodType<Prisma.SectionUpdatelinkInput> = z.object({
+export const HomeUpdatecarouselInputSchema: z.ZodType<Prisma.HomeUpdatecarouselInput> = z.object({
   set: z.string().array().optional(),
   push: z.union([ z.string(),z.string().array() ]).optional(),
 }).strict();
@@ -7662,61 +7567,61 @@ export const BlastMarketingFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.BlastMa
   where: BlastMarketingWhereUniqueInputSchema,
 }).strict()
 
-export const SectionFindFirstArgsSchema: z.ZodType<Prisma.SectionFindFirstArgs> = z.object({
-  select: SectionSelectSchema.optional(),
-  where: SectionWhereInputSchema.optional(),
-  orderBy: z.union([ SectionOrderByWithRelationInputSchema.array(),SectionOrderByWithRelationInputSchema ]).optional(),
-  cursor: SectionWhereUniqueInputSchema.optional(),
+export const HomeFindFirstArgsSchema: z.ZodType<Prisma.HomeFindFirstArgs> = z.object({
+  select: HomeSelectSchema.optional(),
+  where: HomeWhereInputSchema.optional(),
+  orderBy: z.union([ HomeOrderByWithRelationInputSchema.array(),HomeOrderByWithRelationInputSchema ]).optional(),
+  cursor: HomeWhereUniqueInputSchema.optional(),
   take: z.number().optional(),
   skip: z.number().optional(),
-  distinct: SectionScalarFieldEnumSchema.array().optional(),
+  distinct: HomeScalarFieldEnumSchema.array().optional(),
 }).strict()
 
-export const SectionFindFirstOrThrowArgsSchema: z.ZodType<Prisma.SectionFindFirstOrThrowArgs> = z.object({
-  select: SectionSelectSchema.optional(),
-  where: SectionWhereInputSchema.optional(),
-  orderBy: z.union([ SectionOrderByWithRelationInputSchema.array(),SectionOrderByWithRelationInputSchema ]).optional(),
-  cursor: SectionWhereUniqueInputSchema.optional(),
+export const HomeFindFirstOrThrowArgsSchema: z.ZodType<Prisma.HomeFindFirstOrThrowArgs> = z.object({
+  select: HomeSelectSchema.optional(),
+  where: HomeWhereInputSchema.optional(),
+  orderBy: z.union([ HomeOrderByWithRelationInputSchema.array(),HomeOrderByWithRelationInputSchema ]).optional(),
+  cursor: HomeWhereUniqueInputSchema.optional(),
   take: z.number().optional(),
   skip: z.number().optional(),
-  distinct: SectionScalarFieldEnumSchema.array().optional(),
+  distinct: HomeScalarFieldEnumSchema.array().optional(),
 }).strict()
 
-export const SectionFindManyArgsSchema: z.ZodType<Prisma.SectionFindManyArgs> = z.object({
-  select: SectionSelectSchema.optional(),
-  where: SectionWhereInputSchema.optional(),
-  orderBy: z.union([ SectionOrderByWithRelationInputSchema.array(),SectionOrderByWithRelationInputSchema ]).optional(),
-  cursor: SectionWhereUniqueInputSchema.optional(),
+export const HomeFindManyArgsSchema: z.ZodType<Prisma.HomeFindManyArgs> = z.object({
+  select: HomeSelectSchema.optional(),
+  where: HomeWhereInputSchema.optional(),
+  orderBy: z.union([ HomeOrderByWithRelationInputSchema.array(),HomeOrderByWithRelationInputSchema ]).optional(),
+  cursor: HomeWhereUniqueInputSchema.optional(),
   take: z.number().optional(),
   skip: z.number().optional(),
-  distinct: SectionScalarFieldEnumSchema.array().optional(),
+  distinct: HomeScalarFieldEnumSchema.array().optional(),
 }).strict()
 
-export const SectionAggregateArgsSchema: z.ZodType<Prisma.SectionAggregateArgs> = z.object({
-  where: SectionWhereInputSchema.optional(),
-  orderBy: z.union([ SectionOrderByWithRelationInputSchema.array(),SectionOrderByWithRelationInputSchema ]).optional(),
-  cursor: SectionWhereUniqueInputSchema.optional(),
-  take: z.number().optional(),
-  skip: z.number().optional(),
-}).strict()
-
-export const SectionGroupByArgsSchema: z.ZodType<Prisma.SectionGroupByArgs> = z.object({
-  where: SectionWhereInputSchema.optional(),
-  orderBy: z.union([ SectionOrderByWithAggregationInputSchema.array(),SectionOrderByWithAggregationInputSchema ]).optional(),
-  by: SectionScalarFieldEnumSchema.array(),
-  having: SectionScalarWhereWithAggregatesInputSchema.optional(),
+export const HomeAggregateArgsSchema: z.ZodType<Prisma.HomeAggregateArgs> = z.object({
+  where: HomeWhereInputSchema.optional(),
+  orderBy: z.union([ HomeOrderByWithRelationInputSchema.array(),HomeOrderByWithRelationInputSchema ]).optional(),
+  cursor: HomeWhereUniqueInputSchema.optional(),
   take: z.number().optional(),
   skip: z.number().optional(),
 }).strict()
 
-export const SectionFindUniqueArgsSchema: z.ZodType<Prisma.SectionFindUniqueArgs> = z.object({
-  select: SectionSelectSchema.optional(),
-  where: SectionWhereUniqueInputSchema,
+export const HomeGroupByArgsSchema: z.ZodType<Prisma.HomeGroupByArgs> = z.object({
+  where: HomeWhereInputSchema.optional(),
+  orderBy: z.union([ HomeOrderByWithAggregationInputSchema.array(),HomeOrderByWithAggregationInputSchema ]).optional(),
+  by: HomeScalarFieldEnumSchema.array(),
+  having: HomeScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
 }).strict()
 
-export const SectionFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.SectionFindUniqueOrThrowArgs> = z.object({
-  select: SectionSelectSchema.optional(),
-  where: SectionWhereUniqueInputSchema,
+export const HomeFindUniqueArgsSchema: z.ZodType<Prisma.HomeFindUniqueArgs> = z.object({
+  select: HomeSelectSchema.optional(),
+  where: HomeWhereUniqueInputSchema,
+}).strict()
+
+export const HomeFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.HomeFindUniqueOrThrowArgs> = z.object({
+  select: HomeSelectSchema.optional(),
+  where: HomeWhereUniqueInputSchema,
 }).strict()
 
 export const ChatRoomFindFirstArgsSchema: z.ZodType<Prisma.ChatRoomFindFirstArgs> = z.object({
@@ -8496,41 +8401,41 @@ export const BlastMarketingDeleteManyArgsSchema: z.ZodType<Prisma.BlastMarketing
   where: BlastMarketingWhereInputSchema.optional(),
 }).strict()
 
-export const SectionCreateArgsSchema: z.ZodType<Prisma.SectionCreateArgs> = z.object({
-  select: SectionSelectSchema.optional(),
-  data: z.union([ SectionCreateInputSchema,SectionUncheckedCreateInputSchema ]),
+export const HomeCreateArgsSchema: z.ZodType<Prisma.HomeCreateArgs> = z.object({
+  select: HomeSelectSchema.optional(),
+  data: z.union([ HomeCreateInputSchema,HomeUncheckedCreateInputSchema ]),
 }).strict()
 
-export const SectionUpsertArgsSchema: z.ZodType<Prisma.SectionUpsertArgs> = z.object({
-  select: SectionSelectSchema.optional(),
-  where: SectionWhereUniqueInputSchema,
-  create: z.union([ SectionCreateInputSchema,SectionUncheckedCreateInputSchema ]),
-  update: z.union([ SectionUpdateInputSchema,SectionUncheckedUpdateInputSchema ]),
+export const HomeUpsertArgsSchema: z.ZodType<Prisma.HomeUpsertArgs> = z.object({
+  select: HomeSelectSchema.optional(),
+  where: HomeWhereUniqueInputSchema,
+  create: z.union([ HomeCreateInputSchema,HomeUncheckedCreateInputSchema ]),
+  update: z.union([ HomeUpdateInputSchema,HomeUncheckedUpdateInputSchema ]),
 }).strict()
 
-export const SectionCreateManyArgsSchema: z.ZodType<Prisma.SectionCreateManyArgs> = z.object({
-  data: SectionCreateManyInputSchema.array(),
+export const HomeCreateManyArgsSchema: z.ZodType<Prisma.HomeCreateManyArgs> = z.object({
+  data: HomeCreateManyInputSchema.array(),
   skipDuplicates: z.boolean().optional(),
 }).strict()
 
-export const SectionDeleteArgsSchema: z.ZodType<Prisma.SectionDeleteArgs> = z.object({
-  select: SectionSelectSchema.optional(),
-  where: SectionWhereUniqueInputSchema,
+export const HomeDeleteArgsSchema: z.ZodType<Prisma.HomeDeleteArgs> = z.object({
+  select: HomeSelectSchema.optional(),
+  where: HomeWhereUniqueInputSchema,
 }).strict()
 
-export const SectionUpdateArgsSchema: z.ZodType<Prisma.SectionUpdateArgs> = z.object({
-  select: SectionSelectSchema.optional(),
-  data: z.union([ SectionUpdateInputSchema,SectionUncheckedUpdateInputSchema ]),
-  where: SectionWhereUniqueInputSchema,
+export const HomeUpdateArgsSchema: z.ZodType<Prisma.HomeUpdateArgs> = z.object({
+  select: HomeSelectSchema.optional(),
+  data: z.union([ HomeUpdateInputSchema,HomeUncheckedUpdateInputSchema ]),
+  where: HomeWhereUniqueInputSchema,
 }).strict()
 
-export const SectionUpdateManyArgsSchema: z.ZodType<Prisma.SectionUpdateManyArgs> = z.object({
-  data: z.union([ SectionUpdateManyMutationInputSchema,SectionUncheckedUpdateManyInputSchema ]),
-  where: SectionWhereInputSchema.optional(),
+export const HomeUpdateManyArgsSchema: z.ZodType<Prisma.HomeUpdateManyArgs> = z.object({
+  data: z.union([ HomeUpdateManyMutationInputSchema,HomeUncheckedUpdateManyInputSchema ]),
+  where: HomeWhereInputSchema.optional(),
 }).strict()
 
-export const SectionDeleteManyArgsSchema: z.ZodType<Prisma.SectionDeleteManyArgs> = z.object({
-  where: SectionWhereInputSchema.optional(),
+export const HomeDeleteManyArgsSchema: z.ZodType<Prisma.HomeDeleteManyArgs> = z.object({
+  where: HomeWhereInputSchema.optional(),
 }).strict()
 
 export const ChatRoomCreateArgsSchema: z.ZodType<Prisma.ChatRoomCreateArgs> = z.object({
