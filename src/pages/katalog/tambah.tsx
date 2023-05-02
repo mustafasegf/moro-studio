@@ -94,7 +94,7 @@ export default function CreateCatalogue() {
       <div className="flex min-h-full items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="overflow-hidden shadow sm:rounded-md">
-            <div className="bg-gray-200 px-4 py-5 sm:p-6">
+            <div className="bg-[#e5e7eb] px-4 py-5 sm:p-6">
               <div className="grid grid-cols-6 gap-6">
                 <div className="col-span-6">
                   <label
@@ -240,17 +240,17 @@ export default function CreateCatalogue() {
               </div>
             </div>
 
-            <div className="bg-gray-300 px-4 py-3 text-right sm:px-6">
+            <div className="bg-light-grey px-4 py-3 text-right sm:px-6">
               <Link
                 href="/katalog"
                 type="button"
-                className="inline-flex w-full justify-center rounded-md border border-gray-600 px-3 py-2 text-sm font-semibold text-gray-600 transition duration-300 ease-in-out hover:border-gray-700 hover:bg-gray-700 hover:text-gray-200 sm:mr-3 sm:w-auto"
+                className="inline-flex w-full justify-center rounded-md border border-gray-600 px-3 py-2 text-sm font-semibold text-gray-600 transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-auto"
               >
                 Kembali
               </Link>
               <button
                 type="submit"
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-gray-600 py-2 px-3 text-sm font-semibold text-white hover:bg-gray-700 sm:mt-0 sm:w-auto"
+                className="mt-3 inline-flex w-full justify-center rounded-md bg-dark-grey py-2 px-3 text-sm font-semibold text-white-grey hover:bg-medium-grey sm:mt-0 sm:w-auto"
               >
                 Simpan
               </button>
