@@ -18,11 +18,11 @@ module.exports = {
     // daisyui: {
     //     themes: ["cupcake"]
     // },
+    // daisyui: {
+    //     themes: ["light"]
+    // },
     daisyui: {
-        themes: ["light"]
-    },
-    daisyui: { 
-      themes: ["cupcake"]
+        themes: ["cupcake"]
     },
     plugins: [require('daisyui')],
 };
