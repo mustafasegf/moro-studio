@@ -218,7 +218,7 @@ function DatesButton({ now, date, idx }: DatesButtonProps) {
 
   if (enabled && clickable)
     return (
-      <Link href={`/pesan/konfirmasi?katalog=${katalog?.id}&date=${dateStr}`}>
+      <Link href={`/pesan/form?katalog=${katalog?.id}&date=${dateStr}`}>
         <Child />
       </Link>
     );
