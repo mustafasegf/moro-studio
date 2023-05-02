@@ -110,6 +110,9 @@ export const bookingRouter = createTRPCRouter({
             },
           ],
         },
+        include: {
+          katalog: true,
+        },
       });
     }),
 });

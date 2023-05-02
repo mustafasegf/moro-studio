@@ -56,8 +56,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     to: end,
   });
 
-  console.log("DATA", { start, end })
-
   return {
     props: {
       katalogId: katalog,
@@ -89,16 +87,10 @@ export default function Jadwal({ katalogId }: { katalogId: string }) {
   const [katalog, setKatalog] = useAtom(katalogAtom);
   const [booked, setBooked] = useAtom(bookedAtom); 
 
-  useEffect(() => console.log({ booked }), [booked]);
-
-  // const [hoverIndex] = useAtom(hoverIndexAtom);
-  // useEffect(() => console.log({ hoverIndex }), [hoverIndex]);
-
   const { data } = api.catalogue.getCatalogueById.useQuery({ id: katalogId });
   if (!data) {
     return;
   }
-  const range = (data?.durasi ?? 40) / 40;
 
   useEffect(() => {
     setKatalog(data);
@@ -110,7 +102,7 @@ export default function Jadwal({ katalogId }: { katalogId: string }) {
   });
 
   useEffect(() => {
-    listBooking?.forEach((booking) => {
+    listBooking?.forEach(booking => {
 
       const row = differenceInDays(booking.jadwal, start);
       const col =
@@ -119,12 +111,11 @@ export default function Jadwal({ katalogId }: { katalogId: string }) {
           startHour * 60) /
         40;
 
-      for (let i = 0; i < range; i++) {
+      for (let i = 0; i < booking.katalog.durasi / 40; i++) {
         const idx = row * interval + col + i
         booked.add(idx);
       }
     });
-    console.log("book called", { booked });
 
     setBooked(booked);
   }, [booked])
