@@ -134,7 +134,18 @@ All digital Soft files`,
     )
   }
 
-  console.log({ admin, blogManager, studioManager, user, katalog });
+  const backgroundFoto = await prisma.backgroundFoto.upsert({
+    where: {
+      warna: "hitam"
+    },
+    update: {},
+    create: {
+      warna: "hitam",
+    },
+  });
+
+
+  console.log({ admin, blogManager, studioManager, user, katalog, backgroundFoto });
 }
 
 main()
