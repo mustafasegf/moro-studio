@@ -8,6 +8,7 @@ import { userRouter } from "./routers/user";
 import { kuponRouter } from "./routers/kupon";
 import { bookingRouter } from "./routers/booking";
 import { imageRouter } from "./routers/images";
+import { pertanyaanFeedbackRouter } from "./routers/pertanyaanfeedback";
 
 /**
  * This is the primary router for your server.
@@ -20,6 +21,7 @@ export const appRouter = createTRPCRouter({
   contoh: contohRouter,
   auth: authRouter,
   user: userRouter,
+  pertanyaanFeedback: pertanyaanFeedbackRouter,
   feedback: feedbackRouter,
   kupon: kuponRouter,
   booking: bookingRouter,
