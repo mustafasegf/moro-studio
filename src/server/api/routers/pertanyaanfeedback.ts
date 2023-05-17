@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -6,27 +7,26 @@ import {
   // protectedProcedure,
 } from "~/server/api/trpc";
 
+import { addPertanyaanFeedbackSchema} from "~/utils/schemas"
+
 export const pertanyaanFeedbackRouter = createTRPCRouter({
   addPertanyaanFeedback: publicProcedure
-    .input(
-      z.object({
-        pertanyaan: z.string(),
-        // feedback: z.array(z.string()),
-      })
-    )
-    .mutation(({ input, ctx }) => {
-      return ctx.prisma.pertanyaanFeedback.create({
-        data: {
-          pertanyaan: input.pertanyaan,
-          feedback: {
-          // connect: input.feedback.map((feedbackId: string) => ({ Id: feedbackId })),
+    .input(addPertanyaanFeedbackSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const data = await ctx.prisma.feedbackQuestion.create({
+          data: {
+            pertanyaan: input.pertanyaan,
           },
-        },
-      });
+        });
+      } catch (e) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Tidak bisa akses database" });
+      }
+
     }),
   
   getAllPertanyaanFeedback: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.pertanyaanFeedback.findMany();
+    return ctx.prisma.feedbackQuestion.findMany();
   }),
 
   // getFeedbackById: publicProcedure
@@ -50,7 +50,7 @@ export const pertanyaanFeedbackRouter = createTRPCRouter({
     })
   )
   .mutation(({ input, ctx }) => {
-    return ctx.prisma.pertanyaanFeedback.delete({
+    return ctx.prisma.feedbackQuestion.delete({
       where: {
         id: input.id,
       },

@@ -36,6 +36,7 @@ model User {
   deleted        Boolean          @default(false)
   // feedback       Feedback[]
   ContohImage    ContohImage[]
+  Feedback       Feedback[]
 }
 
 // model VerificationToken {
@@ -200,14 +201,6 @@ model Chat {
   updatedAt  DateTime @updatedAt
 }
 
-model PertanyaanFeedback {
-  id         String     @id @default(cuid())
-  pertanyaan String
-  feedback   Feedback[]
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-}
-
 // model Feedback {
 //   id                 String               @id @default(cuid())
 //   user               User                 @relation(fields: [userId], references: [id])
@@ -219,12 +212,29 @@ model PertanyaanFeedback {
 // }
 
 model Feedback {
-  Id                 String               @id @default(cuid())
-  namaPenulis        String
-  pertanyaanFeedback PertanyaanFeedback[]
-  isiFeedback        String
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
+  id             String           @id @default(cuid())
+  userId         String
+  user           User             @relation(fields: [userId], references: [id])
+  feedbackAnswer FeedbackAnswer[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model FeedbackAnswer {
+  id                 String           @id @default(cuid())
+  feedbackId         String
+  feedback           Feedback         @relation(fields: [feedbackId], references: [id])
+  feedbackQuestionId String
+  question           FeedbackQuestion @relation(fields: [feedbackQuestionId], references: [id])
+  answer             String?
+}
+
+model FeedbackQuestion {
+  id             String           @id @default(cuid())
+  pertanyaan     String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  FeedbackAnswer FeedbackAnswer[]
 }
 
 model Contoh {

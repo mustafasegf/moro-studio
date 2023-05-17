@@ -30,13 +30,13 @@ export const feedbackRouter = createTRPCRouter({
   getFeedbackById: publicProcedure
     .input(
       z.object({
-        Id: z.string(),
+        id: z.string(),
       })
     )
     .query(({ input, ctx }) => {
       return ctx.prisma.feedback.findUnique({
         where: {
-          Id : input.Id,
+          id : input.id,
         }
       });
     }),
@@ -44,13 +44,13 @@ export const feedbackRouter = createTRPCRouter({
   deleteFeedback: publicProcedure
   .input(
     z.object({
-      Id: z.string(),
+      id: z.string(),
     })
   )
   .mutation(({ input, ctx }) => {
     return ctx.prisma.feedback.delete({
       where: {
-        Id: input.Id,
+        id: input.id,
       },
     });
   }),
@@ -58,7 +58,7 @@ export const feedbackRouter = createTRPCRouter({
   updateFeedback: publicProcedure
     .input(
       z.object({
-        Id: z.string(),
+        id: z.string(),
         namaPenulis: z.string(),
         isiFeedback: z.string(),
       })
@@ -66,7 +66,7 @@ export const feedbackRouter = createTRPCRouter({
     .mutation(({ input, ctx }) => {
       return ctx.prisma.feedback.update({
         where: {
-          Id: input.Id,
+          id: input.id,
         },
         data: {
           namaPenulis: input.namaPenulis,

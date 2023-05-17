@@ -54,3 +54,10 @@ export const updateCatalogueSchema =  z.object({
 })
 
 export type UpdateCatalogueSchema = z.infer<typeof updateCatalogueSchema>;
+
+
+export const addPertanyaanFeedbackSchema =  z.object({
+  pertanyaan: z.string().min(1, "pertanyaan perlu diisi"),
+})
+
+export type AddPertanyaanFeedbackSchema = z.infer<typeof addPertanyaanFeedbackSchema>;

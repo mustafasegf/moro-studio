@@ -14,7 +14,7 @@ export default function UpdateFeedback(){
   
   const updateFeedback = api.feedback.updateFeedback.useMutation();
   const router = useRouter()
-  const { Id } = router.query as Query
+  const { id } = router.query as Query
 
   useEffect(function(){
     if (updateFeedback.isSuccess){
@@ -22,7 +22,7 @@ export default function UpdateFeedback(){
     }
   },[updateFeedback.isSuccess])
 
-  const { data, isLoading, error } = api.feedback.getFeedbackById.useQuery({Id});
+  const { data, isLoading, error } = api.feedback.getFeedbackById.useQuery({id});
 
   useEffect(()=>{
     if(data) {
@@ -41,7 +41,7 @@ export default function UpdateFeedback(){
 
   const handleUpdateFeedback = (e: FormEvent) => {
     e.preventDefault();
-    updateFeedback.mutate({ Id, namaPenulis , isiFeedback});
+    updateFeedback.mutate({ id, namaPenulis , isiFeedback});
   };
 
   return <>

@@ -9,7 +9,7 @@ export default function ListFeedback() {
   function deleteFeedback(id: string) {
     const confirmed = window.confirm("Apa kamu yakin ingin menghapus feedback ini?");
     if (confirmed) {
-      deleteFeedbackMutation.mutate({ Id: id }, {
+      deleteFeedbackMutation.mutate({ id }, {
         onSuccess: () => {
           window.alert("Feedback berhasil dihapus!");
           window.location.reload();
@@ -41,7 +41,7 @@ export default function ListFeedback() {
             <div className="mt-4 flex justify-between items-center">
               <div className="text-sm text-gray-600">{item.updatedAt.toDateString()}</div>
               <div className="flex items-center">
-                <Link className="mr-4 text-sm text-gray-500 hover:text-gray-700" href={`/updatefeedback/${item.Id}`}>Update</Link>
+                <Link className="mr-4 text-sm text-gray-500 hover:text-gray-700" href={`/feedback/${item.Id}`}>Update</Link>
                 <button
                   className="text-sm text-gray-500 hover:text-red-600"
                   onClick={() => deleteFeedback(item.Id)}>
