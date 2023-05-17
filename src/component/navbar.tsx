@@ -24,6 +24,11 @@ export function Navbar() {
       path: "/homepage/edit",
       role: "admin",
     },
+    {
+      name: "Konfirmasi Pesanan",
+      path: "/pesan/konfirmasi",
+      role: "studioManager",
+    }
   ];
 
   return (
