@@ -20,7 +20,7 @@ import cn from "classnames";
 import Link from "next/link";
 import { atom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { Booking, Katalog } from "@prisma/client";
+import { Booking, Katalog, BookinStatus } from "@prisma/client";
 import { Modal } from "~/component/modal";
 
 const hoverIndexAtom = atom(-1);
@@ -83,7 +83,7 @@ export default function Jadwal() {
       }
     >
   >({});
-  const [bookSet, setBookSet] = useAtom(bookSetAtom); 
+  const [bookSet, setBookSet] = useAtom(bookSetAtom);
 
   const { data: listBooking } = api.booking.getAllBooking.useQuery({
     from: start,
@@ -104,7 +104,7 @@ export default function Jadwal() {
         book[idx] = booking;
         bookSet.add(idx);
       }
-      console.log({bookSet})
+      console.log({ bookSet });
     });
 
     setBookSet(bookSet);
@@ -120,11 +120,11 @@ export default function Jadwal() {
 
   return (
     <>
-      <ModalAction 
+      <ModalAction
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        kembaliHandler = {handleKembali}
-        actionHandler = {handleAction}
+        kembaliHandler={handleKembali}
+        actionHandler={handleAction}
       />
       <CenterContainer>
         <div className=" flex flex-row justify-between">
@@ -165,7 +165,7 @@ interface DatesButtonProps {
 
 function DatesButton({ date, idx, booking }: DatesButtonProps) {
   const [hoverIndex, setHoverIndex] = useAtom(hoverIndexAtom);
-  const [booked] = useAtom(bookSetAtom); 
+  const [booked] = useAtom(bookSetAtom);
   const interval = 17;
   const [, setBook] = useAtom(bookAtom);
   const [, setIsOpen] = useAtom(isOpenAtom);
@@ -173,7 +173,8 @@ function DatesButton({ date, idx, booking }: DatesButtonProps) {
   const enabled = !!booking;
 
   const range = (booking?.katalog?.durasi ?? 40) / 40;
-  let hover = idx - hoverIndex < range && idx - hoverIndex >= 0 && hoverIndex != -1;
+  let hover =
+    idx - hoverIndex < range && idx - hoverIndex >= 0 && hoverIndex != -1;
 
   function handleEnter() {
     if (booked.has(idx)) {
@@ -199,7 +200,8 @@ function DatesButton({ date, idx, booking }: DatesButtonProps) {
       className={cn(
         "mt-3 rounded-xl border-2 border-neutral-400 bg-base-100 py-3 px-2 text-center text-lg",
         {
-          "-translate-y-[2px] bg-neutral-300 transition duration-75 ease-in-out":hover && enabled,
+          "-translate-y-[2px] bg-neutral-300 transition duration-75 ease-in-out":
+            hover && enabled,
         },
         {
           "bg-primary": enabled,
@@ -207,7 +209,9 @@ function DatesButton({ date, idx, booking }: DatesButtonProps) {
       )}
       onMouseEnter={() => handleEnter()}
       onMouseLeave={() => handleLeave()}
-      onClick={() => { handleClick() }}
+      onClick={() => {
+        handleClick();
+      }}
     >
       {format(date, "hh:mm aa", {
         locale: enUS,
@@ -239,24 +243,46 @@ export function ModalAction({
   actionHandler,
 }: ModalActionProps) {
   const [booking] = useAtom(bookAtom);
+  const date = booking?.jadwal ?? new Date();
+  const durasi = booking?.durasi ?? 40;
+  const [status, setStatus] = useState(booking?.status ?? BookinStatus.booked);
+
+  function handleChangeStatus(e: React.ChangeEvent<HTMLSelectElement>) {
+    e.preventDefault();
+    const statusForm = e.target.value as BookinStatus;
+    setStatus(statusForm);
+  }
 
   return (
     <>
       <Modal open={open} onClose={onClose}>
         <div className="z-50 overflow-y-auto">
           <div className="flex items-center py-3 px-4">
-            <h3 className="text-lg font-medium">Masukan DP pesanan</h3>
+            <h3 className="text-lg font-medium">Ubah Status Booking</h3>
           </div>
 
-          <p className="py-4 px-4">Masukan DP pesanan</p>
+          <p className="py-4 px-4">
+            {format(date, "eeee d MMMM p - ", { locale: id }) +
+              format(addMinutes(date, durasi), "p", { locale: id })}
+          </p>
+          <select
+            id="role"
+            className="input-bordered input mt-1 mb-4 w-full max-w-xs"
+            onChange={handleChangeStatus}
+          >
+            {Object.keys(BookinStatus).map((st) => (
+              <option selected={booking?.status === st} key={st}>{st}</option>
+            ))}
+          </select>
+          {status === BookinStatus.dp && (
+            <input className="input-bordered input mt-1 mb-2 w-full max-w-xs"></input>
+          )}
+
           <div className="flex justify-end py-3 px-4">
-            <button className="btn btn-accent mr-4" onClick={kembaliHandler}>
+            <button className="btn-accent btn mr-4" onClick={kembaliHandler}>
               Batal
             </button>
-            <button
-              className="btn-primary btn"
-              onClick={actionHandler}
-            >
+            <button className="btn-primary btn" onClick={actionHandler}>
               Simpan
             </button>
           </div>
