@@ -5,6 +5,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider = "zod-prisma-types"
+  output   = "../src/utils/zod-prisma"
+}
+
 datasource db {
   provider = "postgresql"
   // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
@@ -14,57 +19,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// // Necessary for Next auth
-// model Account {
-//   id                String  @id @default(cuid())
-//   userId            String
-//   type              String
-//   provider          String
-//   providerAccountId String
-//   refresh_token     String? @db.Text
-//   access_token      String? @db.Text
-//   expires_at        Int?
-//   token_type        String?
-//   scope             String?
-//   id_token          String? @db.Text
-//   session_state     String?
-//   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-//   @@unique([provider, providerAccountId])
-// }
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  expires      DateTime
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model User {
   id             String           @id @default(cuid())
   nama           String
-  email          String           @unique
-  hp             String
+  email          String
+  hp             String?
   instagram      String?
   role           Role             @default(user)
-  sessions       Session[]
+  // sessions       Session[]
   booking        Booking[]
   blastMarketing BlastMarketing[]
   chatRoomAdmin  ChatRoom[]       @relation("ChatRoomAdmin")
   chatRoomUser   ChatRoom[]       @relation("ChatRoomUser")
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
+  deleted        Boolean          @default(false)
   // feedback       Feedback[]
+  ContohImage    ContohImage[]
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
+// model VerificationToken {
+//   identifier String
+//   token      String   @unique
+//   expires    DateTime
+//
+//   @@unique([identifier, token])
+// }
 
 enum Role {
   admin
@@ -74,24 +54,26 @@ enum Role {
 }
 
 model Katalog {
-  id        String    @id @default(cuid())
-  nama      String
-  durasi    String
-  harga     Int
-  deskripsi String    @db.Text
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Booking   Booking[]
+  id          String    @id @default(cuid())
+  nama        String
+  durasi      Int
+  harga       Int
+  jumlahOrang Int?
+  deskripsi   String    @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Booking     Booking[]
+  deleted     Boolean   @default(false)
 }
 
 model Kupon {
   id             String    @id @default(cuid())
   nama           String
-  kode           String
+  kode           String    @unique
   diskon         Float
-  kuotaPemakaian Int
-  kuotaTerpakai  Int
-  status         Boolean
+  kuotaPemakaian Int       @default(0)
+  kuotaTerpakai  Int       @default(0)
+  active         Boolean   @default(true)
   tanggal        DateTime
   Booking        Booking[]
   createdAt      DateTime  @default(now())
@@ -103,6 +85,7 @@ model BackgroundFoto {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Booking   Booking[]
+  deleted   Boolean   @default(false)
 }
 
 enum BookinStatus {
@@ -117,20 +100,23 @@ model Booking {
   user            User           @relation(fields: [userId], references: [id])
   backgroundWarna String
   background      BackgroundFoto @relation(fields: [backgroundWarna], references: [warna])
-  peliharaan      Boolean
+  peliharaan      Boolean        @default(false)
   harga           Int
   jadwal          DateTime
+  durasi          Int
+  jumlahOrang     Int
   katalogId       String
   katalog         Katalog        @relation(fields: [katalogId], references: [id])
-  detail          String         @db.Text
-  kuponId         String
-  kupon           Kupon          @relation(fields: [kuponId], references: [id])
+  // detail          String         @db.Text
+  kuponId         String?
+  kupon           Kupon?          @relation(fields: [kuponId], references: [id])
   status          BookinStatus
   // foto FotoUser[]
   Pembayaran      Pembayaran[]
   FotoUser        FotoUser[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
+  deleted         Boolean        @default(false)
 }
 
 model Pembayaran {
@@ -185,33 +171,12 @@ model BlastMarketing {
   updatedAt DateTime @updatedAt
 }
 
-enum SectionType {
-  heroSection
-  carousel
-  leftImageCTA
-  centerImageCTA
-  rightImageCTA
-}
-
-model Homepage {
-  id        String    @id @default(cuid())
-  section   Section[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-}
-
-model Section {
-  id         String      @id @default(cuid())
-  Image      String[]
-  Title      String?
-  Text       String?
-  Type       SectionType
-  CreatedAt  DateTime
-  UpdatedAt  DateTime
-  homepageId String?
-  homepage   Homepage?   @relation(fields: [homepageId], references: [id])
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+model Home {
+  id        String   @id @default(cuid())
+  image     String
+  carousel  String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model ChatRoom {
@@ -265,4 +230,10 @@ model Feedback {
 model Contoh {
   id    String @id @default(cuid())
   email String
+}
+
+model ContohImage {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 }
