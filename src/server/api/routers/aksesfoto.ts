@@ -102,4 +102,23 @@ export const aksesFotoRouter = createTRPCRouter({
         );
       });
     }),
+
+  //   downloadFoto: userProcedure.query(async ({ ctx, input }) => {
+  //   const { id } = input;
+
+  //   const filePath = `${ctx.session.id}/${id}`;
+
+  //   const fileStream = createReadStream(filePath);
+  //   fileStream.on("error", (error) => {
+  //     throw new TRPCError({
+  //       code: "INTERNAL_SERVER_ERROR",
+  //       message: "Failed to download photo",
+  //     });
+  //   });
+
+  //   return {
+  //     stream: fileStream,
+  //     fileName: id,
+  //   };
+  // }),
 });

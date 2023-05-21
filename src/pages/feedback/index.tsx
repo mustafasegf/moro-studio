@@ -16,7 +16,7 @@ export default function Feedback() {
     console.log(isiFeedback);
 
     addFeedback.mutate({ namaPenulis, isiFeedback });
-    window.location.href = "/listfeedback";
+    window.location.href = "/feedback/list";
   };
 
   return (
@@ -36,7 +36,7 @@ export default function Feedback() {
               <div className="col-span-6">
                 <label htmlFor="deskripsi" className="block text-sm font-medium leading-6 text-gray-900">Deskripsi Feedback</label>
                 <div className="mt-2">
-                  <textarea id="deskripsi" name="deskripsi" rows={5} className="textarea textarea-bordered textarea-lg w-full max-w-xs mt-1 block rounded-md border-0 py-1.5 pl-2.5 pr-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6" placeholder="Isi Feedback" onChange={(e) => setIsiFeedback(e.target.value)}></textarea>
+                  <textarea id="deskripsi" name="deskripsi" rows={5} className="textarea textarea-bordered textarea-lg w-[50rem] mt-1 block rounded-md border-0 py-1.5 pl-2.5 pr-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6" placeholder="Isi Feedback" onChange={(e) => setIsiFeedback(e.target.value)}></textarea>
                 </div>
               </div>
 

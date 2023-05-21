@@ -120,9 +120,9 @@ export default function ListCatalogue() {
             <div className="flex flex-col">
               <div className="mb-4 flex items-center">
                 <BiTimeFive className="mr-2 text-2xl text-gray-600" />
-                <span> 
-                  {item.durasi > 60 && Math.floor(item.durasi/60) + " Jam" } 
-                  {item.durasi % 60 + " Menit" } 
+                <span>
+                  {item.durasi > 60 && Math.floor(item.durasi / 60) + " Jam"}
+                  {item.durasi % 60 + " Menit"}
                 </span>
               </div>
               <div className="mb-4 flex items-center">
@@ -138,7 +138,7 @@ export default function ListCatalogue() {
               </div>
               {item.jumlahOrang &&
                 <div className="flex items-center">
-                <IoMdPeople className="mr-2 text-2xl text-gray-600" />
+                  <IoMdPeople className="mr-2 text-2xl text-gray-600" />
                   <span>{item.jumlahOrang} orang</span>
                 </div>
               }

@@ -3,11 +3,12 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   publicProcedure,
+  userProcedure,
   // protectedProcedure,
 } from "~/server/api/trpc";
 
 export const feedbackRouter = createTRPCRouter({
-  addFeedback: publicProcedure
+  addFeedback: userProcedure
     .input(
       z.object({
         namaPenulis: z.string(),
@@ -17,6 +18,11 @@ export const feedbackRouter = createTRPCRouter({
     .mutation(({ input, ctx }) => {
       return ctx.prisma.feedback.create({
         data: {
+          user: {
+            connect: {
+              id: ctx.session.id,
+            },
+          },
           namaPenulis: input.namaPenulis,
           isiFeedback: input.isiFeedback,
         },
@@ -69,7 +75,6 @@ export const feedbackRouter = createTRPCRouter({
           id: input.id,
         },
         data: {
-          namaPenulis: input.namaPenulis,
           isiFeedback: input.isiFeedback,
         },
       });

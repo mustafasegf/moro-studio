@@ -14,7 +14,7 @@ export default function ListFeedback() {
           window.alert("Feedback berhasil dihapus!");
           window.location.reload();
         },
-        onError: () => {    
+        onError: () => {
           window.alert("Penghapusan feedback mengalami masalah");
         }
       });
@@ -27,7 +27,7 @@ export default function ListFeedback() {
 
       <div className="mb-4 flex justify-end">
         <Link href="/feedback">
-          <button className="mr-4 rounded-md bg-gray-600 px-6 py-2 text-white hover:bg-gray-700">
+          <button className="mr-4 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
             + Buat Feedback
           </button>
         </Link>
@@ -35,16 +35,16 @@ export default function ListFeedback() {
 
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         {data?.map((item) => (
-          <div key={item.Id} className="p-4 bg-white rounded-lg shadow">
-            <h3 className="text-lg font-medium text-gray-900">{item.namaPenulis}</h3>
+          <div key={item.id} className="p-4 bg-white rounded-lg shadow">
+            <h3 className="text-lg font-medium text-gray-900">{item.userId}</h3>
             <p className="mt-2 text-gray-600">{item.isiFeedback}</p>
             <div className="mt-4 flex justify-between items-center">
               <div className="text-sm text-gray-600">{item.updatedAt.toDateString()}</div>
               <div className="flex items-center">
-                <Link className="mr-4 text-sm text-gray-500 hover:text-gray-700" href={`/feedback/${item.Id}`}>Update</Link>
+                <Link className="mr-4 text-sm text-gray-500 hover:text-gray-700" href={`/feedback/${item.id}`}>Update</Link>
                 <button
                   className="text-sm text-gray-500 hover:text-red-600"
-                  onClick={() => deleteFeedback(item.Id)}>
+                  onClick={() => deleteFeedback(item.id)}>
                   Delete
                 </button>
               </div>

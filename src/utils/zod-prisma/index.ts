@@ -30,7 +30,7 @@ export const FeedbackAnswerScalarFieldEnumSchema = z.enum(['id','feedbackId','fe
 
 export const FeedbackQuestionScalarFieldEnumSchema = z.enum(['id','pertanyaan','createdAt','updatedAt']);
 
-export const FeedbackScalarFieldEnumSchema = z.enum(['id','userId','createdAt','updatedAt']);
+export const FeedbackScalarFieldEnumSchema = z.enum(['id','userId','isiFeedback','namaPenulis','createdAt','updatedAt']);
 
 export const FotoUserScalarFieldEnumSchema = z.enum(['id','gambar','bookingId','createdAt','updatedAt']);
 
@@ -282,6 +282,8 @@ export type Chat = z.infer<typeof ChatSchema>
 export const FeedbackSchema = z.object({
   id: z.string().cuid(),
   userId: z.string(),
+  isiFeedback: z.string(),
+  namaPenulis: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -768,6 +770,8 @@ export const FeedbackSelectSchema: z.ZodType<Prisma.FeedbackSelect> = z.object({
   id: z.boolean().optional(),
   userId: z.boolean().optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+  isiFeedback: z.boolean().optional(),
+  namaPenulis: z.boolean().optional(),
   feedbackAnswer: z.union([z.boolean(),z.lazy(() => FeedbackAnswerFindManyArgsSchema)]).optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
@@ -1626,6 +1630,8 @@ export const FeedbackWhereInputSchema: z.ZodType<Prisma.FeedbackWhereInput> = z.
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  isiFeedback: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  namaPenulis: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   feedbackAnswer: z.lazy(() => FeedbackAnswerListRelationFilterSchema).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -1635,6 +1641,8 @@ export const FeedbackOrderByWithRelationInputSchema: z.ZodType<Prisma.FeedbackOr
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   user: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
+  isiFeedback: z.lazy(() => SortOrderSchema).optional(),
+  namaPenulis: z.lazy(() => SortOrderSchema).optional(),
   feedbackAnswer: z.lazy(() => FeedbackAnswerOrderByRelationAggregateInputSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -1647,6 +1655,8 @@ export const FeedbackWhereUniqueInputSchema: z.ZodType<Prisma.FeedbackWhereUniqu
 export const FeedbackOrderByWithAggregationInputSchema: z.ZodType<Prisma.FeedbackOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
+  isiFeedback: z.lazy(() => SortOrderSchema).optional(),
+  namaPenulis: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => FeedbackCountOrderByAggregateInputSchema).optional(),
@@ -1660,6 +1670,8 @@ export const FeedbackScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Feed
   NOT: z.union([ z.lazy(() => FeedbackScalarWhereWithAggregatesInputSchema),z.lazy(() => FeedbackScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  isiFeedback: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  namaPenulis: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
@@ -2800,6 +2812,8 @@ export const ChatUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ChatUncheckedU
 export const FeedbackCreateInputSchema: z.ZodType<Prisma.FeedbackCreateInput> = z.object({
   id: z.string().cuid().optional(),
   user: z.lazy(() => UserCreateNestedOneWithoutFeedbackInputSchema),
+  isiFeedback: z.string(),
+  namaPenulis: z.string(),
   feedbackAnswer: z.lazy(() => FeedbackAnswerCreateNestedManyWithoutFeedbackInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -2808,6 +2822,8 @@ export const FeedbackCreateInputSchema: z.ZodType<Prisma.FeedbackCreateInput> = 
 export const FeedbackUncheckedCreateInputSchema: z.ZodType<Prisma.FeedbackUncheckedCreateInput> = z.object({
   id: z.string().cuid().optional(),
   userId: z.string(),
+  isiFeedback: z.string(),
+  namaPenulis: z.string(),
   feedbackAnswer: z.lazy(() => FeedbackAnswerUncheckedCreateNestedManyWithoutFeedbackInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -2816,6 +2832,8 @@ export const FeedbackUncheckedCreateInputSchema: z.ZodType<Prisma.FeedbackUnchec
 export const FeedbackUpdateInputSchema: z.ZodType<Prisma.FeedbackUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutFeedbackNestedInputSchema).optional(),
+  isiFeedback: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  namaPenulis: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   feedbackAnswer: z.lazy(() => FeedbackAnswerUpdateManyWithoutFeedbackNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2824,6 +2842,8 @@ export const FeedbackUpdateInputSchema: z.ZodType<Prisma.FeedbackUpdateInput> = 
 export const FeedbackUncheckedUpdateInputSchema: z.ZodType<Prisma.FeedbackUncheckedUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  isiFeedback: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  namaPenulis: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   feedbackAnswer: z.lazy(() => FeedbackAnswerUncheckedUpdateManyWithoutFeedbackNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2832,12 +2852,16 @@ export const FeedbackUncheckedUpdateInputSchema: z.ZodType<Prisma.FeedbackUnchec
 export const FeedbackCreateManyInputSchema: z.ZodType<Prisma.FeedbackCreateManyInput> = z.object({
   id: z.string().cuid().optional(),
   userId: z.string(),
+  isiFeedback: z.string(),
+  namaPenulis: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const FeedbackUpdateManyMutationInputSchema: z.ZodType<Prisma.FeedbackUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  isiFeedback: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  namaPenulis: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -2845,6 +2869,8 @@ export const FeedbackUpdateManyMutationInputSchema: z.ZodType<Prisma.FeedbackUpd
 export const FeedbackUncheckedUpdateManyInputSchema: z.ZodType<Prisma.FeedbackUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  isiFeedback: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  namaPenulis: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -3852,6 +3878,8 @@ export const FeedbackAnswerOrderByRelationAggregateInputSchema: z.ZodType<Prisma
 export const FeedbackCountOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
+  isiFeedback: z.lazy(() => SortOrderSchema).optional(),
+  namaPenulis: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -3859,6 +3887,8 @@ export const FeedbackCountOrderByAggregateInputSchema: z.ZodType<Prisma.Feedback
 export const FeedbackMaxOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
+  isiFeedback: z.lazy(() => SortOrderSchema).optional(),
+  namaPenulis: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -3866,6 +3896,8 @@ export const FeedbackMaxOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackMa
 export const FeedbackMinOrderByAggregateInputSchema: z.ZodType<Prisma.FeedbackMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
+  isiFeedback: z.lazy(() => SortOrderSchema).optional(),
+  namaPenulis: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -5238,6 +5270,8 @@ export const ContohImageCreateManyUserInputEnvelopeSchema: z.ZodType<Prisma.Cont
 
 export const FeedbackCreateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackCreateWithoutUserInput> = z.object({
   id: z.string().optional(),
+  isiFeedback: z.string(),
+  namaPenulis: z.string(),
   feedbackAnswer: z.lazy(() => FeedbackAnswerCreateNestedManyWithoutFeedbackInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -5245,6 +5279,8 @@ export const FeedbackCreateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackCrea
 
 export const FeedbackUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackUncheckedCreateWithoutUserInput> = z.object({
   id: z.string().optional(),
+  isiFeedback: z.string(),
+  namaPenulis: z.string(),
   feedbackAnswer: z.lazy(() => FeedbackAnswerUncheckedCreateNestedManyWithoutFeedbackInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -5412,6 +5448,8 @@ export const FeedbackScalarWhereInputSchema: z.ZodType<Prisma.FeedbackScalarWher
   NOT: z.union([ z.lazy(() => FeedbackScalarWhereInputSchema),z.lazy(() => FeedbackScalarWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  isiFeedback: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  namaPenulis: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
@@ -6672,6 +6710,8 @@ export const FeedbackAnswerScalarWhereInputSchema: z.ZodType<Prisma.FeedbackAnsw
 export const FeedbackCreateWithoutFeedbackAnswerInputSchema: z.ZodType<Prisma.FeedbackCreateWithoutFeedbackAnswerInput> = z.object({
   id: z.string().optional(),
   user: z.lazy(() => UserCreateNestedOneWithoutFeedbackInputSchema),
+  isiFeedback: z.string(),
+  namaPenulis: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -6679,6 +6719,8 @@ export const FeedbackCreateWithoutFeedbackAnswerInputSchema: z.ZodType<Prisma.Fe
 export const FeedbackUncheckedCreateWithoutFeedbackAnswerInputSchema: z.ZodType<Prisma.FeedbackUncheckedCreateWithoutFeedbackAnswerInput> = z.object({
   id: z.string().optional(),
   userId: z.string(),
+  isiFeedback: z.string(),
+  namaPenulis: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -6715,6 +6757,8 @@ export const FeedbackUpsertWithoutFeedbackAnswerInputSchema: z.ZodType<Prisma.Fe
 export const FeedbackUpdateWithoutFeedbackAnswerInputSchema: z.ZodType<Prisma.FeedbackUpdateWithoutFeedbackAnswerInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutFeedbackNestedInputSchema).optional(),
+  isiFeedback: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  namaPenulis: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -6722,6 +6766,8 @@ export const FeedbackUpdateWithoutFeedbackAnswerInputSchema: z.ZodType<Prisma.Fe
 export const FeedbackUncheckedUpdateWithoutFeedbackAnswerInputSchema: z.ZodType<Prisma.FeedbackUncheckedUpdateWithoutFeedbackAnswerInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  isiFeedback: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  namaPenulis: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -6897,6 +6943,8 @@ export const ContohImageCreateManyUserInputSchema: z.ZodType<Prisma.ContohImageC
 
 export const FeedbackCreateManyUserInputSchema: z.ZodType<Prisma.FeedbackCreateManyUserInput> = z.object({
   id: z.string().cuid().optional(),
+  isiFeedback: z.string(),
+  namaPenulis: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -7037,6 +7085,8 @@ export const ContohImageUncheckedUpdateManyWithoutContohImageInputSchema: z.ZodT
 
 export const FeedbackUpdateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackUpdateWithoutUserInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  isiFeedback: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  namaPenulis: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   feedbackAnswer: z.lazy(() => FeedbackAnswerUpdateManyWithoutFeedbackNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7044,6 +7094,8 @@ export const FeedbackUpdateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackUpda
 
 export const FeedbackUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.FeedbackUncheckedUpdateWithoutUserInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  isiFeedback: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  namaPenulis: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   feedbackAnswer: z.lazy(() => FeedbackAnswerUncheckedUpdateManyWithoutFeedbackNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7051,6 +7103,8 @@ export const FeedbackUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.Fee
 
 export const FeedbackUncheckedUpdateManyWithoutFeedbackInputSchema: z.ZodType<Prisma.FeedbackUncheckedUpdateManyWithoutFeedbackInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  isiFeedback: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  namaPenulis: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
