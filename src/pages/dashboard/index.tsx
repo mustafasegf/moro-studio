@@ -101,6 +101,7 @@ export default function Dashboard() {
       const katalogName =
         katalogNames.find((katalog) => katalog.value === booking.katalogId)
           ?.label || "Katalog Asing";
+      console.log(katalogName); // penting!!
       const bookingYear = booking.jadwal.getFullYear();
       const bookingMonth = booking.jadwal.getMonth() + 1;
       if (bookingYear === year && (month === 0 || bookingMonth === month)) {
