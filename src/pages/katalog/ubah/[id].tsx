@@ -100,7 +100,7 @@ export default function UpdateCatalogue(props: { id: string }) {
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>Katalog telah berhasil ditambahkan</span>
+            <span>Katalog telah berhasil diubah</span>
           </div>
         </div>
       )}
@@ -121,19 +121,19 @@ export default function UpdateCatalogue(props: { id: string }) {
                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>Error! Katalog tidak dapat ditambahkan.</span>
+            <span>Error! Katalog tidak dapat diubah.</span>
           </div>
         </div>
       )}
 
       <h1 className="my-8 mb-4 text-center text-3xl font-bold">
-        Buat Paket Foto
+        Ubah Paket Foto
       </h1>
 
       <div className="flex min-h-full items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="overflow-hidden shadow sm:rounded-md">
-            <div className="bg-gray-200 px-4 py-5 sm:p-6">
+            <div className="bg-[#e5e7eb] px-4 py-5 sm:p-6">
               <div className="grid grid-cols-6 gap-6">
                 <div className="col-span-6">
                   <label
@@ -194,7 +194,7 @@ export default function UpdateCatalogue(props: { id: string }) {
                   </label>
                   <div className="mt-2 flex flex-col">
                     <div className="flex rounded-md shadow-sm">
-                      <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 px-3 text-gray-500 sm:text-sm">
+                      <span className="inline-flex items-center rounded-l-md border border-r-0 px-3 text-gray-500 sm:text-sm">
                         Rp
                       </span>
                       <input
@@ -279,17 +279,17 @@ export default function UpdateCatalogue(props: { id: string }) {
               </div>
             </div>
 
-            <div className="bg-gray-300 px-4 py-3 text-right sm:px-6">
+            <div className="bg-light-grey px-4 py-3 text-right sm:px-6">
               <Link
                 href="/katalog"
                 type="button"
-                className="inline-flex w-full justify-center rounded-md border border-gray-600 px-3 py-2 text-sm font-semibold text-gray-600 transition duration-300 ease-in-out hover:border-gray-700 hover:bg-gray-700 hover:text-gray-200 sm:mr-3 sm:w-auto"
+                className="inline-flex w-full justify-center rounded-md border border-gray-600 px-3 py-2 text-sm font-semibold text-gray-600 transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-auto"
               >
                 Kembali
               </Link>
               <button
                 type="submit"
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-gray-600 py-2 px-3 text-sm font-semibold text-white hover:bg-gray-700 sm:mt-0 sm:w-auto"
+                className="mt-3 inline-flex w-full justify-center rounded-md bg-dark-grey py-2 px-3 text-sm font-semibold text-white-grey hover:bg-medium-grey sm:mt-0 sm:w-auto"
               >
                 Simpan
               </button>

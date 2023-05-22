@@ -56,11 +56,11 @@ export function ModalAction({
 
           <p className="py-4 px-4">{content}</p>
           <div className="flex justify-end py-3 px-4">
-            <button className="btn mr-4" onClick={kembaliHandler}>
+            <button className="focus:shadow-outline mr-2 rounded bg-light-grey py-2 px-4 font-bold hover:bg-medium-grey hover:text-white-grey focus:outline-none" onClick={kembaliHandler}>
               Batal
             </button>
             <button
-              className={isDelete ? "btn-error btn" : "btn-primary btn"}
+              className={isDelete ? "focus:shadow-outline rounded bg-[#FC182A] py-2 px-4 font-bold text-white-grey hover:bg-red focus:outline-none" : "focus:shadow-outline rounded bg-blue py-2 px-4 font-bold text-white-grey hover:bg-[#6380BB] focus:outline-none"}
               onClick={actionHandler}
             >
               {isDelete ? "Hapus" : "Simpan"}

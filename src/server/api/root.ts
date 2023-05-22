@@ -5,6 +5,7 @@ import { contohRouter } from "~/server/api/routers/contoh";
 import { authRouter } from "~/server/api/routers/auth";
 import { feedbackRouter } from "./routers/feedback";
 import { userRouter } from "./routers/user";
+import { kuponRouter } from "./routers/kupon";
 import { bookingRouter } from "./routers/booking";
 import { imageRouter } from "./routers/images";
 import { pembayaranRouter } from "./routers/pembayaran";
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   auth: authRouter,
   user: userRouter,
   feedback: feedbackRouter,
+  kupon: kuponRouter,
   booking: bookingRouter,
   image: imageRouter,
   pembayaran: pembayaranRouter,
