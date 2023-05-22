@@ -1,9 +1,11 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { Chart, ChartDataset, registerables } from "chart.js";
 import { Booking } from "@prisma/client";
 import { LoadingPage } from "~/component/loading";
 import Dropdown from "~/component/Dropdown";
+import { getServerAuthSession } from "~/utils/session";
+import { GetServerSidePropsContext } from "next";
 Chart.register(...registerables);
 
 declare global {
@@ -12,16 +14,45 @@ declare global {
   }
 }
 
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = getServerAuthSession(ctx);
+  if (!session) {
+    return { redirect: { destination: "/login" } };
+  }
+  if (session.role !== ("admin" || "studioManager")) {
+    return { redirect: { destination: "/" } };
+  }
+
+  return { props: {} };
+}
+
 export default function Dashboard() {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const { data, isLoading, error } = api.booking.findAllBooking.useQuery();
+  const katalog = api.catalogue.getAllCatalogue.useQuery();
   const [yearOptions, setYearOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [katalogNames, setKatalogNames] = useState<
     { value: string; label: string }[]
   >([]);
 
   useEffect(() => {
     if (data) {
+      // Map katalog id to katalog name
+      if (katalog.data)
+        setKatalogNames(
+          Array.from(new Set(data.map((booking) => booking.katalogId))).map(
+            (katalogId) => ({
+              value: katalogId,
+              label:
+                katalog.data.find((katalog) => katalog.id === katalogId)
+                  ?.nama || "Katalog tidak ditemukan",
+            })
+          )
+        );
+
       // Set year options
       setYearOptions(
         Array.from(
@@ -67,6 +98,9 @@ export default function Dashboard() {
     const monthlyBookings: MonthlyBooking[] = [];
     const dailyBookings: DailyBooking[] = [];
     bookingData.forEach((booking) => {
+      const katalogName =
+        katalogNames.find((katalog) => katalog.value === booking.katalogId)
+          ?.label || "Katalog Asing";
       const bookingYear = booking.jadwal.getFullYear();
       const bookingMonth = booking.jadwal.getMonth() + 1;
       if (bookingYear === year && (month === 0 || bookingMonth === month)) {
@@ -76,11 +110,11 @@ export default function Dashboard() {
           (mb) => mb.month === monthLabel
         );
         if (existingMonth) {
-          existingMonth.counts[booking.katalogId] =
-            (existingMonth.counts[booking.katalogId] || 0) + 1;
+          existingMonth.counts[katalogName] =
+            (existingMonth.counts[katalogName] || 0) + 1;
         } else {
           const counts: { [key: string]: number } = {};
-          counts[booking.katalogId] = 1;
+          counts[katalogName] = 1;
           monthlyBookings.push({ month: monthLabel, counts });
         }
 
@@ -88,11 +122,11 @@ export default function Dashboard() {
         const dayLabel = `${year}-${month + 1}-${day}`; // Format tanggal sebagai "YYYY-MM-DD"
         const existingDay = dailyBookings.find((db) => db.day === dayLabel);
         if (existingDay) {
-          existingDay.counts[booking.katalogId] =
-            (existingDay.counts[booking.katalogId] || 0) + 1;
+          existingDay.counts[katalogName] =
+            (existingDay.counts[katalogName] || 0) + 1;
         } else {
           const counts: { [key: string]: number } = {};
-          counts[booking.katalogId] = 1;
+          counts[katalogName] = 1;
           dailyBookings.push({ day: dayLabel, counts });
         }
       }
@@ -131,7 +165,13 @@ export default function Dashboard() {
     let labels: string[] = [];
     const datasets: ChartDataset<"bar">[] = [];
     const uniquePackages = Array.from(
-      new Set(bookingData.map((booking) => booking.katalogId))
+      new Set(
+        bookingData.map(
+          (booking) =>
+            katalogNames.find((katalog) => katalog.value === booking.katalogId)
+              ?.label || "Katalog Asing"
+        )
+      )
     );
     if (month === 0) {
       // Urutkan data per bulan berdasarkan bulan
