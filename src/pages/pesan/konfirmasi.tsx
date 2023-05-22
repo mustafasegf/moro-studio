@@ -18,17 +18,44 @@ import {
 import { id, enUS } from "date-fns/locale";
 import cn from "classnames";
 import Link from "next/link";
+import { getServerAuthSession } from "~/utils/session";
 import { atom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
-import { Booking, Katalog, BookinStatus } from "@prisma/client";
+import {
+  Booking,
+  Katalog,
+  BookinStatus,
+  Pembayaran,
+  FotoUser,
+} from "@prisma/client";
 import { Modal } from "~/component/modal";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { NumericFormat } from 'react-number-format';
+import { addPembayaranSchema, AddPembayaranSchema } from "~/utils/schemas";
 
 const hoverIndexAtom = atom(-1);
 const bookSetAtom = atom<Set<number>>(new Set<number>());
-const bookAtom = atom<Booking | undefined>(undefined);
+const bookAtom = atom<
+  | (Booking & {
+    katalog: Katalog;
+    Pembayaran: Pembayaran[];
+    FotoUser: FotoUser[];
+  })
+  | undefined
+>(undefined);
 const isOpenAtom = atom(false);
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = getServerAuthSession(ctx);
+
+  if (!session) {
+    return { redirect: { destination: "/login" } };
+  }
+  if (session.role !== "studioManager" && session.role !== "admin") {
+    return { redirect: { destination: "/" } };
+  }
+
   const ssg = createSSG();
 
   const startHour = 10;
@@ -61,6 +88,7 @@ export default function Jadwal() {
   const interval = Math.ceil(((endHour - startHour) * 60) / duration);
 
   const [isOpen, setIsOpen] = useAtom(isOpenAtom);
+  const [_, setBookAtom] = useAtom(bookAtom);
 
   const start = set(new Date(), {
     hours: startHour,
@@ -80,6 +108,8 @@ export default function Jadwal() {
       number,
       Booking & {
         katalog: Katalog;
+        Pembayaran: Pembayaran[];
+        FotoUser: FotoUser[];
       }
     >
   >({});
@@ -92,6 +122,10 @@ export default function Jadwal() {
 
   useEffect(() => {
     listBooking?.forEach((booking) => {
+      // TODO: remove
+      setBookAtom(booking);
+      setIsOpen(true);
+
       const row = differenceInDays(booking.jadwal, start);
       const col =
         (getHours(booking.jadwal) * 60 +
@@ -104,7 +138,6 @@ export default function Jadwal() {
         book[idx] = booking;
         bookSet.add(idx);
       }
-      console.log({ bookSet });
     });
 
     setBookSet(bookSet);
@@ -160,6 +193,8 @@ interface DatesButtonProps {
   date: Date;
   booking?: Booking & {
     katalog: Katalog;
+    Pembayaran: Pembayaran[];
+    FotoUser: FotoUser[];
   };
 }
 
@@ -247,11 +282,40 @@ export function ModalAction({
   const durasi = booking?.durasi ?? 40;
   const [status, setStatus] = useState(booking?.status ?? BookinStatus.booked);
 
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm<AddPembayaranSchema>({
+    resolver: zodResolver(addPembayaranSchema),
+    defaultValues: {
+      booking: booking?.id,
+    },
+  });
+
+  function onLeave() {
+    reset();
+    onClose();
+    setStatus(BookinStatus.booked);
+  }
+
+  function onSubmit(val: AddPembayaranSchema) {
+    // addBooking.mutate(val);
+    console.log(val);
+  }
+
   function handleChangeStatus(e: React.ChangeEvent<HTMLSelectElement>) {
     e.preventDefault();
     const statusForm = e.target.value as BookinStatus;
     setStatus(statusForm);
   }
+  const bayar = booking?.Pembayaran.map((p) => p.jumlah).reduce(
+    (acc, cur) => acc + cur,
+    0
+  );
+
+  console.log(errors);
 
   return (
     <>
@@ -261,31 +325,55 @@ export function ModalAction({
             <h3 className="text-lg font-medium">Ubah Status Booking</h3>
           </div>
 
-          <p className="py-4 px-4">
+          <p className="py-2 px-4">
             {format(date, "eeee d MMMM p - ", { locale: id }) +
               format(addMinutes(date, durasi), "p", { locale: id })}
           </p>
-          <select
-            id="role"
-            className="input-bordered input mt-1 mb-4 w-full max-w-xs"
-            onChange={handleChangeStatus}
-          >
-            {Object.keys(BookinStatus).map((st) => (
-              <option selected={booking?.status === st} key={st}>{st}</option>
-            ))}
-          </select>
-          {status === BookinStatus.dp && (
-            <input className="input-bordered input mt-1 mb-2 w-full max-w-xs"></input>
-          )}
+          <p className="px-4">Harga: {booking?.harga}</p>
+          <p className="px-4 pb-2">Uang yang sudah terbayar: {bayar}</p>
 
-          <div className="flex justify-end py-3 px-4">
-            <button className="btn-accent btn mr-4" onClick={kembaliHandler}>
-              Batal
-            </button>
-            <button className="btn-primary btn" onClick={actionHandler}>
-              Simpan
-            </button>
-          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+            <select
+              id="role"
+              className="input-bordered input mt-1 mb-4 w-full max-w-xs"
+              onChange={handleChangeStatus}
+            >
+              {Object.keys(BookinStatus).map((st) => (
+                <option selected={booking?.status === st} key={st}>
+                  {st}
+                </option>
+              ))}
+            </select>
+            {(status === BookinStatus.dp || status === BookinStatus.lunas) && (
+              <>
+                <input
+                  className={cn(
+                    "input-bordered input mt-1 mb-2 w-full max-w-xs",
+                    { "input-error": errors.jumlah }
+                  )}
+                  {...register("jumlah", {
+                    setValueAs: (v) => (!v ? 0 : parseInt(v, 10)),
+                  })}
+                ></input>
+                {errors.jumlah && (
+                  <span className={cn("mb-4", { "text-error": errors.jumlah })}>
+                    {errors.jumlah.message}
+                  </span>
+                )}
+              </>
+            )}
+            <input type="hidden" {...register(`booking`)} />
+            <input
+              type="hidden"
+              {...register(`dp`, { value: status === BookinStatus.dp })}
+            />
+            <div className="flex justify-end py-3 px-4">
+              <button className="btn-accent btn mr-4" onClick={onLeave}>
+                Batal
+              </button>
+              <input className="btn-primary btn" type="submit" value="Simpan" />
+            </div>
+          </form>
         </div>
       </Modal>
     </>
