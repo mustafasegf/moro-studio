@@ -144,7 +144,7 @@ export default function Jadwal({ katalogId }: { katalogId: string }) {
                 {format(date, "eeee", { locale: id })}
               </p>
               <p className="text-center text-2xl font-bold">
-                {format(date, "ee")}
+                {format(date, "dd")}
               </p>
               {[...Array(interval)].map((_, colIdx) => (
                 <DatesButton

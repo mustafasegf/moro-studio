@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  studioManagerProcedure,
+} from "~/server/api/trpc";
 import { addBookingSchema } from "~/utils/schemas";
 import { sendEmail } from "~/utils/sendemail";
 
@@ -114,6 +118,7 @@ export const bookingRouter = createTRPCRouter({
           katalog: true,
           Pembayaran: true,
           FotoUser: true,
+          kupon: true,
         },
       });
     }),
@@ -125,4 +130,31 @@ export const bookingRouter = createTRPCRouter({
       },
     });
   }),
+
+  deleteBooking: studioManagerProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      let booking = await ctx.prisma.booking.findFirst({
+        where: {
+          id: input.id,
+          deleted: false,
+        },
+      });
+
+      if (!booking) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Booking tidak ditemukan",
+        });
+      }
+
+      await ctx.prisma.booking.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          deleted: true,
+        },
+      });
+    }),
 });

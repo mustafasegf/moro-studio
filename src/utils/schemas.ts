@@ -61,6 +61,21 @@ export type UpdateCatalogueSchema = z.infer<typeof updateCatalogueSchema>;
 export const addPembayaranSchema = z.object({
   dp: z.boolean(),
   jumlah: z.number().min(1, "jumlah harus diisi"),
+  // jumlah: z.preprocess(
+  //   (val) => {
+  //     console.log("val", val)
+  //     if (!val || typeof val !== "string") return 0
+  //     // @ts-ignore
+  //     let str = val.replace(/\,/g, "")
+  //     console.log("str", str)
+  //     // @ts-ignore
+  //     let int = parseInt(str, 10)
+  //     console.log("int", int)
+  //     return int
+  //   },
+  //   z.number().min(1, "jumlah harus diisi"),
+  // ),
+  //
   booking: z.string().cuid().min(1, "booking harus diisi"),
 });
 

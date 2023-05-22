@@ -22,14 +22,20 @@ export const pembayaranRouter = createTRPCRouter({
         });
       }
 
-      pembayaran = await ctx.prisma.pembayaran.create({
-        data: {
-          dp: input.dp,
-          jumlah: input.jumlah,
-          booking: {
-            connect: { id: input.booking },
+      let tx = await ctx.prisma.$transaction([
+        ctx.prisma.pembayaran.create({
+          data: {
+            dp: input.dp,
+            jumlah: input.jumlah,
+            booking: {
+              connect: { id: input.booking },
+            },
           },
-        },
-      });
+        }),
+        ctx.prisma.booking.update({
+          where: { id: input.booking },
+          data: { status: input.dp ? "dp" : "lunas" },
+        }),
+      ]);
     }),
 });

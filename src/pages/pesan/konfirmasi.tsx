@@ -27,12 +27,13 @@ import {
   BookinStatus,
   Pembayaran,
   FotoUser,
+  Kupon,
 } from "@prisma/client";
-import { Modal } from "~/component/modal";
-import { useForm } from "react-hook-form";
+import { Modal, ModalAction } from "~/component/modal";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NumericFormat } from 'react-number-format';
 import { addPembayaranSchema, AddPembayaranSchema } from "~/utils/schemas";
+import makeToast from "~/component/toast";
 
 const hoverIndexAtom = atom(-1);
 const bookSetAtom = atom<Set<number>>(new Set<number>());
@@ -41,6 +42,7 @@ const bookAtom = atom<
     katalog: Katalog;
     Pembayaran: Pembayaran[];
     FotoUser: FotoUser[];
+    kupon: Kupon | null
   })
   | undefined
 >(undefined);
@@ -88,7 +90,8 @@ export default function Jadwal() {
   const interval = Math.ceil(((endHour - startHour) * 60) / duration);
 
   const [isOpen, setIsOpen] = useAtom(isOpenAtom);
-  const [_, setBookAtom] = useAtom(bookAtom);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [booking] = useAtom(bookAtom);
 
   const start = set(new Date(), {
     hours: startHour,
@@ -110,6 +113,7 @@ export default function Jadwal() {
         katalog: Katalog;
         Pembayaran: Pembayaran[];
         FotoUser: FotoUser[];
+        kupon: Kupon | null
       }
     >
   >({});
@@ -120,12 +124,15 @@ export default function Jadwal() {
     to: end,
   });
 
+  const utils = api.useContext()
+  const deleteBooking = api.booking.deleteBooking.useMutation({
+    onSuccess() {
+      utils.booking.getAllBooking.invalidate()
+    }
+  });
+
   useEffect(() => {
     listBooking?.forEach((booking) => {
-      // TODO: remove
-      setBookAtom(booking);
-      setIsOpen(true);
-
       const row = differenceInDays(booking.jadwal, start);
       const col =
         (getHours(booking.jadwal) * 60 +
@@ -134,6 +141,7 @@ export default function Jadwal() {
         40;
 
       for (let i = 0; i < booking.katalog.durasi / 40; i++) {
+        // console.log(row, col, booking)
         const idx = row * interval + col + i;
         book[idx] = booking;
         bookSet.add(idx);
@@ -144,20 +152,54 @@ export default function Jadwal() {
     setBook(book);
   }, [bookSet]);
 
-  function handleKembali() {
-    setIsOpen(false);
-  }
   function handleAction() {
-    setIsOpen(false);
-  }
+    setIsOpenDelete(false)
+    const id = booking?.id!
+    deleteBooking.mutate({ id })
+  } 
+ 
+  useEffect(
+    function() {
+      if (deleteBooking.isSuccess) {
+        makeToast("pesanan berhasil dihapus");
+        setIsOpen(false)
+        setIsOpenDelete(false)
+      }
+    },
+    [deleteBooking.isSuccess]
+  );
+
+  useEffect(
+    function() {
+      if (deleteBooking.isError) {
+        makeToast(`Eror: ${deleteBooking.error.message}`, { type: "error" });
+        const timeout = setTimeout(() => {
+          deleteBooking.reset();
+          setIsOpenDelete(false)
+        }, 5000);
+        return () => clearTimeout(timeout);
+      }
+    },
+    [deleteBooking.isError]
+  );
 
   return (
     <>
-      <ModalAction
+      <ModalBooking
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        kembaliHandler={handleKembali}
+        onDelete={() => setIsOpenDelete(true)}
+      />
+
+      <ModalAction
+        open={isOpenDelete}
+        isDelete
+        title="Hapus Pesanan"
+        content="Apakah anda yakin ingin menghapus pesanan ini?"
+        onClose={() => setIsOpenDelete(false)}
+        kembaliHandler={() => setIsOpenDelete(false)}
         actionHandler={handleAction}
+
       />
       <CenterContainer>
         <div className=" flex flex-row justify-between">
@@ -170,7 +212,7 @@ export default function Jadwal() {
                 {format(date, "eeee", { locale: id })}
               </p>
               <p className="text-center text-2xl font-bold">
-                {format(date, "ee")}
+                {format(date, "dd")}
               </p>
               {[...Array(interval)].map((_, colIdx) => (
                 <DatesButton
@@ -195,6 +237,7 @@ interface DatesButtonProps {
     katalog: Katalog;
     Pembayaran: Pembayaran[];
     FotoUser: FotoUser[];
+    kupon: Kupon | null
   };
 }
 
@@ -240,6 +283,12 @@ function DatesButton({ date, idx, booking }: DatesButtonProps) {
         },
         {
           "bg-primary": enabled,
+        },
+        {
+          "bg-accent": booking?.status == BookinStatus.dp
+        },
+        {
+          "bg-success": booking?.status == BookinStatus.lunas
         }
       )}
       onMouseEnter={() => handleEnter()}
@@ -264,23 +313,30 @@ function DatesButton({ date, idx, booking }: DatesButtonProps) {
   return <Child />;
 }
 
-interface ModalActionProps {
+interface ModalBookingProps {
   open: boolean;
   onClose: () => void;
-  kembaliHandler: () => void;
-  actionHandler: () => void;
+  onDelete: () => void;
 }
 
-export function ModalAction({
+export function ModalBooking({
   open,
   onClose,
-  kembaliHandler,
-  actionHandler,
-}: ModalActionProps) {
+  onDelete,
+}: ModalBookingProps) {
   const [booking] = useAtom(bookAtom);
+  const [, setBookSet] = useAtom(bookSetAtom);
   const date = booking?.jadwal ?? new Date();
   const durasi = booking?.durasi ?? 40;
   const [status, setStatus] = useState(booking?.status ?? BookinStatus.booked);
+
+  const utils = api.useContext();
+  const addPembayaran = api.pembayaran.addPembayaran.useMutation({
+    onSuccess() {
+      void utils.booking.getAllBooking.invalidate();
+      setBookSet(new Set());
+    },
+  });
 
   const {
     handleSubmit,
@@ -294,6 +350,10 @@ export function ModalAction({
     },
   });
 
+  useEffect(() => {
+    reset({ booking: booking?.id });
+  }, [booking]);
+
   function onLeave() {
     reset();
     onClose();
@@ -301,21 +361,45 @@ export function ModalAction({
   }
 
   function onSubmit(val: AddPembayaranSchema) {
-    // addBooking.mutate(val);
-    console.log(val);
+    addPembayaran.mutate(val);
+    // console.log(val);
   }
+
+  useEffect(
+    function() {
+      if (addPembayaran.isSuccess) {
+        makeToast("pesanan berhasil ditambah");
+        onLeave();
+      }
+    },
+    [addPembayaran.isSuccess]
+  );
+
+  useEffect(
+    function() {
+      if (addPembayaran.isError) {
+        makeToast(`Eror: ${addPembayaran.error.message}`, { type: "error" });
+        const timeout = setTimeout(() => {
+          addPembayaran.reset();
+        }, 5000);
+        return () => clearTimeout(timeout);
+      }
+    },
+    [addPembayaran.isError]
+  );
 
   function handleChangeStatus(e: React.ChangeEvent<HTMLSelectElement>) {
     e.preventDefault();
     const statusForm = e.target.value as BookinStatus;
     setStatus(statusForm);
   }
-  const bayar = booking?.Pembayaran.map((p) => p.jumlah).reduce(
+
+  let bayar = booking?.Pembayaran.map((p) => p.jumlah).reduce(
     (acc, cur) => acc + cur,
     0
-  );
+  ) ?? 0;
 
-  console.log(errors);
+  bayar = bayar * (booking?.kupon?.diskon ?? 1)
 
   return (
     <>
@@ -337,24 +421,47 @@ export function ModalAction({
               id="role"
               className="input-bordered input mt-1 mb-4 w-full max-w-xs"
               onChange={handleChangeStatus}
+              defaultValue={booking?.status}
             >
               {Object.keys(BookinStatus).map((st) => (
-                <option selected={booking?.status === st} key={st}>
+                <option
+                  key={st}
+                  value={st}
+                >
                   {st}
                 </option>
               ))}
             </select>
             {(status === BookinStatus.dp || status === BookinStatus.lunas) && (
               <>
+                {/* <Controller */}
+                {/*   render={({ field }) => ( */}
+                {/*     <NumericFormat */}
+                {/*       thousandSeparator={true} */}
+                {/*       // decimalSeparator={","} */}
+                {/*       className={cn( */}
+                {/*         "input-bordered input mt-1 mb-2 w-full max-w-xs", */}
+                {/*         { "input-error": errors.jumlah } */}
+                {/*       )} */}
+                {/*       {...field} */}
+                {/*       // @ts-ignore */}
+                {/*       ref={null} */}
+                {/*     /> */}
+                {/*   )} */}
+                {/*   control={control} */}
+                {/*   name="jumlah" */}
+                {/* /> */}
+
                 <input
                   className={cn(
                     "input-bordered input mt-1 mb-2 w-full max-w-xs",
                     { "input-error": errors.jumlah }
                   )}
-                  {...register("jumlah", {
-                    setValueAs: (v) => (!v ? 0 : parseInt(v, 10)),
+                  {...register(`jumlah`, {
+                    setValueAs: (val) => (!val ? 0 : parseInt(val)),
                   })}
-                ></input>
+                />
+
                 {errors.jumlah && (
                   <span className={cn("mb-4", { "text-error": errors.jumlah })}>
                     {errors.jumlah.message}
@@ -363,11 +470,16 @@ export function ModalAction({
               </>
             )}
             <input type="hidden" {...register(`booking`)} />
+
             <input
               type="hidden"
               {...register(`dp`, { value: status === BookinStatus.dp })}
             />
+
             <div className="flex justify-end py-3 px-4">
+              <button className="btn-error btn mr-4" onClick={onDelete}>
+                Hapus
+              </button>
               <button className="btn-accent btn mr-4" onClick={onLeave}>
                 Batal
               </button>
