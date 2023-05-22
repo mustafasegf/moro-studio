@@ -12,7 +12,7 @@ export function Navbar() {
     },
     {
       name: "Feedback",
-      path: "/listfeedback",
+      path: "/feedback/list",
       role: "user",
     },
     {
