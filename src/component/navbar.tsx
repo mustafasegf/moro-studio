@@ -30,6 +30,11 @@ export function Navbar() {
       path: "/kupon/list-kupon",
       role: "admin",
     },
+    {
+      name: "Dashboard",
+      path: "/dashboard",
+      role: "admin" || "studioManager",
+    },
   ];
 
   return (
@@ -57,20 +62,19 @@ export function Navbar() {
               tabIndex={0}
               className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-dark-grey p-2 shadow"
             >
-
-            {pages.map(
-              (page) =>
-                (session?.role === page.role || page.role === undefined) && (
-                  <li key={page.path}>
-                    <Link
-                      href={page.path}
-                      className="mr-2 text-white-grey text-base-content hover:bg-base-300 hover:text-black"
-                    >
-                      {page.name}
-                    </Link>
-                  </li>
-                )
-            )}
+              {pages.map(
+                (page) =>
+                  (session?.role === page.role || page.role === undefined) && (
+                    <li key={page.path}>
+                      <Link
+                        href={page.path}
+                        className="mr-2 text-white-grey text-base-content hover:bg-base-300 hover:text-black"
+                      >
+                        {page.name}
+                      </Link>
+                    </li>
+                  )
+              )}
               <li>
                 {session ? (
                   <p
@@ -115,7 +119,7 @@ export function Navbar() {
 
             <Link
               href="/"
-              className="text-white-grey btn-ghost btn text-xl normal-case"
+              className="btn-ghost btn text-xl normal-case text-white-grey"
             >
               Moro Studio
             </Link>
@@ -169,12 +173,14 @@ export function Navbar() {
           <ul className="menu menu-horizontal px-1">
             {session && session?.role !== "user" && (
               <li className="hidden sm:block">
-                <p className="text-white-grey mr-2">role: {session?.role}</p>
+                <p className="mr-2 text-white-grey">role: {session?.role}</p>
               </li>
             )}
             {session && (
               <li className="hidden sm:block">
-                <p className="mr-2 text-white-grey bg-[#595959]">Hi {session?.nama}!</p>
+                <p className="mr-2 bg-[#595959] text-white-grey">
+                  Hi {session?.nama}!
+                </p>
               </li>
             )}
 
@@ -182,14 +188,14 @@ export function Navbar() {
               {session ? (
                 <p
                   onClick={logout}
-                  className="text-white-grey mr-3 border-2 border-white-grey bg-transparent py-2 px-4 font-semibold transition duration-300 ease-in-out hover:bg-light-grey hover:text-black hover:border-light-grey"
+                  className="mr-3 border-2 border-white-grey bg-transparent py-2 px-4 font-semibold text-white-grey transition duration-300 ease-in-out hover:border-light-grey hover:bg-light-grey hover:text-black"
                 >
                   Logout
                 </p>
               ) : (
                 <Link
                   href="/login"
-                  className="text-white-grey mr-3 border-2 border-white-grey bg-transparent py-2 px-4 font-semibold transition duration-300 ease-in-out hover:bg-light-grey hover:text-black hover:border-light-grey"
+                  className="mr-3 border-2 border-white-grey bg-transparent py-2 px-4 font-semibold text-white-grey transition duration-300 ease-in-out hover:border-light-grey hover:bg-light-grey hover:text-black"
                 >
                   Login
                 </Link>
