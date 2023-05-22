@@ -44,7 +44,7 @@ export const bookingRouter = createTRPCRouter({
           },
         });
       }
-      console.log({user})
+      console.log({ user });
 
       // if not, create booking with booked status
       booking = await ctx.prisma.booking.create({
@@ -64,11 +64,13 @@ export const bookingRouter = createTRPCRouter({
               id: input.katalog.id,
             },
           },
-          kupon: input.kupon ? {
-            connect: {
-              kode: input.kupon,
-            },
-          } : undefined,
+          kupon: input.kupon
+            ? {
+                connect: {
+                  kode: input.kupon,
+                },
+              }
+            : undefined,
           peliharaan: input.peliharaan,
           harga: input.katalog.harga,
           jadwal: input.tanggal,
@@ -82,4 +84,15 @@ export const bookingRouter = createTRPCRouter({
       //send email to user
       return sendEmail(user.email, ctx.transport);
     }),
+
+  findAllBooking: publicProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.booking.findMany({
+      where: {
+        deleted: false,
+      },
+      include: {
+        katalog: true,
+      },
+    });
+  }),
 });
