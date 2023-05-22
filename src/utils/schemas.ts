@@ -61,3 +61,10 @@ export const addPertanyaanFeedbackSchema =  z.object({
 })
 
 export type AddPertanyaanFeedbackSchema = z.infer<typeof addPertanyaanFeedbackSchema>;
+
+export const addFeedbackSchema =  z.object({
+  namaPenulis: z.string().min(0, "Nama perlu diisi"),
+  isiFeedback: z.string().min(1, "Feedback perlu diisi"),
+})
+
+export type AddFeedbackSchema = z.infer<typeof addFeedbackSchema>;

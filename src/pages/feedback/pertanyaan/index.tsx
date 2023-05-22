@@ -57,21 +57,6 @@ export default function ListFeedback() {
     [deletePertanyaanFeedbackMutation.isError]
   );
 
-  // function deleteFeedback(id: string) {
-  //   const confirmed = window.confirm("Apa kamu yakin ingin menghapus pertanyaan feedback ini?");
-  //   if (confirmed) {
-  //     deletePertanyaanFeedbackMutation.mutate({ id: id }, {
-  //       onSuccess: () => {
-  //         window.alert("Pertanyaan Feedback berhasil dihapus!");
-  //         window.location.reload();
-  //       },
-  //       onError: () => {    
-  //         window.alert("Penghapusan pertanyaan feedback mengalami masalah");
-  //       }
-  //     });
-  //   }
-  // }
-
   return (
     <>
       <ModalAction

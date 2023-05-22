@@ -29,20 +29,6 @@ export const pertanyaanFeedbackRouter = createTRPCRouter({
     return ctx.prisma.feedbackQuestion.findMany();
   }),
 
-  // getFeedbackById: publicProcedure
-  //   .input(
-  //     z.object({
-  //       Id: z.string(),
-  //     })
-  //   )
-  //   .query(({ input, ctx }) => {
-  //     return ctx.prisma.feedback.findUnique({
-  //       where: {
-  //         Id : input.Id,
-  //       }
-  //     });
-  //   }),
-
   deletePertanyaanFeedback: publicProcedure
   .input(
     z.object({
@@ -56,24 +42,4 @@ export const pertanyaanFeedbackRouter = createTRPCRouter({
       },
     });
   }),
-
-  // updateFeedback: publicProcedure
-  //   .input(
-  //     z.object({
-  //       Id: z.string(),
-  //       namaPenulis: z.string(),
-  //       isiFeedback: z.string(),
-  //     })
-  //   )
-  //   .mutation(({ input, ctx }) => {
-  //     return ctx.prisma.feedback.update({
-  //       where: {
-  //         Id: input.Id,
-  //       },
-  //       data: {
-  //         namaPenulis: input.namaPenulis,
-  //         isiFeedback: input.isiFeedback,
-  //       },
-  //     });
-  //   }),
 });

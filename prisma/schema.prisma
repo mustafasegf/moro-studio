@@ -37,6 +37,7 @@ model User {
   // feedback       Feedback[]
   ContohImage    ContohImage[]
   Feedback       Feedback[]
+  FotoUser       FotoUser[]
 }
 
 // model VerificationToken {
@@ -114,7 +115,7 @@ model Booking {
   status          BookinStatus
   // foto FotoUser[]
   Pembayaran      Pembayaran[]
-  FotoUser        FotoUser[]
+  // FotoUser        FotoUser[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   deleted         Boolean        @default(false)
@@ -130,11 +131,19 @@ model Pembayaran {
   updatedAt DateTime @updatedAt
 }
 
+// model FotoUser {
+//   id        String   @id @default(cuid())
+//   gambar    String
+//   bookingId String
+//   booking   Booking  @relation(fields: [bookingId], references: [id])
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
 model FotoUser {
   id        String   @id @default(cuid())
-  gambar    String
-  bookingId String
-  booking   Booking  @relation(fields: [bookingId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -200,16 +209,6 @@ model Chat {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
-
-// model Feedback {
-//   id                 String               @id @default(cuid())
-//   user               User                 @relation(fields: [userId], references: [id])
-//   pertanyaanFeedback PertanyaanFeedback[]
-//   isiFeedback        String
-//   createdAt          DateTime             @default(now())
-//   updatedAt          DateTime             @updatedAt
-//   userId             String
-// }
 
 model Feedback {
   id             String           @id @default(cuid())

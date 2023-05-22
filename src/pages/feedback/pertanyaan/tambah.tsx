@@ -25,7 +25,7 @@ export default function Feedback() {
   }
 
   useEffect(
-    function() {
+    function () {
       if (addPertanyaanFeedback.isSuccess) {
         makeToast("Pertanyaan berhasil ditambah")
         const timeout = setTimeout(() => {
@@ -38,9 +38,9 @@ export default function Feedback() {
   );
 
   useEffect(
-    function() {
+    function () {
       if (addPertanyaanFeedback.isError) {
-        makeToast(`Error: ${addPertanyaanFeedback.error.message}`, {type: "error"})
+        makeToast(`Error: ${addPertanyaanFeedback.error.message}`, { type: "error" })
         const timeout = setTimeout(() => {
           addPertanyaanFeedback.reset();
         }, 5000);
@@ -73,7 +73,7 @@ export default function Feedback() {
                         "mt-1 block w-[28rem] rounded-md border-0 py-1.5 pl-2.5 pr-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6",
                         { "input-error": errors.pertanyaan }
                       )}
-                      
+
                       placeholder="Buat pertanyaan"
                       {...register("pertanyaan")}
                     />
