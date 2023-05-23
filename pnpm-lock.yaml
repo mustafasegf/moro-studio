@@ -23,6 +23,7 @@ specifiers:
   autoprefixer: ^10.4.7
   aws-cdk-lib: ^2.74.0
   aws-sdk: ^2.1359.0
+  chart.js: ^4.3.0
   classnames: ^2.3.2
   constructs: ^10.1.312
   daisyui: ^2.51.3
@@ -37,7 +38,7 @@ specifiers:
   postcss: ^8.4.14
   prettier: ^2.8.1
   prettier-plugin-tailwindcss: ^0.2.1
-  prisma: ^4.9.0
+  prisma: 4.10.1
   react: 18.2.0
   react-dom: 18.2.0
   react-hook-form: ^7.43.9
@@ -65,6 +66,7 @@ dependencies:
   '@trpc/server': 10.12.0
   aws-cdk-lib: 2.74.0_constructs@10.1.312
   aws-sdk: 2.1359.0
+  chart.js: 4.3.0
   classnames: 2.3.2
   constructs: 10.1.312
   daisyui: 2.51.3_gbtt6ss3tbiz4yjtvdr6fbrj44
@@ -74,6 +76,7 @@ dependencies:
   next: 13.1.6_biqbaboplfbrettd7655fr4n2y
   nodemailer: 6.9.1
   nookies: 2.5.2
+  prisma: 4.10.1
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.43.9_react@18.2.0
@@ -104,7 +107,6 @@ devDependencies:
   postcss: 8.4.21
   prettier: 2.8.4
   prettier-plugin-tailwindcss: 0.2.3_prettier@2.8.4
-  prisma: 4.10.1
   tailwindcss: 3.2.7_postcss@8.4.21
   typescript: 4.9.5
 
@@ -195,6 +197,10 @@ packages:
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
+
+  /@kurkle/color/0.3.2:
+    resolution: {integrity: sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==}
+    dev: false
 
   /@next/env/13.1.6:
     resolution: {integrity: sha512-s+W9Fdqh5MFk6ECrbnVmmAOwxKQuhGMT7xXHrkYIBMBcTiOqNWhv5KbJIboKR5STXxNXl32hllnvKaffzFaWQg==}
@@ -384,6 +390,7 @@ packages:
   /@prisma/engines/4.10.1:
     resolution: {integrity: sha512-B3tcTxjx196nuAu1GOTKO9cGPUgTFHYRdkPkTS4m5ptb2cejyBlH9X7GOfSt3xlI7p4zAJDshJP4JJivCg9ouA==}
     requiresBuild: true
+    dev: false
 
   /@prisma/generator-helper/4.12.0:
     resolution: {integrity: sha512-sB4dkjylb6tMrDZ3GMHPRDKSKOSP86e5yoOrWuJGa0W30LPeCnOzwyNtqUYYdgV/xuIcTS3TGAYSfryeyeU2JA==}
@@ -1009,6 +1016,13 @@ packages:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
+
+  /chart.js/4.3.0:
+    resolution: {integrity: sha512-ynG0E79xGfMaV2xAHdbhwiPLczxnNNnasrmPEXriXsPJGjmhOBYzFVEsB65w2qMDz+CaBJJuJD0inE/ab/h36g==}
+    engines: {pnpm: '>=7'}
+    dependencies:
+      '@kurkle/color': 0.3.2
+    dev: false
 
   /chokidar/3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
@@ -2748,6 +2762,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.10.1
+    dev: false
 
   /prop-types/15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}

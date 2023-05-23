@@ -14,7 +14,7 @@ export const aksesFotoRouter = createTRPCRouter({
   createPresignedUrl: userProcedure.mutation(async ({ ctx }) => {
     console.log("ctx.session.id", ctx.session);
 
-    const gambarRow = await ctx.prisma.contohImage.create({
+    const gambarRow = await ctx.prisma.fotoUser.create({
       data: {
         user: {
           connect: {
@@ -57,7 +57,7 @@ export const aksesFotoRouter = createTRPCRouter({
   }),
 
   getAllFoto: userProcedure.query(async ({ ctx }) => {
-    const images = await ctx.prisma.contohImage.findMany({
+    const images = await ctx.prisma.fotoUser.findMany({
       where: {
         userId: ctx.session.id,
       },
@@ -102,4 +102,23 @@ export const aksesFotoRouter = createTRPCRouter({
         );
       });
     }),
+
+  //   downloadFoto: userProcedure.query(async ({ ctx, input }) => {
+  //   const { id } = input;
+
+  //   const filePath = `${ctx.session.id}/${id}`;
+
+  //   const fileStream = createReadStream(filePath);
+  //   fileStream.on("error", (error) => {
+  //     throw new TRPCError({
+  //       code: "INTERNAL_SERVER_ERROR",
+  //       message: "Failed to download photo",
+  //     });
+  //   });
+
+  //   return {
+  //     stream: fileStream,
+  //     fileName: id,
+  //   };
+  // }),
 });

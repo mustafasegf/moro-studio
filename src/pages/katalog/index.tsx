@@ -116,7 +116,7 @@ export default function ListCatalogue() {
               </div>
               {item.jumlahOrang &&
                 <div className="flex items-center">
-                <IoMdPeople className="mr-2 text-2xl text-gray-600" />
+                  <IoMdPeople className="mr-2 text-2xl text-gray-600" />
                   <span>{item.jumlahOrang} orang</span>
                 </div>
               }

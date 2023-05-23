@@ -87,18 +87,12 @@ export default function Upload() {
 
             <div className="bg-gray-300 px-4 py-3 text-right sm:px-6">
               <Link
-                href="/list-aksesfoto"
+                href="/aksesfoto"
                 type="button"
                 className="inline-flex w-full justify-center rounded-md border border-gray-600 px-3 py-2 text-sm font-semibold text-gray-600 transition duration-300 ease-in-out hover:border-gray-700 hover:bg-gray-700 hover:text-gray-200 sm:mr-3 sm:w-auto"
               >
                 Simpan
               </Link>
-              {/* <button
-                type="submit"
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-gray-600 py-2 px-3 text-sm font-semibold text-white hover:bg-gray-700 sm:mt-0 sm:w-auto"
-              >
-                Simpan
-              </button> */}
             </div>
           </div>
       </div>
