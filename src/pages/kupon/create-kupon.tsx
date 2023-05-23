@@ -48,7 +48,7 @@ export default function CreateKupon() {
           </div>
         </div>
       )}
-
+      
       {addKupon.error && (
         <div className="alert alert-error shadow-lg">
           <div>
@@ -65,7 +65,7 @@ export default function CreateKupon() {
                 d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>Error! Kupon tidak dapat ditambahkan.</span>
+            <span>Error! {addKupon.error.message === "Kode kupon telah ada" ? "Kode kupon telah ada. Gunakan kode lain." : "Kupon tidak dapat ditambahkan."}</span>
           </div>
         </div>
       )}
@@ -74,10 +74,10 @@ export default function CreateKupon() {
         Buat Kupon Baru
       </h1>
 
-      <div className="flex w-full flex-wrap">
+      <div className="flex w-full flex-wrap py-4 px-4 sm:px-6 lg:px-8">
         <form className="w-full" onSubmit={handleSubmitKupon}>
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="nama-kupon"
                 className="text-gray-900 block text-sm font-medium leading-6"
@@ -97,8 +97,8 @@ export default function CreateKupon() {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="kode-kupon"
                 className="text-gray-900 block text-sm font-medium leading-6"
@@ -118,8 +118,8 @@ export default function CreateKupon() {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="diskon"
                 className="text-gray-900 block text-sm font-medium leading-6"
@@ -136,16 +136,16 @@ export default function CreateKupon() {
                   name="diskon"
                   id="diskon"
                   placeholder="20"
-                  className="input-bordered input h-9 w-full ring-1 ring-dark-grey"
+                  className="mt-2 input-bordered input h-9 w-full ring-1 ring-dark-grey"
                   onChange={(e) => setDiskon(parseFloat(e.target.value))}
                 />
-                <span className="ring-1 ring-dark-grey">%DISKON</span>
+                <span className="mt-2 ring-1 ring-dark-grey">%DISKON</span>
               </label>
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="kuota"
                 className="text-gray-900 block text-sm font-medium leading-6"
@@ -166,8 +166,8 @@ export default function CreateKupon() {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="tanggal"
                 className="text-gray-900 block text-sm font-medium leading-6"
@@ -182,23 +182,23 @@ export default function CreateKupon() {
                 min={new Date().toISOString().split("T")[0]}
                 name="tanggal"
                 id="tanggal"
-                className="focus:shadow-outline text-gray-700 w-full appearance-none rounded border py-2  px-3 leading-tight shadow focus:outline-none"
+                className="mt-2 focus:shadow-outline text-gray-700 w-full appearance-none rounded border py-2  px-3 leading-tight shadow focus:outline-none"
                 onChange={(e) => setTanggal(new Date(e.target.value))}
               />
             </div>
           </div>
 
-          <div className="mt-6 flex w-full flex-wrap">
+          <div className="mt-4 flex w-full flex-wrap py-4 px-6 sm:px-6">
             <Link
               href="/kupon/list-kupon"
               type="button"
-              className="ml-8 inline-flex w-full justify-center rounded-md bg-light-grey px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-28"
+              className="mb-2 inline-flex w-full justify-center rounded-md bg-light-grey px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-28"
             >
               Kembali
             </Link>
             <button
               type="submit"
-              className="mt-2 inline-flex w-full justify-center rounded-md bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28"
+              className="mb-2 inline-flex w-full justify-center rounded-md bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28"
             >
               Konfirmasi
             </button>

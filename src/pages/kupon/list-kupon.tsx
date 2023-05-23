@@ -84,7 +84,7 @@ export default function ListKupon() {
         </Link>
       </div>
 
-      <div className="m-5 overflow-x-auto">
+      <div className="m-5 overflow-x-auto relative z-0">
         <table className="table-zebra table w-full">
           <thead>
             <tr>
@@ -100,7 +100,7 @@ export default function ListKupon() {
           <tbody>
             {data?.map((item, i) => (
               <tr key={item.id}>
-                <td>{item.nama}</td>
+                <th>{item.nama}</th>
                 <td>{item.kode}</td>
                 <td>{item.diskon}%</td>
                 <td>{item.kuotaPemakaian}</td>

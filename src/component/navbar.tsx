@@ -27,7 +27,7 @@ export function Navbar() {
     },
     {
       name: "Edit Homepage",
-      path: "/homepage/edit",
+      path: "/homepage",
       role: "admin",
     },
     {
@@ -49,7 +49,7 @@ export function Navbar() {
 
   return (
     <>
-      <div className="navbar bg-dark-grey">
+      <div className="navbar fixed top-0 left-0 right-0 z-10 bg-dark-grey">
         <div className="flex-1">
           <div className="dropdown">
             <label tabIndex={0} className="btn-ghost btn lg:hidden">
@@ -183,7 +183,7 @@ export function Navbar() {
           <ul className="menu menu-horizontal px-1">
             {session && session?.role !== "user" && (
               <li className="hidden sm:block">
-                <p className="mr-2 text-white-grey">role: {session?.role}</p>
+                <p className="text-white-grey mr-2 bg-[#595959]">role: {session?.role}</p>
               </li>
             )}
             {session && (
@@ -213,6 +213,8 @@ export function Navbar() {
             </li>
           </ul>
         </div>
+      </div>
+      <div className="py-8 px-4 sm:px-6">
       </div>
     </>
   );
