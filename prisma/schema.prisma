@@ -149,15 +149,23 @@ model FotoUser {
 }
 
 model KontenBlog {
-  id        String        @id @default(cuid())
-  judul     String
-  comment   CommentBlog[]
-  thumbnail String
-  isi       String        @db.Text
-  posted    Boolean
-  like      Int
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id           String        @id @default(cuid())
+  judul        String
+  comment      CommentBlog[]
+  isi          String        @db.Text
+  posted       Boolean
+  like         Int
+  gambarBlogId String        @unique
+  gambarBlog   GambarBlog    @relation(fields: [gambarBlogId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model GambarBlog {
+  id         String      @id @default(cuid())
+  KontenBlog KontenBlog?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 model CommentBlog {

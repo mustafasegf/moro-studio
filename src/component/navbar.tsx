@@ -26,6 +26,11 @@ export function Navbar() {
       role: "admin",
     },
     {
+      name: "Konfirmasi Pesanan",
+      path: "/pesan/konfirmasi",
+      role: "studioManager",
+    },
+    {
       name: "Kupon",
       path: "/kupon/list-kupon",
       role: "admin",
