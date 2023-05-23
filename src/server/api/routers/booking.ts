@@ -117,7 +117,7 @@ export const bookingRouter = createTRPCRouter({
         include: {
           katalog: true,
           Pembayaran: true,
-          FotoUser: true,
+          // FotoUser: true,
           kupon: true,
         },
       });

@@ -26,7 +26,6 @@ import {
   Katalog,
   BookinStatus,
   Pembayaran,
-  FotoUser,
   Kupon,
 } from "@prisma/client";
 import { Modal, ModalAction } from "~/component/modal";
@@ -41,7 +40,6 @@ const bookAtom = atom<
   | (Booking & {
     katalog: Katalog;
     Pembayaran: Pembayaran[];
-    FotoUser: FotoUser[];
     kupon: Kupon | null
   })
   | undefined
@@ -112,7 +110,6 @@ export default function Jadwal() {
       Booking & {
         katalog: Katalog;
         Pembayaran: Pembayaran[];
-        FotoUser: FotoUser[];
         kupon: Kupon | null
       }
     >
@@ -236,7 +233,6 @@ interface DatesButtonProps {
   booking?: Booking & {
     katalog: Katalog;
     Pembayaran: Pembayaran[];
-    FotoUser: FotoUser[];
     kupon: Kupon | null
   };
 }
