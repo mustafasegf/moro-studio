@@ -71,10 +71,10 @@ export const bookingRouter = createTRPCRouter({
           },
           kupon: input.kupon
             ? {
-              connect: {
-                kode: input.kupon,
-              },
-            }
+                connect: {
+                  kode: input.kupon,
+                },
+              }
             : undefined,
           peliharaan: input.peliharaan,
           harga: input.katalog.harga,
@@ -157,4 +157,15 @@ export const bookingRouter = createTRPCRouter({
         },
       });
     }),
+
+  findAllBooking: publicProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.booking.findMany({
+      where: {
+        deleted: false,
+      },
+      include: {
+        katalog: true,
+      },
+    });
+  }),
 });
