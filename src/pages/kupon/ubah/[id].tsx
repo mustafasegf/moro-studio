@@ -136,10 +136,10 @@ export default function UpdateKupon(props: { id: string }) {
 
       <h1 className="my-8 mb-4 text-center text-3xl font-bold">Ubah Kupon</h1>
 
-      <div className="flex w-full flex-wrap">
+      <div className="flex w-full flex-wrap py-4 px-4 sm:px-6 lg:px-8">
         <form className="w-full" onSubmit={handleUpdateKupon}>
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="nama-kupon"
                 className="text-gray-900 block text-sm font-medium leading-6"
@@ -159,8 +159,8 @@ export default function UpdateKupon(props: { id: string }) {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="kode-kupon"
                 className="text-gray-900 block text-sm font-medium leading-6"
@@ -181,7 +181,7 @@ export default function UpdateKupon(props: { id: string }) {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
             <div className="col-span-2 ml-2 flex items-center">
               <label
                 htmlFor="diskon"
@@ -207,7 +207,7 @@ export default function UpdateKupon(props: { id: string }) {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
             <div className="col-span-2 ml-2 flex items-center">
               <label
                 htmlFor="kuota"
@@ -229,7 +229,7 @@ export default function UpdateKupon(props: { id: string }) {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
             <div className="col-span-2 ml-2 flex items-center">
               <label
                 htmlFor="tanggal"
@@ -251,17 +251,17 @@ export default function UpdateKupon(props: { id: string }) {
             </div>
           </div>
 
-          <div className="mt-6 flex w-full flex-wrap">
+          <div className="mt-4 flex w-full flex-wrap py-4 px-6 sm:px-6">
             <Link
               href="/kupon/list-kupon"
               type="button"
-              className="ml-8 inline-flex w-full justify-center rounded-md bg-light-grey px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-28"
+              className="mb-2 inline-flex w-full justify-center rounded-md bg-light-grey px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-28"
             >
               Kembali
             </Link>
             <button
               type="submit"
-              className="mt-2 inline-flex w-full justify-center rounded-md bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28"
+              className="mb-2 inline-flex w-full justify-center rounded-md bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28"
             >
               Konfirmasi
             </button>

@@ -5,11 +5,10 @@ import Link from "next/link";
 import { GetServerSidePropsContext } from "next";
 import { getServerAuthSession } from "~/utils/session";
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
 import { Katalog } from "@prisma/client";
-import { Modal } from "~/component/modal";
 import { createSSG } from "~/server/SSGHelper";
 import { LoadingPage } from "~/component/loading";
+import { ModalAction } from "~/component/modal";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = getServerAuthSession(ctx);
@@ -33,11 +32,11 @@ export default function ListCatalogue() {
   const { data, isLoading, error } = api.catalogue.getAllCatalogue.useQuery();
 
   const [selected, setSelected] = useState<Katalog | undefined>(undefined);
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDeleteButton = (item: Katalog) => {
     setSelected(item);
-    setIsOpen(true);
+    setOpen(true);
   };
 
   const utils = api.useContext();
@@ -50,7 +49,7 @@ export default function ListCatalogue() {
   function onDelete() {
     if (!selected) return;
     deleteCatalogue.mutate({ id: selected.id });
-    setIsOpen(false);
+    setOpen(false);
   }
 
   if (isLoading) {
@@ -74,36 +73,15 @@ export default function ListCatalogue() {
         </Link>
       </div>
 
-      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="modal-content z-50 overflow-y-auto">
-          <div className="modal-header flex items-center py-3 px-4">
-            <MdDelete className="mr-2 text-2xl text-gray-600" />
-            <span>
-              <h2 className="text-lg font-medium">Hapus Katalog</h2>
-            </span>
-          </div>
-
-          <div className="modal-body py-4 px-4">
-            <p className="text-gray-700">
-              Apakah Anda yakin akan menghapus katalog ini?
-            </p>
-          </div>
-          <div className="modal-footer flex justify-end py-3 px-4">
-            <button
-              className="focus:shadow-outline mr-2 rounded bg-light-grey py-2 px-4 font-bold hover:bg-medium-grey hover:text-white-grey focus:outline-none"
-              onClick={() => setIsOpen(false)}
-            >
-              Batal
-            </button>
-            <button
-              className="focus:shadow-outline rounded bg-[#FC182A] py-2 px-4 font-bold text-white-grey hover:bg-red focus:outline-none"
-              onClick={onDelete}
-            >
-              Hapus
-            </button>
-          </div>
-        </div>
-      </Modal>
+      <ModalAction
+        isDelete
+        open={open}
+        title="Hapus Katalog"
+        content="Apakah Anda yakin akan menghapus katalog ini?"
+        onClose={() => setOpen(false)}
+        kembaliHandler={() => setOpen(false)}
+        actionHandler={onDelete}
+      />
 
       {data?.map((item) => (
         <div
@@ -121,7 +99,7 @@ export default function ListCatalogue() {
               <div className="mb-4 flex items-center">
                 <BiTimeFive className="mr-2 text-2xl text-gray-600" />
                 <span> 
-                  {item.durasi > 60 && Math.floor(item.durasi/60) + " Jam" } 
+                  {item.durasi > 60 && Math.floor(item.durasi/60) + " Jam " } 
                   {item.durasi % 60 + " Menit" } 
                 </span>
               </div>

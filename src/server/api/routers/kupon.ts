@@ -17,7 +17,17 @@ export const kuponRouter = createTRPCRouter({
         tanggal: z.date(),
       })
     )
-    .mutation(({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
+      const existingKupon = await ctx.prisma.kupon.findFirst({
+        where: {
+          kode: input.kode,
+        },
+      });
+
+      if (existingKupon) {
+        throw new Error("Kode kupon telah ada");
+      }
+
       return ctx.prisma.kupon.create({
         data: {
           nama: input.nama,

@@ -268,7 +268,7 @@ export default function Homepage() {
                 >
                   <img className="max-h-72 object-contain" src={image.url} />
                   <button
-                    className="btn-error btn"
+                    className="btn bg-red border-red text-white-grey"
                     onClick={() => handleDelete(image.id)}
                   >
                     Delete
