@@ -22,6 +22,9 @@ export default function Feedback() {
     formState: { errors },
   } = useForm<AddFeedbackSchema>({
     resolver: zodResolver(addFeedbackSchema),
+    defaultValues: {
+      namaPenulis: session?.nama,
+    }
   });
 
   function onSubmit(val: AddFeedbackSchema) {
@@ -71,14 +74,14 @@ export default function Feedback() {
               <div className="col-span-6">
                 <label htmlFor="deskripsi" className="block text-sm font-medium leading-6 text-gray-900">Deskripsi Feedback</label>
                 <div className="mt-2">
-                  <textarea 
-                    id="deskripsi" 
-                    rows={5} 
+                  <textarea
+                    id="deskripsi"
+                    rows={5}
                     className={cn(
                       "mt-1 block w-[28rem] rounded-md border-0 py-1.5 pl-2.5 pr-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6",
                       { "input-error": errors.isiFeedback }
-                    )} 
-                    placeholder="Isi Feedback" 
+                    )}
+                    placeholder="Isi Feedback"
                     {...register("isiFeedback")}>
                   </textarea>
                   {errors.isiFeedback && (
@@ -86,6 +89,7 @@ export default function Feedback() {
                       {errors.isiFeedback.message}
                     </span>
                   )}
+                  <input hidden {...register("namaPenulis")}></input>
                 </div>
               </div>
 
