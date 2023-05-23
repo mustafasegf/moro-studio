@@ -2,325 +2,488 @@ import { GetServerSidePropsContext } from "next/types";
 import { CenterContainer } from "~/component/centercontainer";
 import { createSSG } from "~/server/SSGHelper";
 import { api } from "~/utils/api";
-import { format, isAfter, getDay } from "date-fns";
+import {
+  format,
+  addDays,
+  eachDayOfInterval,
+  set,
+  addMinutes,
+  isAfter,
+  setHours,
+  getDay,
+  differenceInDays,
+  getMinutes,
+  getHours,
+} from "date-fns";
+import { id, enUS } from "date-fns/locale";
 import cn from "classnames";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { getServerAuthSession } from "~/utils/session";
+import { atom, useAtom } from "jotai";
+import { useEffect, useState } from "react";
+import {
+  Booking,
+  Katalog,
+  BookinStatus,
+  Pembayaran,
+  Kupon,
+} from "@prisma/client";
+import { Modal, ModalAction } from "~/component/modal";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { addBookingSchema, AddBookingSchema } from "~/utils/schemas";
-import { LoadingPage } from "~/component/loading";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { addPembayaranSchema, AddPembayaranSchema } from "~/utils/schemas";
 import makeToast from "~/component/toast";
 
+const hoverIndexAtom = atom(-1);
+const bookSetAtom = atom<Set<number>>(new Set<number>());
+const bookAtom = atom<
+  | (Booking & {
+    katalog: Katalog;
+    Pembayaran: Pembayaran[];
+    kupon: Kupon | null
+  })
+  | undefined
+>(undefined);
+const isOpenAtom = atom(false);
+
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = getServerAuthSession(ctx);
+
+  if (!session) {
+    return { redirect: { destination: "/login" } };
+  }
+  if (session.role !== "studioManager" && session.role !== "admin") {
+    return { redirect: { destination: "/" } };
+  }
+
   const ssg = createSSG();
-  const { katalog, date } = ctx.query;
 
-  if (typeof katalog !== "string") {
-    return { redirect: { destination: "/pesan" } };
-  }
+  const startHour = 10;
+  const endHour = 21;
+  const start = set(new Date(), {
+    hours: startHour,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+  });
 
-  if (typeof date !== "string") {
-    return { redirect: { destination: `/pesan/jadwal?katalog=${katalog}` } };
-  }
+  const end = setHours(addDays(start, 6), endHour);
 
-  const now = new Date();
-  const dateObj = new Date(date);
-  if (isAfter(now, dateObj)) {
-    return { redirect: { destination: `/pesan/jadwal?katalog=${katalog}` } };
-  }
-
-  const data = await ssg.catalogue.getCatalogueById.fetch({ id: katalog });
-  if (!data) {
-    return { redirect: { destination: "/pesan" } };
-  }
+  await ssg.booking.getAllBooking.prefetch({
+    from: start,
+    to: end,
+  });
 
   return {
     props: {
-      katalog,
-      dateStr: date,
       trpcState: ssg.dehydrate(),
     },
   };
 }
 
-export default function Jadwal({
-  katalog,
-  dateStr,
-}: Record<"katalog" | "dateStr", string>) {
-  const { data } = api.catalogue.getCatalogueById.useQuery({ id: katalog });
-  const router = useRouter()
-  if (!data) {
-    return;
-  }
+export default function Jadwal() {
+  const startHour = 10;
+  const endHour = 21;
+  const duration = 40;
+  const interval = Math.ceil(((endHour - startHour) * 60) / duration);
 
-  
+  const [isOpen, setIsOpen] = useAtom(isOpenAtom);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [booking] = useAtom(bookAtom);
 
-  const date = new Date(dateStr);
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm<AddBookingSchema>({
-    resolver: zodResolver(addBookingSchema),
-    defaultValues: {
-      tanggal: date,
-      katalog: data,
-      jumlahOrang: data.jumlahOrang ?? undefined,
-    },
+  const start = set(new Date(), {
+    hours: startHour,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
   });
 
-  const addBooking = api.booking.addBooking.useMutation();
+  const end = setHours(addDays(start, 6), endHour);
 
+  const dates = eachDayOfInterval({
+    start,
+    end,
+  }).map((d) => setHours(d, startHour));
+  const [book, setBook] = useState<
+    Record<
+      number,
+      Booking & {
+        katalog: Katalog;
+        Pembayaran: Pembayaran[];
+        kupon: Kupon | null
+      }
+    >
+  >({});
+  const [bookSet, setBookSet] = useAtom(bookSetAtom);
+
+  const { data: listBooking } = api.booking.getAllBooking.useQuery({
+    from: start,
+    to: end,
+  });
+
+  const utils = api.useContext()
+  const deleteBooking = api.booking.deleteBooking.useMutation({
+    onSuccess() {
+      utils.booking.getAllBooking.invalidate()
+    }
+  });
+
+  useEffect(() => {
+    listBooking?.forEach((booking) => {
+      const row = differenceInDays(booking.jadwal, start);
+      const col =
+        (getHours(booking.jadwal) * 60 +
+          getMinutes(booking.jadwal) -
+          startHour * 60) /
+        40;
+
+      for (let i = 0; i < booking.katalog.durasi / 40; i++) {
+        // console.log(row, col, booking)
+        const idx = row * interval + col + i;
+        book[idx] = booking;
+        bookSet.add(idx);
+      }
+    });
+
+    setBookSet(bookSet);
+    setBook(book);
+  }, [bookSet]);
+
+  function handleAction() {
+    setIsOpenDelete(false)
+    const id = booking?.id!
+    deleteBooking.mutate({ id })
+  } 
+ 
   useEffect(
     function() {
-      if (addBooking.isSuccess) {
-        makeToast("pesanan berhasil ditambah")
-        const timeout = setTimeout(() => {
-          void router.push("/user");
-        }, 1000);
-        return () => clearTimeout(timeout);
+      if (deleteBooking.isSuccess) {
+        makeToast("pesanan berhasil dihapus");
+        setIsOpen(false)
+        setIsOpenDelete(false)
       }
     },
-    [addBooking.isSuccess]
+    [deleteBooking.isSuccess]
   );
 
   useEffect(
     function() {
-      if (addBooking.isError) {
-        makeToast(`Eror: ${addBooking.error.message}`, {type: "error"})
+      if (deleteBooking.isError) {
+        makeToast(`Eror: ${deleteBooking.error.message}`, { type: "error" });
         const timeout = setTimeout(() => {
-          addBooking.reset();
+          deleteBooking.reset();
+          setIsOpenDelete(false)
         }, 5000);
         return () => clearTimeout(timeout);
       }
     },
-    [addBooking.isError]
+    [deleteBooking.isError]
   );
-
-  function onSubmit(val: AddBookingSchema) {
-    addBooking.mutate(val);
-  }
 
   return (
     <>
+      <ModalBooking
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        onDelete={() => setIsOpenDelete(true)}
+      />
+
+      <ModalAction
+        open={isOpenDelete}
+        isDelete
+        title="Hapus Pesanan"
+        content="Apakah anda yakin ingin menghapus pesanan ini?"
+        onClose={() => setIsOpenDelete(false)}
+        kembaliHandler={() => setIsOpenDelete(false)}
+        actionHandler={handleAction}
+
+      />
       <CenterContainer>
-        <div className="flex justify-center">
-          <form
-            className="max-w-lg mt-4 mb-8 grow rounded-3xl bg-base-200 p-8"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <div className="mb-4">
-              <label
-                htmlFor="nama"
-                className="block text-sm font-medium leading-6"
-              >
-                Nama
-              </label>
-              <input
-                type="text"
-                id="nama"
-                className={cn(
-                  "input-bordered input mt-1 mb-2 w-full max-w-md",
-                  { "input-error": errors.nama }
-                )}
-                {...register("nama")}
-              />
-              {errors.nama && (
-                <span className={cn("mb-4", { "text-error": errors.nama })}>
-                  {errors.nama.message}
-                </span>
-              )}
+        <div className=" flex flex-row justify-between">
+          {dates.map((date, rowIdx) => (
+            <div
+              key={date.toISOString()}
+              className="mt-4 mb-8 rounded-xl py-3 px-4 text-center text-lg"
+            >
+              <p className="text-center text-lg font-bold">
+                {format(date, "eeee", { locale: id })}
+              </p>
+              <p className="text-center text-2xl font-bold">
+                {format(date, "dd")}
+              </p>
+              {[...Array(interval)].map((_, colIdx) => (
+                <DatesButton
+                  key={colIdx}
+                  idx={rowIdx * interval + colIdx}
+                  date={addMinutes(date, colIdx * 40)}
+                  booking={book[rowIdx * interval + colIdx]}
+                />
+              ))}
             </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium leading-6"
-              >
-                Email
-              </label>
-              <input
-                type="text"
-                id="email"
-                className={cn(
-                  "input-bordered input mt-1 mb-2 w-full max-w-md",
-                  { "input-error": errors.email }
-                )}
-                {...register("email")}
-              />
-              {errors.email && (
-                <span className={cn("mb-4", { "text-error": errors.email })}>
-                  {errors.email.message}
-                </span>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="hp"
-                className="block text-sm font-medium leading-6"
-              >
-                Hp
-              </label>
-              <input
-                type="text"
-                id="hp"
-                className={cn(
-                  "input-bordered input mt-1 mb-2 w-full max-w-md",
-                  { "input-error": errors.hp }
-                )}
-                {...register("hp")}
-              />
-              {errors.hp && (
-                <span className={cn("mb-4", { "text-error": errors.hp })}>
-                  {errors.hp.message}
-                </span>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="instagram"
-                className="block text-sm font-medium leading-6"
-              >
-                Instagram
-              </label>
-              <input
-                type="text"
-                id="instagram"
-                className={cn(
-                  "input-bordered input mt-1 mb-2 w-full max-w-md",
-                  { "input-error": errors.instagram }
-                )}
-                {...register("instagram")}
-              />
-              {errors.instagram && (
-                <span
-                  className={cn("mb-4", { "text-error": errors.instagram })}
-                >
-                  {errors.instagram.message}
-                </span>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="jumlahOrang"
-                className="block text-sm font-medium leading-6"
-              >
-                Jumlah Orang
-              </label>
-              <input
-                disabled={!!data.jumlahOrang}
-                defaultValue={data.jumlahOrang ?? undefined}
-                type="number"
-                id="jumlahOrang"
-                min={1}
-                inputMode="numeric"
-                className={cn(
-                  "input-bordered input mt-1 mb-2 w-full max-w-md",
-                  { "input-error": errors.jumlahOrang }
-                )}
-                {...register("jumlahOrang", {
-                  setValueAs: (v) => (!v ? 0 : parseInt(v, 10)),
-                })}
-              />
-              {errors.jumlahOrang && (
-                <span
-                  className={cn("mb-4", { "text-error": errors.jumlahOrang })}
-                >
-                  {errors.jumlahOrang.message}
-                </span>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="warna"
-                className="block text-sm font-medium leading-6"
-              >
-                Warna Background Dan Preset Foto
-              </label>
-              <input
-                type="text"
-                id="warna"
-                className={cn(
-                  "input-bordered input mt-1 mb-2 w-full max-w-md",
-                  { "input-error": errors.warna }
-                )}
-                {...register("warna")}
-              />
-              {errors.warna && (
-                <span className={cn("mb-4", { "text-error": errors.warna })}>
-                  {errors.warna.message}
-                </span>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="peliharaan"
-                className="block text-sm font-medium leading-6"
-              >
-                Saya datang dengan hewan peliharaan (hewan kecil)
-              </label>
-              <select
-                id="peliharaan"
-                className="input-bordered input mt-1 mb-4 w-full max-w-xs"
-                {...register("peliharaan", { setValueAs: (v) => v === "true" })}
-              >
-                <option value="false">tidak</option>
-                <option value="true">ya</option>
-              </select>
-              {errors.peliharaan && (
-                <span
-                  className={cn("mb-4", { "text-error": errors.peliharaan })}
-                >
-                  {errors.peliharaan.message}
-                </span>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="kupon"
-                className="block text-sm font-medium leading-6"
-              >
-                Kupon
-              </label>
-              <input
-                type="text"
-                id="kupon"
-                className={cn(
-                  "input-bordered input mt-1 mb-2 w-full max-w-md",
-                  { "input-error": errors.kupon }
-                )}
-                {...register("kupon")}
-              />
-              {errors.kupon && (
-                <span className={cn("mb-4", { "text-error": errors.kupon })}>
-                  {errors.kupon.message}
-                </span>
-              )}
-            </div>
-            <input
-              type="hidden"
-              {...register(`tanggal`, { valueAsDate: true })}
-            />
-            <input type="hidden" {...register(`katalog`)} />
-
-            <input
-              className="btn-primary btn mt-4"
-              type="submit"
-              value="kirim"
-            />
-          </form>
-          {addBooking.isLoading && <LoadingPage />}
+          ))}
         </div>
       </CenterContainer>
+    </>
+  );
+}
+
+interface DatesButtonProps {
+  idx: number;
+  date: Date;
+  booking?: Booking & {
+    katalog: Katalog;
+    Pembayaran: Pembayaran[];
+    kupon: Kupon | null
+  };
+}
+
+function DatesButton({ date, idx, booking }: DatesButtonProps) {
+  const [hoverIndex, setHoverIndex] = useAtom(hoverIndexAtom);
+  const [booked] = useAtom(bookSetAtom);
+  const interval = 17;
+  const [, setBook] = useAtom(bookAtom);
+  const [, setIsOpen] = useAtom(isOpenAtom);
+
+  const enabled = !!booking;
+
+  const range = (booking?.katalog?.durasi ?? 40) / 40;
+  let hover =
+    idx - hoverIndex < range && idx - hoverIndex >= 0 && hoverIndex != -1;
+
+  function handleEnter() {
+    if (booked.has(idx)) {
+      let i = idx;
+      while (booked.has(i)) {
+        i--;
+      }
+      setHoverIndex(i + 1);
+    }
+  }
+  function handleLeave() {
+    setHoverIndex(-1);
+  }
+  function handleClick() {
+    if (enabled) {
+      setBook(booking);
+      setIsOpen(true);
+    }
+  }
+
+  const Child = () => (
+    <div
+      className={cn(
+        "mt-3 rounded-xl border-2 border-neutral-400 bg-base-100 py-3 px-2 text-center text-lg",
+        {
+          "-translate-y-[2px] bg-neutral-300 transition duration-75 ease-in-out":
+            hover && enabled,
+        },
+        {
+          "bg-primary": enabled,
+        },
+        {
+          "bg-accent": booking?.status == BookinStatus.dp
+        },
+        {
+          "bg-success": booking?.status == BookinStatus.lunas
+        }
+      )}
+      onMouseEnter={() => handleEnter()}
+      onMouseLeave={() => handleLeave()}
+      onClick={() => {
+        handleClick();
+      }}
+    >
+      {format(date, "hh:mm aa", {
+        locale: enUS,
+      })}
+    </div>
+  );
+
+  if (enabled)
+    return (
+      <div>
+        <Child />
+      </div>
+    );
+
+  return <Child />;
+}
+
+interface ModalBookingProps {
+  open: boolean;
+  onClose: () => void;
+  onDelete: () => void;
+}
+
+export function ModalBooking({
+  open,
+  onClose,
+  onDelete,
+}: ModalBookingProps) {
+  const [booking] = useAtom(bookAtom);
+  const [, setBookSet] = useAtom(bookSetAtom);
+  const date = booking?.jadwal ?? new Date();
+  const durasi = booking?.durasi ?? 40;
+  const [status, setStatus] = useState(booking?.status ?? BookinStatus.booked);
+
+  const utils = api.useContext();
+  const addPembayaran = api.pembayaran.addPembayaran.useMutation({
+    onSuccess() {
+      void utils.booking.getAllBooking.invalidate();
+      setBookSet(new Set());
+    },
+  });
+
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm<AddPembayaranSchema>({
+    resolver: zodResolver(addPembayaranSchema),
+    defaultValues: {
+      booking: booking?.id,
+    },
+  });
+
+  useEffect(() => {
+    reset({ booking: booking?.id });
+  }, [booking]);
+
+  function onLeave() {
+    reset();
+    onClose();
+    setStatus(BookinStatus.booked);
+  }
+
+  function onSubmit(val: AddPembayaranSchema) {
+    addPembayaran.mutate(val);
+    // console.log(val);
+  }
+
+  useEffect(
+    function() {
+      if (addPembayaran.isSuccess) {
+        makeToast("pesanan berhasil ditambah");
+        onLeave();
+      }
+    },
+    [addPembayaran.isSuccess]
+  );
+
+  useEffect(
+    function() {
+      if (addPembayaran.isError) {
+        makeToast(`Eror: ${addPembayaran.error.message}`, { type: "error" });
+        const timeout = setTimeout(() => {
+          addPembayaran.reset();
+        }, 5000);
+        return () => clearTimeout(timeout);
+      }
+    },
+    [addPembayaran.isError]
+  );
+
+  function handleChangeStatus(e: React.ChangeEvent<HTMLSelectElement>) {
+    e.preventDefault();
+    const statusForm = e.target.value as BookinStatus;
+    setStatus(statusForm);
+  }
+
+  let bayar = booking?.Pembayaran.map((p) => p.jumlah).reduce(
+    (acc, cur) => acc + cur,
+    0
+  ) ?? 0;
+
+  bayar = bayar * (booking?.kupon?.diskon ?? 1)
+
+  return (
+    <>
+      <Modal open={open} onClose={onClose}>
+        <div className="z-50 overflow-y-auto">
+          <div className="flex items-center py-3 px-4">
+            <h3 className="text-lg font-medium">Ubah Status Booking</h3>
+          </div>
+
+          <p className="py-2 px-4">
+            {format(date, "eeee d MMMM p - ", { locale: id }) +
+              format(addMinutes(date, durasi), "p", { locale: id })}
+          </p>
+          <p className="px-4">Harga: {booking?.harga}</p>
+          <p className="px-4 pb-2">Uang yang sudah terbayar: {bayar}</p>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+            <select
+              id="role"
+              className="input-bordered input mt-1 mb-4 w-full max-w-xs"
+              onChange={handleChangeStatus}
+              defaultValue={booking?.status}
+            >
+              {Object.keys(BookinStatus).map((st) => (
+                <option
+                  key={st}
+                  value={st}
+                >
+                  {st}
+                </option>
+              ))}
+            </select>
+            {(status === BookinStatus.dp || status === BookinStatus.lunas) && (
+              <>
+                {/* <Controller */}
+                {/*   render={({ field }) => ( */}
+                {/*     <NumericFormat */}
+                {/*       thousandSeparator={true} */}
+                {/*       // decimalSeparator={","} */}
+                {/*       className={cn( */}
+                {/*         "input-bordered input mt-1 mb-2 w-full max-w-xs", */}
+                {/*         { "input-error": errors.jumlah } */}
+                {/*       )} */}
+                {/*       {...field} */}
+                {/*       // @ts-ignore */}
+                {/*       ref={null} */}
+                {/*     /> */}
+                {/*   )} */}
+                {/*   control={control} */}
+                {/*   name="jumlah" */}
+                {/* /> */}
+
+                <input
+                  className={cn(
+                    "input-bordered input mt-1 mb-2 w-full max-w-xs",
+                    { "input-error": errors.jumlah }
+                  )}
+                  {...register(`jumlah`, {
+                    setValueAs: (val) => (!val ? 0 : parseInt(val)),
+                  })}
+                />
+
+                {errors.jumlah && (
+                  <span className={cn("mb-4", { "text-error": errors.jumlah })}>
+                    {errors.jumlah.message}
+                  </span>
+                )}
+              </>
+            )}
+            <input type="hidden" {...register(`booking`)} />
+
+            <input
+              type="hidden"
+              {...register(`dp`, { value: status === BookinStatus.dp })}
+            />
+
+            <div className="flex justify-end py-3 px-4">
+              <button className="btn-error btn mr-4" onClick={onDelete}>
+                Hapus
+              </button>
+              <button className="btn-accent btn mr-4" onClick={onLeave}>
+                Batal
+              </button>
+              <input className="btn-primary btn" type="submit" value="Simpan" />
+            </div>
+          </form>
+        </div>
+      </Modal>
     </>
   );
 }

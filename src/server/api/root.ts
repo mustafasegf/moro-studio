@@ -8,6 +8,8 @@ import { userRouter } from "./routers/user";
 import { kuponRouter } from "./routers/kupon";
 import { bookingRouter } from "./routers/booking";
 import { imageRouter } from "./routers/images";
+import { pembayaranRouter } from "./routers/pembayaran";
+import { blogRouter } from "./routers/blog";
 import { pertanyaanFeedbackRouter } from "./routers/pertanyaanfeedback";
 import { aksesFotoRouter } from "./routers/aksesfoto";
 
@@ -27,6 +29,8 @@ export const appRouter = createTRPCRouter({
   kupon: kuponRouter,
   booking: bookingRouter,
   image: imageRouter,
+  pembayaran: pembayaranRouter,
+  blog: blogRouter,
   aksesFoto: aksesFotoRouter
 });
 

@@ -11,6 +11,11 @@ export function Navbar() {
       role: undefined,
     },
     {
+      name: "Blog",
+      path: "/blog",
+      role: undefined,
+    },
+    {
       name: "Feedback",
       path: "/feedback/list",
       role: "user",
@@ -24,6 +29,11 @@ export function Navbar() {
       name: "Edit Homepage",
       path: "/homepage",
       role: "admin",
+    },
+    {
+      name: "Konfirmasi Pesanan",
+      path: "/pesan/konfirmasi",
+      role: "studioManager",
     },
     {
       name: "Kupon",

@@ -11,8 +11,24 @@ import Link from "next/link";
 import { ModalAction } from "~/component/modal";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = getServerAuthSession(ctx);
+
+  if (!session) {
+    return { redirect: { destination: "/login" } };
+  }
+
+  if (session.role !== "blogManager" && session.role !== "admin") {
+    return { redirect: { destination: "/" } };
+  }
+
+  console.log("session", session);
+
   const ssg = createSSG();
-  const data = await ssg.blog.getAllBlogPosted.fetch();
+  const data = await ssg.blog.getAllBlogDraft.fetch();
+
+  if (!data) {
+    return { redirect: { destination: "/blog" } };
+  }
 
   const ids = data.map((blog) => blog.gambarBlogId);
   await ssg.blog.getImagesById.prefetch({ ids });
@@ -25,8 +41,8 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 export default function DraftList() {
-  const { session } = useAuth();
-  const { data: blogs } = api.blog.getAllBlogPosted.useQuery();
+  const { session } = useAuth()
+  const { data: blogs } = api.blog.getAllBlogDraft.useQuery();
   const ids = blogs?.map((blog) => blog.gambarBlogId)!;
   const { data: images } = api.blog.getImagesById.useQuery({ ids });
 
@@ -36,15 +52,14 @@ export default function DraftList() {
   const [isKonfirmasi, setIsKonfirmasi] = useState(false);
 
   const hapusBlog = api.blog.deleteBlog.useMutation({
-    onSuccess() {
-      utils.blog.getAllBlogPosted.invalidate();
-    },
+    onSuccess(){
+      utils.blog.getAllBlogDraft.invalidate();
+    }
   });
-
-  const draftBlog = api.blog.draftBlog.useMutation({
-    onSuccess() {
-      utils.blog.getAllBlogPosted.invalidate();
-    },
+  const konfirmasiBlog = api.blog.konfirmasiBlog.useMutation({
+    onSuccess(){
+      utils.blog.getAllBlogDraft.invalidate();
+    }
   });
 
   const utils = api.useContext();
@@ -55,7 +70,7 @@ export default function DraftList() {
   }
 
   function konfirmasiHandler() {
-    draftBlog.mutate({ id });
+    konfirmasiBlog.mutate({ id });
     setIsKonfirmasi(false);
   }
 
@@ -87,24 +102,17 @@ export default function DraftList() {
 
       <ModalAction
         open={isKonfirmasi}
-        title="Draft Blog"
-        content="Apakah Anda yakin akan mengdraft blog ini?"
+        title="Publikasi Blog"
+        content="Apakah Anda yakin akan mengpublikasi blog ini?"
         onClose={() => setIsKonfirmasi(false)}
         kembaliHandler={() => setIsKonfirmasi(false)}
         actionHandler={konfirmasiHandler}
       />
-
       <div className="m-8">
         <div className="flex flex-col items-end justify-end gap-4 md:flex-row md:items-center">
-          <div className="flex w-full flex-col items-center justify-end gap-2">
-            {(session?.role === "admin" || session?.role === "blogManager") && (
-              <Link href="/blog/tambah" className="btn-success btn">
-                {" "}
-                Buat Blog Baru{" "}
-              </Link>
-            )}
+          <div className="flex w-full flex-row items-center justify-end gap-2">
             {blogs?.map((blog) => (
-              <Link key={blog.id} href={`/blog/${blog.id}`}>
+              <Link key={blog.id} href={`/blog/draft/${blog.id}`}>
                 <div className="bg-white flex w-full flex-col rounded-lg p-4 shadow-md">
                   <div className="flex flex-row items-center justify-between">
                     <div className="flex flex-col">
@@ -121,37 +129,19 @@ export default function DraftList() {
                         <p className="text-gray-500 text-sm">
                           {blog.isi.substring(0, 1500)}...
                         </p>
+
                         <div>
                           {session?.role === "admin" && (
-                            <div>
-                              <button
-                                className="btn-success btn mb-4 w-40"
-                                /*@ts-ignore*/
-                                onClick={(e) => onKonfirmasi(e, blog.id)}
-                              >
-                                Draft
-                              </button>
-                              <button
-                                className="btn-error btn w-40"
-                                /*@ts-ignore*/
-                                onClick={(e) => onDelete(e, blog.id)}
-                              >
-                                hapus
-                              </button>
-                            </div>
-                          )}
+                            /*@ts-ignore*/
+                            <button className="btn btn-success w-40 mb-4" onClick={(e) => onKonfirmasi(e, blog.id)}>Konfirmasi</button>
 
-                          {session?.role === "blogManager" && (
-                            <button
-                              className="btn-error btn w-40"
-                              /*@ts-ignore*/
-                              onClick={(e) => onDelete(e, blog.id)}
-                            >
-                              hapus
-                            </button>
                           )}
+                          {/*@ts-ignore*/}
+                          <button className="btn btn-error w-40" onClick={(e) => onDelete(e, blog.id) }>hapus</button>
+
                         </div>
                       </div>
+
                     </div>
                   </div>
                 </div>

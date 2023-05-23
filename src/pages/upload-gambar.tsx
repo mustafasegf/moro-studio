@@ -67,12 +67,11 @@ export default function Upload() {
       {images && (
        images.map(image => (
         <div key={image.id}>
-            <img width={400} src={image.url} />
-            <button className="btn btn-error" onClick={() => handleDelete(image.id) }>Delete</button>
+          <img width={400} src={image.url} />
+          <button className="btn btn-error" onClick={() => handleDelete(image.id) }>Delete</button>
         </div>
        )) 
       )}
     </>
   )
 }
-
