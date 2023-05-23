@@ -249,6 +249,24 @@ export const blogRouter = createTRPCRouter({
     }
   ),
 
+  draftBlog: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const blog = await ctx.prisma.kontenBlog.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          posted: false,
+        },
+      });
+    }),
+    
+
   deleteBlog: publicProcedure
     .input(
       z.object({
