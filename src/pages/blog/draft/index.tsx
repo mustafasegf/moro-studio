@@ -1,4 +1,4 @@
-import { getServerAuthSession } from "~/utils/session";
+import { getServerAuthSession, useAuth } from "~/utils/session";
 import { FormEvent, FormEventHandler, useEffect, useState } from "react";
 import { GetServerSidePropsContext } from "next/types";
 import { createSSG } from "~/server/SSGHelper";
@@ -41,6 +41,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 export default function DraftList() {
+  const { session } = useAuth()
   const { data: blogs } = api.blog.getAllBlogDraft.useQuery();
   const ids = blogs?.map((blog) => blog.gambarBlogId)!;
   const { data: images } = api.blog.getImagesById.useQuery({ ids });
@@ -130,8 +131,11 @@ export default function DraftList() {
                         </p>
 
                         <div>
-                          {/*@ts-ignore*/}
-                          <button className="btn btn-success w-40 mb-4" onClick={(e) => onKonfirmasi(e, blog.id)}>Konfirmasi</button>
+                          {session?.role === "admin" && (
+                            /*@ts-ignore*/
+                            <button className="btn btn-success w-40 mb-4" onClick={(e) => onKonfirmasi(e, blog.id)}>Konfirmasi</button>
+
+                          )}
                           {/*@ts-ignore*/}
                           <button className="btn btn-error w-40" onClick={(e) => onDelete(e, blog.id) }>hapus</button>
 

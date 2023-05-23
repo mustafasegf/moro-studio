@@ -11,6 +11,11 @@ export function Navbar() {
       role: undefined,
     },
     {
+      name: "Blog",
+      path: "/blog",
+      role: undefined,
+    },
+    {
       name: "Feedback",
       path: "/feedback/list",
       role: "user",

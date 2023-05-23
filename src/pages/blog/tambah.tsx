@@ -108,7 +108,7 @@ export default function CreateDraft() {
       if (createBlog.isSuccess) {
         makeToast("blog berhasil ditambah")
         const timeout = setTimeout(() => {
-          void router.push("/blog");
+          void router.push("/blog/draft");
         }, 1000);
         return () => clearTimeout(timeout);
       }
