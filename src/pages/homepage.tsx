@@ -201,13 +201,13 @@ export default function Homepage() {
 
       <div className="grid min-h-full grid-cols-2 grid-rows-2 items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
         <div className="flex justify-center">
-          <button className="btn" onClick={handleOpenModal}>
+          <button className="btn rounded-md bg-blue text-white-grey border-blue hover:bg-[#6380BB] hover:border-[#6380BB] gap-2" onClick={handleOpenModal}>
             Ubah gambar utama
           </button>
         </div>
 
         <div className="row-span-2 overflow-hidden shadow sm:rounded-md">
-          <div className="bg-gray-200 px-4 py-5 sm:p-6">
+          <div className="bg-light-grey px-4 py-5 sm:p-6">
             <div className="grid grid-cols-6 gap-6">
               <div className="col-span-6">
                 <label
@@ -226,10 +226,10 @@ export default function Homepage() {
             </div>
           </div>
 
-          <div className="bg-gray-300 px-4 py-3 text-right sm:px-6">
+          <div className="bg-grey bg-opacity-80 px-4 py-3 text-right sm:px-6">
             <button
               type="submit"
-              className="mt-3 inline-flex w-full justify-center rounded-md bg-gray-600 py-2 px-3 text-sm font-semibold text-white hover:bg-gray-700 sm:mt-0 sm:w-auto"
+              className="mt-3 inline-flex w-full justify-center rounded-md bg-blue text-white-grey border-blue hover:bg-[#6380BB] hover:border-[#6380BB] py-2 px-3 text-sm font-semibold  sm:mt-0 sm:w-auto"
             >
               Simpan
             </button>
@@ -237,7 +237,7 @@ export default function Homepage() {
         </div>
 
         <div className="flex justify-center">
-          <button className="btn" onClick={handleOpenModal2}>
+          <button className="btn rounded-md bg-blue text-white-grey border-blue hover:bg-[#6380BB] hover:border-[#6380BB] gap-2" onClick={handleOpenModal2}>
             Ubah gambar carousel
           </button>
         </div>
