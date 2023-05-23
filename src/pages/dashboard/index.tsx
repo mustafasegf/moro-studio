@@ -52,6 +52,7 @@ export default function Dashboard() {
             })
           )
         );
+      console.log(katalogNames); // penting!!
 
       // Set year options
       setYearOptions(
