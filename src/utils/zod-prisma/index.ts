@@ -30,11 +30,13 @@ export const FeedbackScalarFieldEnumSchema = z.enum(['Id','namaPenulis','isiFeed
 
 export const FotoUserScalarFieldEnumSchema = z.enum(['id','gambar','bookingId','createdAt','updatedAt']);
 
+export const GambarBlogScalarFieldEnumSchema = z.enum(['id','createdAt','updatedAt']);
+
 export const HomeScalarFieldEnumSchema = z.enum(['id','image','carousel','createdAt','updatedAt']);
 
 export const KatalogScalarFieldEnumSchema = z.enum(['id','nama','durasi','harga','jumlahOrang','deskripsi','createdAt','updatedAt','deleted']);
 
-export const KontenBlogScalarFieldEnumSchema = z.enum(['id','judul','thumbnail','isi','posted','like','createdAt','updatedAt']);
+export const KontenBlogScalarFieldEnumSchema = z.enum(['id','judul','isi','posted','like','gambarBlogId','createdAt','updatedAt']);
 
 export const KuponScalarFieldEnumSchema = z.enum(['id','nama','kode','diskon','kuotaPemakaian','kuotaTerpakai','active','tanggal','createdAt','updatedAt']);
 
@@ -189,15 +191,27 @@ export type FotoUser = z.infer<typeof FotoUserSchema>
 export const KontenBlogSchema = z.object({
   id: z.string().cuid(),
   judul: z.string(),
-  thumbnail: z.string(),
   isi: z.string(),
   posted: z.boolean(),
   like: z.number().int(),
+  gambarBlogId: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
 
 export type KontenBlog = z.infer<typeof KontenBlogSchema>
+
+/////////////////////////////////////////
+// GAMBAR BLOG SCHEMA
+/////////////////////////////////////////
+
+export const GambarBlogSchema = z.object({
+  id: z.string().cuid(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type GambarBlog = z.infer<typeof GambarBlogSchema>
 
 /////////////////////////////////////////
 // COMMENT BLOG SCHEMA
@@ -573,6 +587,7 @@ export const FotoUserSelectSchema: z.ZodType<Prisma.FotoUserSelect> = z.object({
 
 export const KontenBlogIncludeSchema: z.ZodType<Prisma.KontenBlogInclude> = z.object({
   comment: z.union([z.boolean(),z.lazy(() => CommentBlogFindManyArgsSchema)]).optional(),
+  gambarBlog: z.union([z.boolean(),z.lazy(() => GambarBlogArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => KontenBlogCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -593,13 +608,33 @@ export const KontenBlogSelectSchema: z.ZodType<Prisma.KontenBlogSelect> = z.obje
   id: z.boolean().optional(),
   judul: z.boolean().optional(),
   comment: z.union([z.boolean(),z.lazy(() => CommentBlogFindManyArgsSchema)]).optional(),
-  thumbnail: z.boolean().optional(),
   isi: z.boolean().optional(),
   posted: z.boolean().optional(),
   like: z.boolean().optional(),
+  gambarBlogId: z.boolean().optional(),
+  gambarBlog: z.union([z.boolean(),z.lazy(() => GambarBlogArgsSchema)]).optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   _count: z.union([z.boolean(),z.lazy(() => KontenBlogCountOutputTypeArgsSchema)]).optional(),
+}).strict()
+
+// GAMBAR BLOG
+//------------------------------------------------------
+
+export const GambarBlogIncludeSchema: z.ZodType<Prisma.GambarBlogInclude> = z.object({
+  KontenBlog: z.union([z.boolean(),z.lazy(() => KontenBlogArgsSchema)]).optional(),
+}).strict()
+
+export const GambarBlogArgsSchema: z.ZodType<Prisma.GambarBlogArgs> = z.object({
+  select: z.lazy(() => GambarBlogSelectSchema).optional(),
+  include: z.lazy(() => GambarBlogIncludeSchema).optional(),
+}).strict();
+
+export const GambarBlogSelectSchema: z.ZodType<Prisma.GambarBlogSelect> = z.object({
+  id: z.boolean().optional(),
+  KontenBlog: z.union([z.boolean(),z.lazy(() => KontenBlogArgsSchema)]).optional(),
+  createdAt: z.boolean().optional(),
+  updatedAt: z.boolean().optional(),
 }).strict()
 
 // COMMENT BLOG
@@ -1268,10 +1303,11 @@ export const KontenBlogWhereInputSchema: z.ZodType<Prisma.KontenBlogWhereInput> 
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   judul: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   comment: z.lazy(() => CommentBlogListRelationFilterSchema).optional(),
-  thumbnail: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   isi: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   posted: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   like: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  gambarBlogId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  gambarBlog: z.union([ z.lazy(() => GambarBlogRelationFilterSchema),z.lazy(() => GambarBlogWhereInputSchema) ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
@@ -1280,25 +1316,27 @@ export const KontenBlogOrderByWithRelationInputSchema: z.ZodType<Prisma.KontenBl
   id: z.lazy(() => SortOrderSchema).optional(),
   judul: z.lazy(() => SortOrderSchema).optional(),
   comment: z.lazy(() => CommentBlogOrderByRelationAggregateInputSchema).optional(),
-  thumbnail: z.lazy(() => SortOrderSchema).optional(),
   isi: z.lazy(() => SortOrderSchema).optional(),
   posted: z.lazy(() => SortOrderSchema).optional(),
   like: z.lazy(() => SortOrderSchema).optional(),
+  gambarBlogId: z.lazy(() => SortOrderSchema).optional(),
+  gambarBlog: z.lazy(() => GambarBlogOrderByWithRelationInputSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const KontenBlogWhereUniqueInputSchema: z.ZodType<Prisma.KontenBlogWhereUniqueInput> = z.object({
-  id: z.string().cuid().optional()
+  id: z.string().cuid().optional(),
+  gambarBlogId: z.string().optional()
 }).strict();
 
 export const KontenBlogOrderByWithAggregationInputSchema: z.ZodType<Prisma.KontenBlogOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   judul: z.lazy(() => SortOrderSchema).optional(),
-  thumbnail: z.lazy(() => SortOrderSchema).optional(),
   isi: z.lazy(() => SortOrderSchema).optional(),
   posted: z.lazy(() => SortOrderSchema).optional(),
   like: z.lazy(() => SortOrderSchema).optional(),
+  gambarBlogId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => KontenBlogCountOrderByAggregateInputSchema).optional(),
@@ -1314,10 +1352,49 @@ export const KontenBlogScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Ko
   NOT: z.union([ z.lazy(() => KontenBlogScalarWhereWithAggregatesInputSchema),z.lazy(() => KontenBlogScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   judul: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  thumbnail: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   isi: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   posted: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
   like: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  gambarBlogId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
+}).strict();
+
+export const GambarBlogWhereInputSchema: z.ZodType<Prisma.GambarBlogWhereInput> = z.object({
+  AND: z.union([ z.lazy(() => GambarBlogWhereInputSchema),z.lazy(() => GambarBlogWhereInputSchema).array() ]).optional(),
+  OR: z.lazy(() => GambarBlogWhereInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => GambarBlogWhereInputSchema),z.lazy(() => GambarBlogWhereInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  KontenBlog: z.union([ z.lazy(() => KontenBlogRelationFilterSchema),z.lazy(() => KontenBlogWhereInputSchema) ]).optional().nullable(),
+  createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+  updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
+}).strict();
+
+export const GambarBlogOrderByWithRelationInputSchema: z.ZodType<Prisma.GambarBlogOrderByWithRelationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  KontenBlog: z.lazy(() => KontenBlogOrderByWithRelationInputSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const GambarBlogWhereUniqueInputSchema: z.ZodType<Prisma.GambarBlogWhereUniqueInput> = z.object({
+  id: z.string().cuid().optional()
+}).strict();
+
+export const GambarBlogOrderByWithAggregationInputSchema: z.ZodType<Prisma.GambarBlogOrderByWithAggregationInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional(),
+  _count: z.lazy(() => GambarBlogCountOrderByAggregateInputSchema).optional(),
+  _max: z.lazy(() => GambarBlogMaxOrderByAggregateInputSchema).optional(),
+  _min: z.lazy(() => GambarBlogMinOrderByAggregateInputSchema).optional()
+}).strict();
+
+export const GambarBlogScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.GambarBlogScalarWhereWithAggregatesInput> = z.object({
+  AND: z.union([ z.lazy(() => GambarBlogScalarWhereWithAggregatesInputSchema),z.lazy(() => GambarBlogScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  OR: z.lazy(() => GambarBlogScalarWhereWithAggregatesInputSchema).array().optional(),
+  NOT: z.union([ z.lazy(() => GambarBlogScalarWhereWithAggregatesInputSchema),z.lazy(() => GambarBlogScalarWhereWithAggregatesInputSchema).array() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
@@ -2319,10 +2396,10 @@ export const KontenBlogCreateInputSchema: z.ZodType<Prisma.KontenBlogCreateInput
   id: z.string().cuid().optional(),
   judul: z.string(),
   comment: z.lazy(() => CommentBlogCreateNestedManyWithoutKontenBlogInputSchema).optional(),
-  thumbnail: z.string(),
   isi: z.string(),
   posted: z.boolean(),
   like: z.number().int(),
+  gambarBlog: z.lazy(() => GambarBlogCreateNestedOneWithoutKontenBlogInputSchema),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -2331,10 +2408,10 @@ export const KontenBlogUncheckedCreateInputSchema: z.ZodType<Prisma.KontenBlogUn
   id: z.string().cuid().optional(),
   judul: z.string(),
   comment: z.lazy(() => CommentBlogUncheckedCreateNestedManyWithoutKontenBlogInputSchema).optional(),
-  thumbnail: z.string(),
   isi: z.string(),
   posted: z.boolean(),
   like: z.number().int(),
+  gambarBlogId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -2343,10 +2420,10 @@ export const KontenBlogUpdateInputSchema: z.ZodType<Prisma.KontenBlogUpdateInput
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   judul: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.lazy(() => CommentBlogUpdateManyWithoutKontenBlogNestedInputSchema).optional(),
-  thumbnail: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isi: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   posted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   like: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  gambarBlog: z.lazy(() => GambarBlogUpdateOneRequiredWithoutKontenBlogNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -2355,10 +2432,10 @@ export const KontenBlogUncheckedUpdateInputSchema: z.ZodType<Prisma.KontenBlogUn
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   judul: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   comment: z.lazy(() => CommentBlogUncheckedUpdateManyWithoutKontenBlogNestedInputSchema).optional(),
-  thumbnail: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isi: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   posted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   like: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  gambarBlogId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -2366,10 +2443,10 @@ export const KontenBlogUncheckedUpdateInputSchema: z.ZodType<Prisma.KontenBlogUn
 export const KontenBlogCreateManyInputSchema: z.ZodType<Prisma.KontenBlogCreateManyInput> = z.object({
   id: z.string().cuid().optional(),
   judul: z.string(),
-  thumbnail: z.string(),
   isi: z.string(),
   posted: z.boolean(),
   like: z.number().int(),
+  gambarBlogId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -2377,7 +2454,6 @@ export const KontenBlogCreateManyInputSchema: z.ZodType<Prisma.KontenBlogCreateM
 export const KontenBlogUpdateManyMutationInputSchema: z.ZodType<Prisma.KontenBlogUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   judul: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  thumbnail: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isi: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   posted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   like: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2388,10 +2464,56 @@ export const KontenBlogUpdateManyMutationInputSchema: z.ZodType<Prisma.KontenBlo
 export const KontenBlogUncheckedUpdateManyInputSchema: z.ZodType<Prisma.KontenBlogUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   judul: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  thumbnail: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isi: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   posted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   like: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  gambarBlogId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const GambarBlogCreateInputSchema: z.ZodType<Prisma.GambarBlogCreateInput> = z.object({
+  id: z.string().cuid().optional(),
+  KontenBlog: z.lazy(() => KontenBlogCreateNestedOneWithoutGambarBlogInputSchema).optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const GambarBlogUncheckedCreateInputSchema: z.ZodType<Prisma.GambarBlogUncheckedCreateInput> = z.object({
+  id: z.string().cuid().optional(),
+  KontenBlog: z.lazy(() => KontenBlogUncheckedCreateNestedOneWithoutGambarBlogInputSchema).optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const GambarBlogUpdateInputSchema: z.ZodType<Prisma.GambarBlogUpdateInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  KontenBlog: z.lazy(() => KontenBlogUpdateOneWithoutGambarBlogNestedInputSchema).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const GambarBlogUncheckedUpdateInputSchema: z.ZodType<Prisma.GambarBlogUncheckedUpdateInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  KontenBlog: z.lazy(() => KontenBlogUncheckedUpdateOneWithoutGambarBlogNestedInputSchema).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const GambarBlogCreateManyInputSchema: z.ZodType<Prisma.GambarBlogCreateManyInput> = z.object({
+  id: z.string().cuid().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const GambarBlogUpdateManyMutationInputSchema: z.ZodType<Prisma.GambarBlogUpdateManyMutationInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const GambarBlogUncheckedUpdateManyInputSchema: z.ZodType<Prisma.GambarBlogUncheckedUpdateManyInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -3478,6 +3600,11 @@ export const CommentBlogListRelationFilterSchema: z.ZodType<Prisma.CommentBlogLi
   none: z.lazy(() => CommentBlogWhereInputSchema).optional()
 }).strict();
 
+export const GambarBlogRelationFilterSchema: z.ZodType<Prisma.GambarBlogRelationFilter> = z.object({
+  is: z.lazy(() => GambarBlogWhereInputSchema).optional(),
+  isNot: z.lazy(() => GambarBlogWhereInputSchema).optional()
+}).strict();
+
 export const CommentBlogOrderByRelationAggregateInputSchema: z.ZodType<Prisma.CommentBlogOrderByRelationAggregateInput> = z.object({
   _count: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -3485,10 +3612,10 @@ export const CommentBlogOrderByRelationAggregateInputSchema: z.ZodType<Prisma.Co
 export const KontenBlogCountOrderByAggregateInputSchema: z.ZodType<Prisma.KontenBlogCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   judul: z.lazy(() => SortOrderSchema).optional(),
-  thumbnail: z.lazy(() => SortOrderSchema).optional(),
   isi: z.lazy(() => SortOrderSchema).optional(),
   posted: z.lazy(() => SortOrderSchema).optional(),
   like: z.lazy(() => SortOrderSchema).optional(),
+  gambarBlogId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -3500,10 +3627,10 @@ export const KontenBlogAvgOrderByAggregateInputSchema: z.ZodType<Prisma.KontenBl
 export const KontenBlogMaxOrderByAggregateInputSchema: z.ZodType<Prisma.KontenBlogMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   judul: z.lazy(() => SortOrderSchema).optional(),
-  thumbnail: z.lazy(() => SortOrderSchema).optional(),
   isi: z.lazy(() => SortOrderSchema).optional(),
   posted: z.lazy(() => SortOrderSchema).optional(),
   like: z.lazy(() => SortOrderSchema).optional(),
+  gambarBlogId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -3511,10 +3638,10 @@ export const KontenBlogMaxOrderByAggregateInputSchema: z.ZodType<Prisma.KontenBl
 export const KontenBlogMinOrderByAggregateInputSchema: z.ZodType<Prisma.KontenBlogMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
   judul: z.lazy(() => SortOrderSchema).optional(),
-  thumbnail: z.lazy(() => SortOrderSchema).optional(),
   isi: z.lazy(() => SortOrderSchema).optional(),
   posted: z.lazy(() => SortOrderSchema).optional(),
   like: z.lazy(() => SortOrderSchema).optional(),
+  gambarBlogId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -3524,8 +3651,26 @@ export const KontenBlogSumOrderByAggregateInputSchema: z.ZodType<Prisma.KontenBl
 }).strict();
 
 export const KontenBlogRelationFilterSchema: z.ZodType<Prisma.KontenBlogRelationFilter> = z.object({
-  is: z.lazy(() => KontenBlogWhereInputSchema).optional(),
-  isNot: z.lazy(() => KontenBlogWhereInputSchema).optional()
+  is: z.lazy(() => KontenBlogWhereInputSchema).optional().nullable(),
+  isNot: z.lazy(() => KontenBlogWhereInputSchema).optional().nullable()
+}).strict();
+
+export const GambarBlogCountOrderByAggregateInputSchema: z.ZodType<Prisma.GambarBlogCountOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const GambarBlogMaxOrderByAggregateInputSchema: z.ZodType<Prisma.GambarBlogMaxOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
+}).strict();
+
+export const GambarBlogMinOrderByAggregateInputSchema: z.ZodType<Prisma.GambarBlogMinOrderByAggregateInput> = z.object({
+  id: z.lazy(() => SortOrderSchema).optional(),
+  createdAt: z.lazy(() => SortOrderSchema).optional(),
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const CommentBlogCountOrderByAggregateInputSchema: z.ZodType<Prisma.CommentBlogCountOrderByAggregateInput> = z.object({
@@ -4353,6 +4498,12 @@ export const CommentBlogCreateNestedManyWithoutKontenBlogInputSchema: z.ZodType<
   connect: z.union([ z.lazy(() => CommentBlogWhereUniqueInputSchema),z.lazy(() => CommentBlogWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
+export const GambarBlogCreateNestedOneWithoutKontenBlogInputSchema: z.ZodType<Prisma.GambarBlogCreateNestedOneWithoutKontenBlogInput> = z.object({
+  create: z.union([ z.lazy(() => GambarBlogCreateWithoutKontenBlogInputSchema),z.lazy(() => GambarBlogUncheckedCreateWithoutKontenBlogInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => GambarBlogCreateOrConnectWithoutKontenBlogInputSchema).optional(),
+  connect: z.lazy(() => GambarBlogWhereUniqueInputSchema).optional()
+}).strict();
+
 export const CommentBlogUncheckedCreateNestedManyWithoutKontenBlogInputSchema: z.ZodType<Prisma.CommentBlogUncheckedCreateNestedManyWithoutKontenBlogInput> = z.object({
   create: z.union([ z.lazy(() => CommentBlogCreateWithoutKontenBlogInputSchema),z.lazy(() => CommentBlogCreateWithoutKontenBlogInputSchema).array(),z.lazy(() => CommentBlogUncheckedCreateWithoutKontenBlogInputSchema),z.lazy(() => CommentBlogUncheckedCreateWithoutKontenBlogInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => CommentBlogCreateOrConnectWithoutKontenBlogInputSchema),z.lazy(() => CommentBlogCreateOrConnectWithoutKontenBlogInputSchema).array() ]).optional(),
@@ -4374,6 +4525,14 @@ export const CommentBlogUpdateManyWithoutKontenBlogNestedInputSchema: z.ZodType<
   deleteMany: z.union([ z.lazy(() => CommentBlogScalarWhereInputSchema),z.lazy(() => CommentBlogScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
+export const GambarBlogUpdateOneRequiredWithoutKontenBlogNestedInputSchema: z.ZodType<Prisma.GambarBlogUpdateOneRequiredWithoutKontenBlogNestedInput> = z.object({
+  create: z.union([ z.lazy(() => GambarBlogCreateWithoutKontenBlogInputSchema),z.lazy(() => GambarBlogUncheckedCreateWithoutKontenBlogInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => GambarBlogCreateOrConnectWithoutKontenBlogInputSchema).optional(),
+  upsert: z.lazy(() => GambarBlogUpsertWithoutKontenBlogInputSchema).optional(),
+  connect: z.lazy(() => GambarBlogWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => GambarBlogUpdateWithoutKontenBlogInputSchema),z.lazy(() => GambarBlogUncheckedUpdateWithoutKontenBlogInputSchema) ]).optional(),
+}).strict();
+
 export const CommentBlogUncheckedUpdateManyWithoutKontenBlogNestedInputSchema: z.ZodType<Prisma.CommentBlogUncheckedUpdateManyWithoutKontenBlogNestedInput> = z.object({
   create: z.union([ z.lazy(() => CommentBlogCreateWithoutKontenBlogInputSchema),z.lazy(() => CommentBlogCreateWithoutKontenBlogInputSchema).array(),z.lazy(() => CommentBlogUncheckedCreateWithoutKontenBlogInputSchema),z.lazy(() => CommentBlogUncheckedCreateWithoutKontenBlogInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => CommentBlogCreateOrConnectWithoutKontenBlogInputSchema),z.lazy(() => CommentBlogCreateOrConnectWithoutKontenBlogInputSchema).array() ]).optional(),
@@ -4386,6 +4545,38 @@ export const CommentBlogUncheckedUpdateManyWithoutKontenBlogNestedInputSchema: z
   update: z.union([ z.lazy(() => CommentBlogUpdateWithWhereUniqueWithoutKontenBlogInputSchema),z.lazy(() => CommentBlogUpdateWithWhereUniqueWithoutKontenBlogInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => CommentBlogUpdateManyWithWhereWithoutKontenBlogInputSchema),z.lazy(() => CommentBlogUpdateManyWithWhereWithoutKontenBlogInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => CommentBlogScalarWhereInputSchema),z.lazy(() => CommentBlogScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const KontenBlogCreateNestedOneWithoutGambarBlogInputSchema: z.ZodType<Prisma.KontenBlogCreateNestedOneWithoutGambarBlogInput> = z.object({
+  create: z.union([ z.lazy(() => KontenBlogCreateWithoutGambarBlogInputSchema),z.lazy(() => KontenBlogUncheckedCreateWithoutGambarBlogInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => KontenBlogCreateOrConnectWithoutGambarBlogInputSchema).optional(),
+  connect: z.lazy(() => KontenBlogWhereUniqueInputSchema).optional()
+}).strict();
+
+export const KontenBlogUncheckedCreateNestedOneWithoutGambarBlogInputSchema: z.ZodType<Prisma.KontenBlogUncheckedCreateNestedOneWithoutGambarBlogInput> = z.object({
+  create: z.union([ z.lazy(() => KontenBlogCreateWithoutGambarBlogInputSchema),z.lazy(() => KontenBlogUncheckedCreateWithoutGambarBlogInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => KontenBlogCreateOrConnectWithoutGambarBlogInputSchema).optional(),
+  connect: z.lazy(() => KontenBlogWhereUniqueInputSchema).optional()
+}).strict();
+
+export const KontenBlogUpdateOneWithoutGambarBlogNestedInputSchema: z.ZodType<Prisma.KontenBlogUpdateOneWithoutGambarBlogNestedInput> = z.object({
+  create: z.union([ z.lazy(() => KontenBlogCreateWithoutGambarBlogInputSchema),z.lazy(() => KontenBlogUncheckedCreateWithoutGambarBlogInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => KontenBlogCreateOrConnectWithoutGambarBlogInputSchema).optional(),
+  upsert: z.lazy(() => KontenBlogUpsertWithoutGambarBlogInputSchema).optional(),
+  disconnect: z.boolean().optional(),
+  delete: z.boolean().optional(),
+  connect: z.lazy(() => KontenBlogWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => KontenBlogUpdateWithoutGambarBlogInputSchema),z.lazy(() => KontenBlogUncheckedUpdateWithoutGambarBlogInputSchema) ]).optional(),
+}).strict();
+
+export const KontenBlogUncheckedUpdateOneWithoutGambarBlogNestedInputSchema: z.ZodType<Prisma.KontenBlogUncheckedUpdateOneWithoutGambarBlogNestedInput> = z.object({
+  create: z.union([ z.lazy(() => KontenBlogCreateWithoutGambarBlogInputSchema),z.lazy(() => KontenBlogUncheckedCreateWithoutGambarBlogInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => KontenBlogCreateOrConnectWithoutGambarBlogInputSchema).optional(),
+  upsert: z.lazy(() => KontenBlogUpsertWithoutGambarBlogInputSchema).optional(),
+  disconnect: z.boolean().optional(),
+  delete: z.boolean().optional(),
+  connect: z.lazy(() => KontenBlogWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => KontenBlogUpdateWithoutGambarBlogInputSchema),z.lazy(() => KontenBlogUncheckedUpdateWithoutGambarBlogInputSchema) ]).optional(),
 }).strict();
 
 export const KontenBlogCreateNestedOneWithoutCommentInputSchema: z.ZodType<Prisma.KontenBlogCreateNestedOneWithoutCommentInput> = z.object({
@@ -5835,6 +6026,23 @@ export const CommentBlogCreateManyKontenBlogInputEnvelopeSchema: z.ZodType<Prism
   skipDuplicates: z.boolean().optional()
 }).strict();
 
+export const GambarBlogCreateWithoutKontenBlogInputSchema: z.ZodType<Prisma.GambarBlogCreateWithoutKontenBlogInput> = z.object({
+  id: z.string().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const GambarBlogUncheckedCreateWithoutKontenBlogInputSchema: z.ZodType<Prisma.GambarBlogUncheckedCreateWithoutKontenBlogInput> = z.object({
+  id: z.string().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const GambarBlogCreateOrConnectWithoutKontenBlogInputSchema: z.ZodType<Prisma.GambarBlogCreateOrConnectWithoutKontenBlogInput> = z.object({
+  where: z.lazy(() => GambarBlogWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => GambarBlogCreateWithoutKontenBlogInputSchema),z.lazy(() => GambarBlogUncheckedCreateWithoutKontenBlogInputSchema) ]),
+}).strict();
+
 export const CommentBlogUpsertWithWhereUniqueWithoutKontenBlogInputSchema: z.ZodType<Prisma.CommentBlogUpsertWithWhereUniqueWithoutKontenBlogInput> = z.object({
   where: z.lazy(() => CommentBlogWhereUniqueInputSchema),
   update: z.union([ z.lazy(() => CommentBlogUpdateWithoutKontenBlogInputSchema),z.lazy(() => CommentBlogUncheckedUpdateWithoutKontenBlogInputSchema) ]),
@@ -5865,10 +6073,27 @@ export const CommentBlogScalarWhereInputSchema: z.ZodType<Prisma.CommentBlogScal
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
-export const KontenBlogCreateWithoutCommentInputSchema: z.ZodType<Prisma.KontenBlogCreateWithoutCommentInput> = z.object({
+export const GambarBlogUpsertWithoutKontenBlogInputSchema: z.ZodType<Prisma.GambarBlogUpsertWithoutKontenBlogInput> = z.object({
+  update: z.union([ z.lazy(() => GambarBlogUpdateWithoutKontenBlogInputSchema),z.lazy(() => GambarBlogUncheckedUpdateWithoutKontenBlogInputSchema) ]),
+  create: z.union([ z.lazy(() => GambarBlogCreateWithoutKontenBlogInputSchema),z.lazy(() => GambarBlogUncheckedCreateWithoutKontenBlogInputSchema) ]),
+}).strict();
+
+export const GambarBlogUpdateWithoutKontenBlogInputSchema: z.ZodType<Prisma.GambarBlogUpdateWithoutKontenBlogInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const GambarBlogUncheckedUpdateWithoutKontenBlogInputSchema: z.ZodType<Prisma.GambarBlogUncheckedUpdateWithoutKontenBlogInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const KontenBlogCreateWithoutGambarBlogInputSchema: z.ZodType<Prisma.KontenBlogCreateWithoutGambarBlogInput> = z.object({
   id: z.string().optional(),
   judul: z.string(),
-  thumbnail: z.string(),
+  comment: z.lazy(() => CommentBlogCreateNestedManyWithoutKontenBlogInputSchema).optional(),
   isi: z.string(),
   posted: z.boolean(),
   like: z.number(),
@@ -5876,13 +6101,67 @@ export const KontenBlogCreateWithoutCommentInputSchema: z.ZodType<Prisma.KontenB
   updatedAt: z.coerce.date().optional()
 }).strict();
 
-export const KontenBlogUncheckedCreateWithoutCommentInputSchema: z.ZodType<Prisma.KontenBlogUncheckedCreateWithoutCommentInput> = z.object({
+export const KontenBlogUncheckedCreateWithoutGambarBlogInputSchema: z.ZodType<Prisma.KontenBlogUncheckedCreateWithoutGambarBlogInput> = z.object({
   id: z.string().optional(),
   judul: z.string(),
-  thumbnail: z.string(),
+  comment: z.lazy(() => CommentBlogUncheckedCreateNestedManyWithoutKontenBlogInputSchema).optional(),
   isi: z.string(),
   posted: z.boolean(),
   like: z.number(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const KontenBlogCreateOrConnectWithoutGambarBlogInputSchema: z.ZodType<Prisma.KontenBlogCreateOrConnectWithoutGambarBlogInput> = z.object({
+  where: z.lazy(() => KontenBlogWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => KontenBlogCreateWithoutGambarBlogInputSchema),z.lazy(() => KontenBlogUncheckedCreateWithoutGambarBlogInputSchema) ]),
+}).strict();
+
+export const KontenBlogUpsertWithoutGambarBlogInputSchema: z.ZodType<Prisma.KontenBlogUpsertWithoutGambarBlogInput> = z.object({
+  update: z.union([ z.lazy(() => KontenBlogUpdateWithoutGambarBlogInputSchema),z.lazy(() => KontenBlogUncheckedUpdateWithoutGambarBlogInputSchema) ]),
+  create: z.union([ z.lazy(() => KontenBlogCreateWithoutGambarBlogInputSchema),z.lazy(() => KontenBlogUncheckedCreateWithoutGambarBlogInputSchema) ]),
+}).strict();
+
+export const KontenBlogUpdateWithoutGambarBlogInputSchema: z.ZodType<Prisma.KontenBlogUpdateWithoutGambarBlogInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  judul: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  comment: z.lazy(() => CommentBlogUpdateManyWithoutKontenBlogNestedInputSchema).optional(),
+  isi: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  posted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  like: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const KontenBlogUncheckedUpdateWithoutGambarBlogInputSchema: z.ZodType<Prisma.KontenBlogUncheckedUpdateWithoutGambarBlogInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  judul: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  comment: z.lazy(() => CommentBlogUncheckedUpdateManyWithoutKontenBlogNestedInputSchema).optional(),
+  isi: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  posted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  like: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const KontenBlogCreateWithoutCommentInputSchema: z.ZodType<Prisma.KontenBlogCreateWithoutCommentInput> = z.object({
+  id: z.string().optional(),
+  judul: z.string(),
+  isi: z.string(),
+  posted: z.boolean(),
+  like: z.number(),
+  gambarBlog: z.lazy(() => GambarBlogCreateNestedOneWithoutKontenBlogInputSchema),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const KontenBlogUncheckedCreateWithoutCommentInputSchema: z.ZodType<Prisma.KontenBlogUncheckedCreateWithoutCommentInput> = z.object({
+  id: z.string().optional(),
+  judul: z.string(),
+  isi: z.string(),
+  posted: z.boolean(),
+  like: z.number(),
+  gambarBlogId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -5900,10 +6179,10 @@ export const KontenBlogUpsertWithoutCommentInputSchema: z.ZodType<Prisma.KontenB
 export const KontenBlogUpdateWithoutCommentInputSchema: z.ZodType<Prisma.KontenBlogUpdateWithoutCommentInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   judul: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  thumbnail: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isi: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   posted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   like: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  gambarBlog: z.lazy(() => GambarBlogUpdateOneRequiredWithoutKontenBlogNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -5911,10 +6190,10 @@ export const KontenBlogUpdateWithoutCommentInputSchema: z.ZodType<Prisma.KontenB
 export const KontenBlogUncheckedUpdateWithoutCommentInputSchema: z.ZodType<Prisma.KontenBlogUncheckedUpdateWithoutCommentInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   judul: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  thumbnail: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   isi: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   posted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   like: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  gambarBlogId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -7443,6 +7722,68 @@ export const KontenBlogFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.KontenBlogF
   where: KontenBlogWhereUniqueInputSchema,
 }).strict()
 
+export const GambarBlogFindFirstArgsSchema: z.ZodType<Prisma.GambarBlogFindFirstArgs> = z.object({
+  select: GambarBlogSelectSchema.optional(),
+  include: GambarBlogIncludeSchema.optional(),
+  where: GambarBlogWhereInputSchema.optional(),
+  orderBy: z.union([ GambarBlogOrderByWithRelationInputSchema.array(),GambarBlogOrderByWithRelationInputSchema ]).optional(),
+  cursor: GambarBlogWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: GambarBlogScalarFieldEnumSchema.array().optional(),
+}).strict()
+
+export const GambarBlogFindFirstOrThrowArgsSchema: z.ZodType<Prisma.GambarBlogFindFirstOrThrowArgs> = z.object({
+  select: GambarBlogSelectSchema.optional(),
+  include: GambarBlogIncludeSchema.optional(),
+  where: GambarBlogWhereInputSchema.optional(),
+  orderBy: z.union([ GambarBlogOrderByWithRelationInputSchema.array(),GambarBlogOrderByWithRelationInputSchema ]).optional(),
+  cursor: GambarBlogWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: GambarBlogScalarFieldEnumSchema.array().optional(),
+}).strict()
+
+export const GambarBlogFindManyArgsSchema: z.ZodType<Prisma.GambarBlogFindManyArgs> = z.object({
+  select: GambarBlogSelectSchema.optional(),
+  include: GambarBlogIncludeSchema.optional(),
+  where: GambarBlogWhereInputSchema.optional(),
+  orderBy: z.union([ GambarBlogOrderByWithRelationInputSchema.array(),GambarBlogOrderByWithRelationInputSchema ]).optional(),
+  cursor: GambarBlogWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+  distinct: GambarBlogScalarFieldEnumSchema.array().optional(),
+}).strict()
+
+export const GambarBlogAggregateArgsSchema: z.ZodType<Prisma.GambarBlogAggregateArgs> = z.object({
+  where: GambarBlogWhereInputSchema.optional(),
+  orderBy: z.union([ GambarBlogOrderByWithRelationInputSchema.array(),GambarBlogOrderByWithRelationInputSchema ]).optional(),
+  cursor: GambarBlogWhereUniqueInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict()
+
+export const GambarBlogGroupByArgsSchema: z.ZodType<Prisma.GambarBlogGroupByArgs> = z.object({
+  where: GambarBlogWhereInputSchema.optional(),
+  orderBy: z.union([ GambarBlogOrderByWithAggregationInputSchema.array(),GambarBlogOrderByWithAggregationInputSchema ]).optional(),
+  by: GambarBlogScalarFieldEnumSchema.array(),
+  having: GambarBlogScalarWhereWithAggregatesInputSchema.optional(),
+  take: z.number().optional(),
+  skip: z.number().optional(),
+}).strict()
+
+export const GambarBlogFindUniqueArgsSchema: z.ZodType<Prisma.GambarBlogFindUniqueArgs> = z.object({
+  select: GambarBlogSelectSchema.optional(),
+  include: GambarBlogIncludeSchema.optional(),
+  where: GambarBlogWhereUniqueInputSchema,
+}).strict()
+
+export const GambarBlogFindUniqueOrThrowArgsSchema: z.ZodType<Prisma.GambarBlogFindUniqueOrThrowArgs> = z.object({
+  select: GambarBlogSelectSchema.optional(),
+  include: GambarBlogIncludeSchema.optional(),
+  where: GambarBlogWhereUniqueInputSchema,
+}).strict()
+
 export const CommentBlogFindFirstArgsSchema: z.ZodType<Prisma.CommentBlogFindFirstArgs> = z.object({
   select: CommentBlogSelectSchema.optional(),
   include: CommentBlogIncludeSchema.optional(),
@@ -8317,6 +8658,47 @@ export const KontenBlogUpdateManyArgsSchema: z.ZodType<Prisma.KontenBlogUpdateMa
 
 export const KontenBlogDeleteManyArgsSchema: z.ZodType<Prisma.KontenBlogDeleteManyArgs> = z.object({
   where: KontenBlogWhereInputSchema.optional(),
+}).strict()
+
+export const GambarBlogCreateArgsSchema: z.ZodType<Prisma.GambarBlogCreateArgs> = z.object({
+  select: GambarBlogSelectSchema.optional(),
+  include: GambarBlogIncludeSchema.optional(),
+  data: z.union([ GambarBlogCreateInputSchema,GambarBlogUncheckedCreateInputSchema ]),
+}).strict()
+
+export const GambarBlogUpsertArgsSchema: z.ZodType<Prisma.GambarBlogUpsertArgs> = z.object({
+  select: GambarBlogSelectSchema.optional(),
+  include: GambarBlogIncludeSchema.optional(),
+  where: GambarBlogWhereUniqueInputSchema,
+  create: z.union([ GambarBlogCreateInputSchema,GambarBlogUncheckedCreateInputSchema ]),
+  update: z.union([ GambarBlogUpdateInputSchema,GambarBlogUncheckedUpdateInputSchema ]),
+}).strict()
+
+export const GambarBlogCreateManyArgsSchema: z.ZodType<Prisma.GambarBlogCreateManyArgs> = z.object({
+  data: GambarBlogCreateManyInputSchema.array(),
+  skipDuplicates: z.boolean().optional(),
+}).strict()
+
+export const GambarBlogDeleteArgsSchema: z.ZodType<Prisma.GambarBlogDeleteArgs> = z.object({
+  select: GambarBlogSelectSchema.optional(),
+  include: GambarBlogIncludeSchema.optional(),
+  where: GambarBlogWhereUniqueInputSchema,
+}).strict()
+
+export const GambarBlogUpdateArgsSchema: z.ZodType<Prisma.GambarBlogUpdateArgs> = z.object({
+  select: GambarBlogSelectSchema.optional(),
+  include: GambarBlogIncludeSchema.optional(),
+  data: z.union([ GambarBlogUpdateInputSchema,GambarBlogUncheckedUpdateInputSchema ]),
+  where: GambarBlogWhereUniqueInputSchema,
+}).strict()
+
+export const GambarBlogUpdateManyArgsSchema: z.ZodType<Prisma.GambarBlogUpdateManyArgs> = z.object({
+  data: z.union([ GambarBlogUpdateManyMutationInputSchema,GambarBlogUncheckedUpdateManyInputSchema ]),
+  where: GambarBlogWhereInputSchema.optional(),
+}).strict()
+
+export const GambarBlogDeleteManyArgsSchema: z.ZodType<Prisma.GambarBlogDeleteManyArgs> = z.object({
+  where: GambarBlogWhereInputSchema.optional(),
 }).strict()
 
 export const CommentBlogCreateArgsSchema: z.ZodType<Prisma.CommentBlogCreateArgs> = z.object({
