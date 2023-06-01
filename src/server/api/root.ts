@@ -12,6 +12,7 @@ import { pembayaranRouter } from "./routers/pembayaran";
 import { blogRouter } from "./routers/blog";
 import { pertanyaanFeedbackRouter } from "./routers/pertanyaanfeedback";
 import { aksesFotoRouter } from "./routers/aksesfoto";
+import { detailPemesananRouter } from "./routers/detailpemesanan";
 
 /**
  * This is the primary router for your server.
@@ -31,7 +32,8 @@ export const appRouter = createTRPCRouter({
   image: imageRouter,
   pembayaran: pembayaranRouter,
   blog: blogRouter,
-  aksesFoto: aksesFotoRouter
+  aksesFoto: aksesFotoRouter,
+  detailPemesanan: detailPemesananRouter
 });
 
 // export type definition of API
