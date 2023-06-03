@@ -279,11 +279,11 @@ export default function UpdateKupon(props: { id: string }) {
             <div className="col-span-3 flex items-center">
               <input
                 value={new Date(jadwal).toISOString().substr(0, 10)}
-                type="date"
+                type="datetime-local"
                 min={new Date().toISOString().split("T")[0]}
                 name="tanggal"
                 id="tanggal"
-                className="focus:shadow-outline text-gray-700 w-full appearance-none rounded border py-2 px-3 leading-tight shadow focus:outline-none"
+                className="text-gray-900 focus:ring-indigo-600 mt-2 block w-full rounded-md border-0 py-1.5 px-2.5 shadow-sm ring-1 ring-inset  ring-dark-grey focus:ring-inset sm:text-sm sm:leading-6"
                 disabled
               />
             </div>
@@ -291,18 +291,19 @@ export default function UpdateKupon(props: { id: string }) {
 
           <div className="mt-4 flex w-full flex-wrap py-4 px-6 sm:px-6">
             <Link
-              href="/kupon/list-kupon"
+              href="/detailpemesanan"
               type="button"
               className="mb-2 inline-flex w-full justify-center rounded-md bg-light-grey px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-28"
             >
               Kembali
             </Link>
-            <button
-              type="submit"
-              className="mb-2 inline-flex w-full justify-center rounded-md bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28"
+            <Link
+              href="/detailpemesanan"
+              type="button"
+              className="mb-2 inline-flex w-full justify-center rounded-md bg-light-grey px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-28"
             >
-              Konfirmasi
-            </button>
+              Akses Foto
+            </Link>
           </div>
         </form>
       </div>
