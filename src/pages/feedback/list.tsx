@@ -84,7 +84,7 @@ export default function ListFeedback() {
         {data?.map((item) => (
           <div className={`mx-4 my-6 rounded-lg bg-[#e5e7eb] p-6 shadow-lg md:mx-10 lg:mx-20 flex flex-col justify-between border ${item.isiFeedback.length > 100 ? 'h-auto' : 'h-[20rem]'}`}>
             <div>
-              <h3 className="text-lg font-medium text-gray-900">{item.userId}</h3>
+              <h3 className="text-lg font-medium text-gray-900">{item.user.nama}</h3>
               <p className="mt-4 rounded-md bg-light-grey p-4 text-black break-words">{item.isiFeedback}</p>
             </div>
             <div className="mt-4 flex justify-between items-center">

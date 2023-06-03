@@ -115,7 +115,7 @@ model Booking {
   status          BookinStatus
   // foto FotoUser[]
   Pembayaran      Pembayaran[]
-  // FotoUser        FotoUser[]
+  fotoUser        FotoUser[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   deleted         Boolean        @default(false)
@@ -142,6 +142,8 @@ model Pembayaran {
 
 model FotoUser {
   id        String   @id @default(cuid())
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id])
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())

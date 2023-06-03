@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { createTRPCRouter, adminProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, adminProcedure, userProcedure } from "~/server/api/trpc";
 import { roles } from "~/utils/roles";
 import { addUserSchema } from "~/utils/schemas";
 
@@ -136,4 +136,16 @@ export const userRouter = createTRPCRouter({
         maxPage,
       };
     }),
+  
+  getUser : userProcedure
+  .query(async ({ ctx }) => {
+    const user = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.id,
+      },
+    });
+
+    return user;
+  })
+
 });

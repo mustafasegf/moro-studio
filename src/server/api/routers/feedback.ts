@@ -66,7 +66,11 @@ export const feedbackRouter = createTRPCRouter({
     }),
   
   getAllFeedback: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.feedback.findMany();
+    return ctx.prisma.feedback.findMany({
+      include :{
+        user: true,
+      }
+    });
   }),
 
   getFeedbackById: publicProcedure
