@@ -29,7 +29,7 @@ model User {
   // sessions       Session[]
   booking        Booking[]
   blastMarketing BlastMarketing[]
-  chatRoomAdmin  ChatRoom[]       @relation("ChatRoomAdmin")
+  chatRoomStaff  ChatRoom[]       @relation("ChatRoomStaff")
   chatRoomUser   ChatRoom[]       @relation("ChatRoomUser")
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
@@ -198,12 +198,12 @@ model Home {
 }
 
 model ChatRoom {
-  Id        String   @id @default(cuid())
-  adminId   String
-  admin     User     @relation("ChatRoomAdmin", fields: [adminId], references: [id])
+  id        String   @id @default(cuid())
+  staffId   String?
+  staff     User?    @relation("ChatRoomStaff", fields: [staffId], references: [id])
   userId    String?
-  User      User?    @relation("ChatRoomUser", fields: [userId], references: [id])
-  Chat      Chat[]
+  user      User?    @relation("ChatRoomUser", fields: [userId], references: [id])
+  chat      Chat[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -211,9 +211,9 @@ model ChatRoom {
 model Chat {
   id         String   @id @default(cuid())
   chatRoomId String
-  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [Id])
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
   chat       String   @db.Text
-  adminSend  Boolean
+  staffSend  Boolean
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
