@@ -54,7 +54,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   };
 }
 
-export default function UpdateKupon(props: { id: string }) {
+export default function DetailPemesanan(props: { id: string }) {
   const [namaUser, setNamaUser] = useState("");
   const [namaKatalog, setNamaKatalog] = useState("");
   const [backgroundWarna, setBackgroundWarna] = useState("");
@@ -313,7 +313,7 @@ export default function UpdateKupon(props: { id: string }) {
               Kembali
             </Link>
             <Link
-              href="/detailpemesanan"
+              href={`/aksesfoto/${data?.id}`}
               type="button"
               className="mb-2 inline-flex w-full justify-center rounded-md bg-light-grey px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-28"
             >

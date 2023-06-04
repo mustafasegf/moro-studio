@@ -4,6 +4,7 @@ import { sign } from "jsonwebtoken";
 import {
   createTRPCRouter,
   publicProcedure,
+  studioManagerProcedure,
   userProcedure,
 } from "~/server/api/trpc";
 import { env } from "~/env.mjs";
@@ -11,15 +12,57 @@ import { tryToCatch } from "~/utils/trycatch";
 import { TRPCError } from "@trpc/server";
 
 export const aksesFotoRouter = createTRPCRouter({
-  createPresignedUrl: userProcedure.mutation(async ({ ctx }) => {
+  createPresignedUrl: studioManagerProcedure
+  .input(
+      z.object({
+        bookingId: z.string(),
+      })
+    )
+  .mutation(async ({ ctx, input }) => {
     console.log("ctx.session.id", ctx.session);
+
+
+    // get booking id
+    const booking = await ctx.prisma.booking.findUnique({
+      where: {
+        id: input.bookingId,
+      },
+    });
+
+    if (!booking) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Booking tidak ditemukan",
+      });
+    }
+
 
     const gambarRow = await ctx.prisma.fotoUser.create({
       data: {
         user: {
           connect: {
-            id: ctx.session.id,
+            id: booking.userId,
           },
+        },
+        booking: {
+          connect: {
+            id: input.bookingId,
+          },
+        },
+      },
+    });
+
+
+    // update booking with foto user
+    const bookingWithFotoUser = await ctx.prisma.booking.update({
+      where: {
+        id: input.bookingId,
+      },
+      data: {
+        fotoUser: {
+          connect : {
+            id : gambarRow.id
+          }
         },
       },
     });
@@ -103,22 +146,24 @@ export const aksesFotoRouter = createTRPCRouter({
       });
     }),
 
-  //   downloadFoto: userProcedure.query(async ({ ctx, input }) => {
-  //   const { id } = input;
+    getFotoByUser : userProcedure.query(async ({ ctx }) => {
+      const images = await ctx.prisma.fotoUser.findMany({
+        where: {
+          userId: ctx.session.id,
+        },
+      });
+  
+      return await Promise.all(
+        images.map(async (image) => {
+          return {
+            ...image,
+            url: await ctx.s3.getSignedUrlPromise("getObject", {
+              Bucket: env.BUCKET_NAME,
+              Key: `${ctx.session.id}/${image.id}`,
+            }),
+          };
+        })
+      );
 
-  //   const filePath = `${ctx.session.id}/${id}`;
-
-  //   const fileStream = createReadStream(filePath);
-  //   fileStream.on("error", (error) => {
-  //     throw new TRPCError({
-  //       code: "INTERNAL_SERVER_ERROR",
-  //       message: "Failed to download photo",
-  //     });
-  //   });
-
-  //   return {
-  //     stream: fileStream,
-  //     fileName: id,
-  //   };
-  // }),
+    })
 });
