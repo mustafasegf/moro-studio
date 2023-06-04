@@ -7,7 +7,22 @@ import { getServerAuthSession } from "~/utils/session";
 import { createSSG } from "~/server/SSGHelper";
 import { ParsedUrlQuery } from "querystring";
 import { LoadingPage } from "~/component/loading";
-import { cp } from "fs";
+import {
+  format,
+  addDays,
+  eachDayOfInterval,
+  set,
+  addMinutes,
+  isAfter,
+  setMinutes,
+  setHours,
+  getDay,
+  differenceInMinutes,
+  differenceInDays,
+  getMinutes,
+  getHours,
+} from "date-fns";
+import { id, enUS } from "date-fns/locale";
 
 interface Query extends ParsedUrlQuery {
   id: string;
@@ -40,8 +55,8 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 export default function UpdateKupon(props: { id: string }) {
-  const [userId, setUserId] = useState("");
-  const [katalogId, setKatalogId] = useState("");
+  const [namaUser, setNamaUser] = useState("");
+  const [namaKatalog, setNamaKatalog] = useState("");
   const [backgroundWarna, setBackgroundWarna] = useState("");
   const [status, setStatus] = useState("");
   const [jumlahOrang, setJumlahOrang] = useState(0);
@@ -64,8 +79,8 @@ export default function UpdateKupon(props: { id: string }) {
 
   useEffect(() => {
     if (data) {
-      setUserId(data.userId);
-      setKatalogId(data.katalogId);
+      setNamaUser(data.user.nama);
+      setNamaKatalog(data.katalog.nama);
       setBackgroundWarna(data.backgroundWarna);
       setStatus(data.status);
       setJumlahOrang(data.jumlahOrang);
@@ -173,7 +188,7 @@ export default function UpdateKupon(props: { id: string }) {
             </div>
             <div className="col-span-3 flex items-center">
               <input
-                value={userId}
+                value={namaUser}
                 type="text"
                 name="nama-pemesan"
                 id="nama-pemesan"
@@ -215,7 +230,7 @@ export default function UpdateKupon(props: { id: string }) {
             </div>
             <div className="col-span-3 flex items-center">
               <input
-                value={katalogId}
+                value={namaKatalog}
                 type="text"
                 name="nama-pemesan"
                 id="nama-pemesan"
@@ -279,7 +294,7 @@ export default function UpdateKupon(props: { id: string }) {
             <div className="col-span-3 flex items-center">
               <input
                 value={new Date(jadwal).toISOString().substr(0, 10)}
-                type="datetime-local"
+                type="date"
                 min={new Date().toISOString().split("T")[0]}
                 name="tanggal"
                 id="tanggal"

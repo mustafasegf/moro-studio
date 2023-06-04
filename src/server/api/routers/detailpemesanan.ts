@@ -9,7 +9,12 @@ import {
 
 export const detailPemesananRouter = createTRPCRouter({ 
   getAllPemesananan: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.booking.findMany();
+    return ctx.prisma.booking.findMany({
+      include :{
+        user: true,
+        katalog: true,
+      }
+    });
   }),
 
   getPemesananById: publicProcedure
@@ -23,6 +28,10 @@ export const detailPemesananRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
+        include :{
+          user: true,
+          katalog: true,
+        }
       });
     }),
 

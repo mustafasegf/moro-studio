@@ -42,7 +42,7 @@ export default function UpdateCatalogue(props: { id: string }) {
   const updateCatalogue = api.catalogue.updateCatalogue.useMutation();
 
   useEffect(
-    function() {
+    function () {
       if (updateCatalogue.isSuccess) {
         setTimeout(() => {
 

@@ -17,7 +17,7 @@ export function Navbar() {
     },
     {
       name: "Feedback",
-      path: "/feedback/list",
+      path: "/feedback",
       role: "user",
     },
     {

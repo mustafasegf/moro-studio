@@ -91,7 +91,7 @@ export default function ListKupon() {
             {data?.map((item, i) => (
               <tr key={item.id}>
                 <th>{item.id}</th>
-                <td>{item.userId}</td>
+                <td>{item.user.nama}</td>
                 <td>{item.jadwal.toDateString()}</td>
                 <td>{item.jumlahOrang}</td>
                 <td>{item.status}</td>
