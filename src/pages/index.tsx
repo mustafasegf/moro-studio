@@ -96,7 +96,7 @@ const Home: NextPage = () => {
             ))}
           </div>
         </div>
-
+              
         <footer className="footer bg-dark-grey md:grid-cols-4 p-8 text-base-content">
           <div className="md:ml-20">
             <Image
