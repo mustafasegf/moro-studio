@@ -110,7 +110,7 @@ export default function DraftList() {
       />
       <div className="m-8">
         <div className="flex flex-col items-end justify-end gap-4 md:flex-row md:items-center">
-          <div className="flex w-full flex-row items-center justify-end gap-2">
+          <div className="flex w-full flex-col items-center justify-end gap-2">
             {blogs?.map((blog) => (
               <Link key={blog.id} href={`/blog/draft/${blog.id}`}>
                 <div className="bg-white flex w-full flex-col rounded-lg p-4 shadow-md">
@@ -119,7 +119,8 @@ export default function DraftList() {
                       <h3 className="text-lg font-semibold">{blog.judul}</h3>
                       <div className="flex gap-4">
                         <img
-                          width={200}
+                          className="max-h-48"
+                          width={200} 
                           src={
                             images?.find(
                               (image) => image.id === blog.gambarBlogId
@@ -127,7 +128,7 @@ export default function DraftList() {
                           }
                         />
                         <p className="text-gray-500 text-sm">
-                          {blog.isi.substring(0, 1500)}...
+                          {blog.isi.substring(0, 500)}...
                         </p>
 
                         <div>

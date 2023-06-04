@@ -7,6 +7,7 @@ import { Navbar } from "../component/navbar";
 import { Session } from "~/server/api/trpc";
 import { AuthProvider, getServerAuthSession } from "~/utils/session";
 import { Toaster } from "react-hot-toast";
+import { Footer } from "~/component/footer";
 
 //@ts-ignore
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -19,6 +20,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <Toaster />
         <Navbar />
         <Component {...pageProps} />
+        <Footer />
       </AuthProvider>
     </>
   );
