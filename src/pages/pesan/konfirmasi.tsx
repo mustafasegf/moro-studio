@@ -33,15 +33,16 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addPembayaranSchema, AddPembayaranSchema } from "~/utils/schemas";
 import makeToast from "~/component/toast";
+import dynamic from 'next/dynamic';
 
 const hoverIndexAtom = atom(-1);
 const bookSetAtom = atom<Set<number>>(new Set<number>());
 const bookAtom = atom<
   | (Booking & {
-    katalog: Katalog;
-    Pembayaran: Pembayaran[];
-    kupon: Kupon | null
-  })
+      katalog: Katalog;
+      Pembayaran: Pembayaran[];
+      kupon: Kupon | null;
+    })
   | undefined
 >(undefined);
 const isOpenAtom = atom(false);
@@ -81,7 +82,13 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   };
 }
 
-export default function Jadwal() {
+
+const DynamicJawal = dynamic(() => import("~/pages/pesan/konfirmasi").then(module => module.Jadwal) , {ssr: false})
+
+export default DynamicJawal
+
+
+export function Jadwal() {
   const startHour = 10;
   const endHour = 21;
   const duration = 40;
@@ -121,11 +128,11 @@ export default function Jadwal() {
     to: end,
   });
 
-  const utils = api.useContext()
+  const utils = api.useContext();
   const deleteBooking = api.booking.deleteBooking.useMutation({
     onSuccess() {
-      utils.booking.getAllBooking.invalidate()
-    }
+      utils.booking.getAllBooking.invalidate();
+    },
   });
 
   useEffect(() => {
@@ -150,29 +157,29 @@ export default function Jadwal() {
   }, [bookSet]);
 
   function handleAction() {
-    setIsOpenDelete(false)
-    const id = booking?.id!
-    deleteBooking.mutate({ id })
-  } 
- 
+    setIsOpenDelete(false);
+    const id = booking?.id!;
+    deleteBooking.mutate({ id });
+  }
+
   useEffect(
-    function() {
+    function () {
       if (deleteBooking.isSuccess) {
         makeToast("pesanan berhasil dihapus");
-        setIsOpen(false)
-        setIsOpenDelete(false)
+        setIsOpen(false);
+        setIsOpenDelete(false);
       }
     },
     [deleteBooking.isSuccess]
   );
 
   useEffect(
-    function() {
+    function () {
       if (deleteBooking.isError) {
         makeToast(`Eror: ${deleteBooking.error.message}`, { type: "error" });
         const timeout = setTimeout(() => {
           deleteBooking.reset();
-          setIsOpenDelete(false)
+          setIsOpenDelete(false);
         }, 5000);
         return () => clearTimeout(timeout);
       }
