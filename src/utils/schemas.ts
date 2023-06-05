@@ -93,3 +93,11 @@ export const addFeedbackSchema =  z.object({
 })
 
 export type AddFeedbackSchema = z.infer<typeof addFeedbackSchema>;
+
+export const updateFeedbackSchema =  z.object({
+  id: z.string().cuid().min(1, "id perlu diisi"),
+  namaPenulis: z.string().min(0, "Nama perlu diisi"),
+  isiFeedback: z.string().min(1, "Feedback perlu diisi"),
+})
+
+export type UpdateFeedbackSchema = z.infer<typeof updateFeedbackSchema>;

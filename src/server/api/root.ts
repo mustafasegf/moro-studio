@@ -13,6 +13,7 @@ import { blogRouter } from "./routers/blog";
 import { pertanyaanFeedbackRouter } from "./routers/pertanyaanfeedback";
 import { aksesFotoRouter } from "./routers/aksesfoto";
 import { chatRouter } from "./routers/chat";
+import { detailPemesananRouter } from "./routers/detailpemesanan";
 
 /**
  * This is the primary router for your server.
@@ -34,6 +35,7 @@ export const appRouter = createTRPCRouter({
   blog: blogRouter,
   aksesFoto: aksesFotoRouter,
   chat: chatRouter,
+  detailPemesanan: detailPemesananRouter
 });
 
 // export type definition of API

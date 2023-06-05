@@ -168,4 +168,18 @@ export const bookingRouter = createTRPCRouter({
       },
     });
   }),
+
+  getBookingByBookingId: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(({ input, ctx }) => {
+      return ctx.prisma.booking.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });

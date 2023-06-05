@@ -32,7 +32,7 @@ export const FeedbackQuestionScalarFieldEnumSchema = z.enum(['id','pertanyaan','
 
 export const FeedbackScalarFieldEnumSchema = z.enum(['id','userId','isiFeedback','namaPenulis','createdAt','updatedAt']);
 
-export const FotoUserScalarFieldEnumSchema = z.enum(['id','userId','createdAt','updatedAt']);
+export const FotoUserScalarFieldEnumSchema = z.enum(['id','bookingId','userId','createdAt','updatedAt']);
 
 export const GambarBlogScalarFieldEnumSchema = z.enum(['id','createdAt','updatedAt']);
 
@@ -178,6 +178,7 @@ export type Pembayaran = z.infer<typeof PembayaranSchema>
 
 export const FotoUserSchema = z.object({
   id: z.string().cuid(),
+  bookingId: z.string(),
   userId: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -518,6 +519,7 @@ export const BookingIncludeSchema: z.ZodType<Prisma.BookingInclude> = z.object({
   katalog: z.union([z.boolean(),z.lazy(() => KatalogArgsSchema)]).optional(),
   kupon: z.union([z.boolean(),z.lazy(() => KuponArgsSchema)]).optional(),
   Pembayaran: z.union([z.boolean(),z.lazy(() => PembayaranFindManyArgsSchema)]).optional(),
+  fotoUser: z.union([z.boolean(),z.lazy(() => FotoUserFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => BookingCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -532,6 +534,7 @@ export const BookingCountOutputTypeArgsSchema: z.ZodType<Prisma.BookingCountOutp
 
 export const BookingCountOutputTypeSelectSchema: z.ZodType<Prisma.BookingCountOutputTypeSelect> = z.object({
   Pembayaran: z.boolean().optional(),
+  fotoUser: z.boolean().optional(),
 }).strict();
 
 export const BookingSelectSchema: z.ZodType<Prisma.BookingSelect> = z.object({
@@ -551,6 +554,7 @@ export const BookingSelectSchema: z.ZodType<Prisma.BookingSelect> = z.object({
   kupon: z.union([z.boolean(),z.lazy(() => KuponArgsSchema)]).optional(),
   status: z.boolean().optional(),
   Pembayaran: z.union([z.boolean(),z.lazy(() => PembayaranFindManyArgsSchema)]).optional(),
+  fotoUser: z.union([z.boolean(),z.lazy(() => FotoUserFindManyArgsSchema)]).optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   deleted: z.boolean().optional(),
@@ -583,6 +587,7 @@ export const PembayaranSelectSchema: z.ZodType<Prisma.PembayaranSelect> = z.obje
 //------------------------------------------------------
 
 export const FotoUserIncludeSchema: z.ZodType<Prisma.FotoUserInclude> = z.object({
+  booking: z.union([z.boolean(),z.lazy(() => BookingArgsSchema)]).optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
 
@@ -593,6 +598,8 @@ export const FotoUserArgsSchema: z.ZodType<Prisma.FotoUserArgs> = z.object({
 
 export const FotoUserSelectSchema: z.ZodType<Prisma.FotoUserSelect> = z.object({
   id: z.boolean().optional(),
+  bookingId: z.boolean().optional(),
+  booking: z.union([z.boolean(),z.lazy(() => BookingArgsSchema)]).optional(),
   userId: z.boolean().optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   createdAt: z.boolean().optional(),
@@ -1167,6 +1174,7 @@ export const BookingWhereInputSchema: z.ZodType<Prisma.BookingWhereInput> = z.ob
   kupon: z.union([ z.lazy(() => KuponRelationFilterSchema),z.lazy(() => KuponWhereInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => EnumBookinStatusFilterSchema),z.lazy(() => BookinStatusSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranListRelationFilterSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserListRelationFilterSchema).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   deleted: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
@@ -1189,6 +1197,7 @@ export const BookingOrderByWithRelationInputSchema: z.ZodType<Prisma.BookingOrde
   kupon: z.lazy(() => KuponOrderByWithRelationInputSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   Pembayaran: z.lazy(() => PembayaranOrderByRelationAggregateInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserOrderByRelationAggregateInputSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   deleted: z.lazy(() => SortOrderSchema).optional()
@@ -1298,6 +1307,8 @@ export const FotoUserWhereInputSchema: z.ZodType<Prisma.FotoUserWhereInput> = z.
   OR: z.lazy(() => FotoUserWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => FotoUserWhereInputSchema),z.lazy(() => FotoUserWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  bookingId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  booking: z.union([ z.lazy(() => BookingRelationFilterSchema),z.lazy(() => BookingWhereInputSchema) ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -1306,6 +1317,8 @@ export const FotoUserWhereInputSchema: z.ZodType<Prisma.FotoUserWhereInput> = z.
 
 export const FotoUserOrderByWithRelationInputSchema: z.ZodType<Prisma.FotoUserOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
+  bookingId: z.lazy(() => SortOrderSchema).optional(),
+  booking: z.lazy(() => BookingOrderByWithRelationInputSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   user: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
@@ -1318,6 +1331,7 @@ export const FotoUserWhereUniqueInputSchema: z.ZodType<Prisma.FotoUserWhereUniqu
 
 export const FotoUserOrderByWithAggregationInputSchema: z.ZodType<Prisma.FotoUserOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
+  bookingId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -1331,6 +1345,7 @@ export const FotoUserScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Foto
   OR: z.lazy(() => FotoUserScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => FotoUserScalarWhereWithAggregatesInputSchema),z.lazy(() => FotoUserScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  bookingId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
@@ -2264,6 +2279,7 @@ export const BookingCreateInputSchema: z.ZodType<Prisma.BookingCreateInput> = z.
   kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -2282,6 +2298,7 @@ export const BookingUncheckedCreateInputSchema: z.ZodType<Prisma.BookingUnchecke
   kuponId: z.string().optional().nullable(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -2300,6 +2317,7 @@ export const BookingUpdateInputSchema: z.ZodType<Prisma.BookingUpdateInput> = z.
   kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2318,6 +2336,7 @@ export const BookingUncheckedUpdateInputSchema: z.ZodType<Prisma.BookingUnchecke
   kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2434,6 +2453,7 @@ export const PembayaranUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Pembayar
 
 export const FotoUserCreateInputSchema: z.ZodType<Prisma.FotoUserCreateInput> = z.object({
   id: z.string().cuid().optional(),
+  booking: z.lazy(() => BookingCreateNestedOneWithoutFotoUserInputSchema),
   user: z.lazy(() => UserCreateNestedOneWithoutFotoUserInputSchema),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -2441,6 +2461,7 @@ export const FotoUserCreateInputSchema: z.ZodType<Prisma.FotoUserCreateInput> = 
 
 export const FotoUserUncheckedCreateInputSchema: z.ZodType<Prisma.FotoUserUncheckedCreateInput> = z.object({
   id: z.string().cuid().optional(),
+  bookingId: z.string(),
   userId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -2448,6 +2469,7 @@ export const FotoUserUncheckedCreateInputSchema: z.ZodType<Prisma.FotoUserUnchec
 
 export const FotoUserUpdateInputSchema: z.ZodType<Prisma.FotoUserUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  booking: z.lazy(() => BookingUpdateOneRequiredWithoutFotoUserNestedInputSchema).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutFotoUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2455,6 +2477,7 @@ export const FotoUserUpdateInputSchema: z.ZodType<Prisma.FotoUserUpdateInput> = 
 
 export const FotoUserUncheckedUpdateInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  bookingId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2462,6 +2485,7 @@ export const FotoUserUncheckedUpdateInputSchema: z.ZodType<Prisma.FotoUserUnchec
 
 export const FotoUserCreateManyInputSchema: z.ZodType<Prisma.FotoUserCreateManyInput> = z.object({
   id: z.string().cuid().optional(),
+  bookingId: z.string(),
   userId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -2475,6 +2499,7 @@ export const FotoUserUpdateManyMutationInputSchema: z.ZodType<Prisma.FotoUserUpd
 
 export const FotoUserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  bookingId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3723,6 +3748,7 @@ export const PembayaranSumOrderByAggregateInputSchema: z.ZodType<Prisma.Pembayar
 
 export const FotoUserCountOrderByAggregateInputSchema: z.ZodType<Prisma.FotoUserCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
+  bookingId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -3730,6 +3756,7 @@ export const FotoUserCountOrderByAggregateInputSchema: z.ZodType<Prisma.FotoUser
 
 export const FotoUserMaxOrderByAggregateInputSchema: z.ZodType<Prisma.FotoUserMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
+  bookingId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -3737,6 +3764,7 @@ export const FotoUserMaxOrderByAggregateInputSchema: z.ZodType<Prisma.FotoUserMa
 
 export const FotoUserMinOrderByAggregateInputSchema: z.ZodType<Prisma.FotoUserMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
+  bookingId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -4604,11 +4632,25 @@ export const PembayaranCreateNestedManyWithoutBookingInputSchema: z.ZodType<Pris
   connect: z.union([ z.lazy(() => PembayaranWhereUniqueInputSchema),z.lazy(() => PembayaranWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
+export const FotoUserCreateNestedManyWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserCreateNestedManyWithoutBookingInput> = z.object({
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserCreateWithoutBookingInputSchema).array(),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema),z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => FotoUserCreateManyBookingInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
 export const PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema: z.ZodType<Prisma.PembayaranUncheckedCreateNestedManyWithoutBookingInput> = z.object({
   create: z.union([ z.lazy(() => PembayaranCreateWithoutBookingInputSchema),z.lazy(() => PembayaranCreateWithoutBookingInputSchema).array(),z.lazy(() => PembayaranUncheckedCreateWithoutBookingInputSchema),z.lazy(() => PembayaranUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => PembayaranCreateOrConnectWithoutBookingInputSchema),z.lazy(() => PembayaranCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
   createMany: z.lazy(() => PembayaranCreateManyBookingInputEnvelopeSchema).optional(),
   connect: z.union([ z.lazy(() => PembayaranWhereUniqueInputSchema),z.lazy(() => PembayaranWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUncheckedCreateNestedManyWithoutBookingInput> = z.object({
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserCreateWithoutBookingInputSchema).array(),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema),z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => FotoUserCreateManyBookingInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
 export const UserUpdateOneRequiredWithoutBookingNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutBookingNestedInput> = z.object({
@@ -4663,6 +4705,20 @@ export const PembayaranUpdateManyWithoutBookingNestedInputSchema: z.ZodType<Pris
   deleteMany: z.union([ z.lazy(() => PembayaranScalarWhereInputSchema),z.lazy(() => PembayaranScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
+export const FotoUserUpdateManyWithoutBookingNestedInputSchema: z.ZodType<Prisma.FotoUserUpdateManyWithoutBookingNestedInput> = z.object({
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserCreateWithoutBookingInputSchema).array(),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema),z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => FotoUserUpsertWithWhereUniqueWithoutBookingInputSchema),z.lazy(() => FotoUserUpsertWithWhereUniqueWithoutBookingInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => FotoUserCreateManyBookingInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => FotoUserUpdateWithWhereUniqueWithoutBookingInputSchema),z.lazy(() => FotoUserUpdateWithWhereUniqueWithoutBookingInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => FotoUserUpdateManyWithWhereWithoutBookingInputSchema),z.lazy(() => FotoUserUpdateManyWithWhereWithoutBookingInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => FotoUserScalarWhereInputSchema),z.lazy(() => FotoUserScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
 export const PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema: z.ZodType<Prisma.PembayaranUncheckedUpdateManyWithoutBookingNestedInput> = z.object({
   create: z.union([ z.lazy(() => PembayaranCreateWithoutBookingInputSchema),z.lazy(() => PembayaranCreateWithoutBookingInputSchema).array(),z.lazy(() => PembayaranUncheckedCreateWithoutBookingInputSchema),z.lazy(() => PembayaranUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => PembayaranCreateOrConnectWithoutBookingInputSchema),z.lazy(() => PembayaranCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
@@ -4675,6 +4731,20 @@ export const PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema: z.Zod
   update: z.union([ z.lazy(() => PembayaranUpdateWithWhereUniqueWithoutBookingInputSchema),z.lazy(() => PembayaranUpdateWithWhereUniqueWithoutBookingInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => PembayaranUpdateManyWithWhereWithoutBookingInputSchema),z.lazy(() => PembayaranUpdateManyWithWhereWithoutBookingInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => PembayaranScalarWhereInputSchema),z.lazy(() => PembayaranScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateManyWithoutBookingNestedInput> = z.object({
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserCreateWithoutBookingInputSchema).array(),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema),z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => FotoUserUpsertWithWhereUniqueWithoutBookingInputSchema),z.lazy(() => FotoUserUpsertWithWhereUniqueWithoutBookingInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => FotoUserCreateManyBookingInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => FotoUserUpdateWithWhereUniqueWithoutBookingInputSchema),z.lazy(() => FotoUserUpdateWithWhereUniqueWithoutBookingInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => FotoUserUpdateManyWithWhereWithoutBookingInputSchema),z.lazy(() => FotoUserUpdateManyWithWhereWithoutBookingInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => FotoUserScalarWhereInputSchema),z.lazy(() => FotoUserScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
 export const BookingCreateNestedOneWithoutPembayaranInputSchema: z.ZodType<Prisma.BookingCreateNestedOneWithoutPembayaranInput> = z.object({
@@ -4691,10 +4761,24 @@ export const BookingUpdateOneRequiredWithoutPembayaranNestedInputSchema: z.ZodTy
   update: z.union([ z.lazy(() => BookingUpdateWithoutPembayaranInputSchema),z.lazy(() => BookingUncheckedUpdateWithoutPembayaranInputSchema) ]).optional(),
 }).strict();
 
+export const BookingCreateNestedOneWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingCreateNestedOneWithoutFotoUserInput> = z.object({
+  create: z.union([ z.lazy(() => BookingCreateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedCreateWithoutFotoUserInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => BookingCreateOrConnectWithoutFotoUserInputSchema).optional(),
+  connect: z.lazy(() => BookingWhereUniqueInputSchema).optional()
+}).strict();
+
 export const UserCreateNestedOneWithoutFotoUserInputSchema: z.ZodType<Prisma.UserCreateNestedOneWithoutFotoUserInput> = z.object({
   create: z.union([ z.lazy(() => UserCreateWithoutFotoUserInputSchema),z.lazy(() => UserUncheckedCreateWithoutFotoUserInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutFotoUserInputSchema).optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional()
+}).strict();
+
+export const BookingUpdateOneRequiredWithoutFotoUserNestedInputSchema: z.ZodType<Prisma.BookingUpdateOneRequiredWithoutFotoUserNestedInput> = z.object({
+  create: z.union([ z.lazy(() => BookingCreateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedCreateWithoutFotoUserInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => BookingCreateOrConnectWithoutFotoUserInputSchema).optional(),
+  upsert: z.lazy(() => BookingUpsertWithoutFotoUserInputSchema).optional(),
+  connect: z.lazy(() => BookingWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => BookingUpdateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedUpdateWithoutFotoUserInputSchema) ]).optional(),
 }).strict();
 
 export const UserUpdateOneRequiredWithoutFotoUserNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutFotoUserNestedInput> = z.object({
@@ -5320,6 +5404,7 @@ export const BookingCreateWithoutUserInputSchema: z.ZodType<Prisma.BookingCreate
   kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -5337,6 +5422,7 @@ export const BookingUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.Book
   kuponId: z.string().optional().nullable(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -5473,12 +5559,14 @@ export const FeedbackCreateManyUserInputEnvelopeSchema: z.ZodType<Prisma.Feedbac
 
 export const FotoUserCreateWithoutUserInputSchema: z.ZodType<Prisma.FotoUserCreateWithoutUserInput> = z.object({
   id: z.string().optional(),
+  booking: z.lazy(() => BookingCreateNestedOneWithoutFotoUserInputSchema),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const FotoUserUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.FotoUserUncheckedCreateWithoutUserInput> = z.object({
   id: z.string().optional(),
+  bookingId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -5672,6 +5760,7 @@ export const FotoUserScalarWhereInputSchema: z.ZodType<Prisma.FotoUserScalarWher
   OR: z.lazy(() => FotoUserScalarWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => FotoUserScalarWhereInputSchema),z.lazy(() => FotoUserScalarWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  bookingId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -5689,6 +5778,7 @@ export const BookingCreateWithoutKatalogInputSchema: z.ZodType<Prisma.BookingCre
   kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -5706,6 +5796,7 @@ export const BookingUncheckedCreateWithoutKatalogInputSchema: z.ZodType<Prisma.B
   kuponId: z.string().optional().nullable(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -5749,6 +5840,7 @@ export const BookingCreateWithoutKuponInputSchema: z.ZodType<Prisma.BookingCreat
   katalog: z.lazy(() => KatalogCreateNestedOneWithoutBookingInputSchema),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -5766,6 +5858,7 @@ export const BookingUncheckedCreateWithoutKuponInputSchema: z.ZodType<Prisma.Boo
   katalogId: z.string(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -5809,6 +5902,7 @@ export const BookingCreateWithoutBackgroundInputSchema: z.ZodType<Prisma.Booking
   kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -5826,6 +5920,7 @@ export const BookingUncheckedCreateWithoutBackgroundInputSchema: z.ZodType<Prism
   kuponId: z.string().optional().nullable(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -6003,6 +6098,30 @@ export const PembayaranCreateManyBookingInputEnvelopeSchema: z.ZodType<Prisma.Pe
   skipDuplicates: z.boolean().optional()
 }).strict();
 
+export const FotoUserCreateWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserCreateWithoutBookingInput> = z.object({
+  id: z.string().optional(),
+  user: z.lazy(() => UserCreateNestedOneWithoutFotoUserInputSchema),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const FotoUserUncheckedCreateWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUncheckedCreateWithoutBookingInput> = z.object({
+  id: z.string().optional(),
+  userId: z.string(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const FotoUserCreateOrConnectWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserCreateOrConnectWithoutBookingInput> = z.object({
+  where: z.lazy(() => FotoUserWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema) ]),
+}).strict();
+
+export const FotoUserCreateManyBookingInputEnvelopeSchema: z.ZodType<Prisma.FotoUserCreateManyBookingInputEnvelope> = z.object({
+  data: z.lazy(() => FotoUserCreateManyBookingInputSchema).array(),
+  skipDuplicates: z.boolean().optional()
+}).strict();
+
 export const UserUpsertWithoutBookingInputSchema: z.ZodType<Prisma.UserUpsertWithoutBookingInput> = z.object({
   update: z.union([ z.lazy(() => UserUpdateWithoutBookingInputSchema),z.lazy(() => UserUncheckedUpdateWithoutBookingInputSchema) ]),
   create: z.union([ z.lazy(() => UserCreateWithoutBookingInputSchema),z.lazy(() => UserUncheckedCreateWithoutBookingInputSchema) ]),
@@ -6151,6 +6270,22 @@ export const PembayaranScalarWhereInputSchema: z.ZodType<Prisma.PembayaranScalar
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
+export const FotoUserUpsertWithWhereUniqueWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUpsertWithWhereUniqueWithoutBookingInput> = z.object({
+  where: z.lazy(() => FotoUserWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => FotoUserUpdateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedUpdateWithoutBookingInputSchema) ]),
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema) ]),
+}).strict();
+
+export const FotoUserUpdateWithWhereUniqueWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUpdateWithWhereUniqueWithoutBookingInput> = z.object({
+  where: z.lazy(() => FotoUserWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => FotoUserUpdateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedUpdateWithoutBookingInputSchema) ]),
+}).strict();
+
+export const FotoUserUpdateManyWithWhereWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUpdateManyWithWhereWithoutBookingInput> = z.object({
+  where: z.lazy(() => FotoUserScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => FotoUserUpdateManyMutationInputSchema),z.lazy(() => FotoUserUncheckedUpdateManyWithoutFotoUserInputSchema) ]),
+}).strict();
+
 export const BookingCreateWithoutPembayaranInputSchema: z.ZodType<Prisma.BookingCreateWithoutPembayaranInput> = z.object({
   id: z.string().optional(),
   user: z.lazy(() => UserCreateNestedOneWithoutBookingInputSchema),
@@ -6163,6 +6298,7 @@ export const BookingCreateWithoutPembayaranInputSchema: z.ZodType<Prisma.Booking
   katalog: z.lazy(() => KatalogCreateNestedOneWithoutBookingInputSchema),
   kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
   status: z.lazy(() => BookinStatusSchema),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -6180,6 +6316,7 @@ export const BookingUncheckedCreateWithoutPembayaranInputSchema: z.ZodType<Prism
   katalogId: z.string(),
   kuponId: z.string().optional().nullable(),
   status: z.lazy(() => BookinStatusSchema),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -6207,6 +6344,7 @@ export const BookingUpdateWithoutPembayaranInputSchema: z.ZodType<Prisma.Booking
   katalog: z.lazy(() => KatalogUpdateOneRequiredWithoutBookingNestedInputSchema).optional(),
   kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6224,9 +6362,51 @@ export const BookingUncheckedUpdateWithoutPembayaranInputSchema: z.ZodType<Prism
   katalogId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const BookingCreateWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingCreateWithoutFotoUserInput> = z.object({
+  id: z.string().optional(),
+  user: z.lazy(() => UserCreateNestedOneWithoutBookingInputSchema),
+  background: z.lazy(() => BackgroundFotoCreateNestedOneWithoutBookingInputSchema),
+  peliharaan: z.boolean().optional(),
+  harga: z.number(),
+  jadwal: z.coerce.date(),
+  durasi: z.number(),
+  jumlahOrang: z.number(),
+  katalog: z.lazy(() => KatalogCreateNestedOneWithoutBookingInputSchema),
+  kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
+  status: z.lazy(() => BookinStatusSchema),
+  Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  deleted: z.boolean().optional()
+}).strict();
+
+export const BookingUncheckedCreateWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingUncheckedCreateWithoutFotoUserInput> = z.object({
+  id: z.string().optional(),
+  userId: z.string(),
+  backgroundWarna: z.string(),
+  peliharaan: z.boolean().optional(),
+  harga: z.number(),
+  jadwal: z.coerce.date(),
+  durasi: z.number(),
+  jumlahOrang: z.number(),
+  katalogId: z.string(),
+  kuponId: z.string().optional().nullable(),
+  status: z.lazy(() => BookinStatusSchema),
+  Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  deleted: z.boolean().optional()
+}).strict();
+
+export const BookingCreateOrConnectWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingCreateOrConnectWithoutFotoUserInput> = z.object({
+  where: z.lazy(() => BookingWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => BookingCreateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedCreateWithoutFotoUserInputSchema) ]),
 }).strict();
 
 export const UserCreateWithoutFotoUserInputSchema: z.ZodType<Prisma.UserCreateWithoutFotoUserInput> = z.object({
@@ -6268,6 +6448,47 @@ export const UserUncheckedCreateWithoutFotoUserInputSchema: z.ZodType<Prisma.Use
 export const UserCreateOrConnectWithoutFotoUserInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutFotoUserInput> = z.object({
   where: z.lazy(() => UserWhereUniqueInputSchema),
   create: z.union([ z.lazy(() => UserCreateWithoutFotoUserInputSchema),z.lazy(() => UserUncheckedCreateWithoutFotoUserInputSchema) ]),
+}).strict();
+
+export const BookingUpsertWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingUpsertWithoutFotoUserInput> = z.object({
+  update: z.union([ z.lazy(() => BookingUpdateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedUpdateWithoutFotoUserInputSchema) ]),
+  create: z.union([ z.lazy(() => BookingCreateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedCreateWithoutFotoUserInputSchema) ]),
+}).strict();
+
+export const BookingUpdateWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingUpdateWithoutFotoUserInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  user: z.lazy(() => UserUpdateOneRequiredWithoutBookingNestedInputSchema).optional(),
+  background: z.lazy(() => BackgroundFotoUpdateOneRequiredWithoutBookingNestedInputSchema).optional(),
+  peliharaan: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  harga: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  jadwal: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  durasi: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  jumlahOrang: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  katalog: z.lazy(() => KatalogUpdateOneRequiredWithoutBookingNestedInputSchema).optional(),
+  kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
+  status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const BookingUncheckedUpdateWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingUncheckedUpdateWithoutFotoUserInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  backgroundWarna: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  peliharaan: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  harga: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  jadwal: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  durasi: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  jumlahOrang: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  katalogId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const UserUpsertWithoutFotoUserInputSchema: z.ZodType<Prisma.UserUpsertWithoutFotoUserInput> = z.object({
@@ -7223,6 +7444,7 @@ export const FeedbackCreateManyUserInputSchema: z.ZodType<Prisma.FeedbackCreateM
 
 export const FotoUserCreateManyUserInputSchema: z.ZodType<Prisma.FotoUserCreateManyUserInput> = z.object({
   id: z.string().cuid().optional(),
+  bookingId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -7239,6 +7461,7 @@ export const BookingUpdateWithoutUserInputSchema: z.ZodType<Prisma.BookingUpdate
   kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7256,6 +7479,7 @@ export const BookingUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.Book
   kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7387,18 +7611,21 @@ export const FeedbackUncheckedUpdateManyWithoutFeedbackInputSchema: z.ZodType<Pr
 
 export const FotoUserUpdateWithoutUserInputSchema: z.ZodType<Prisma.FotoUserUpdateWithoutUserInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  booking: z.lazy(() => BookingUpdateOneRequiredWithoutFotoUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const FotoUserUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateWithoutUserInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  bookingId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const FotoUserUncheckedUpdateManyWithoutFotoUserInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateManyWithoutFotoUserInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  bookingId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -7431,6 +7658,7 @@ export const BookingUpdateWithoutKatalogInputSchema: z.ZodType<Prisma.BookingUpd
   kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7448,6 +7676,7 @@ export const BookingUncheckedUpdateWithoutKatalogInputSchema: z.ZodType<Prisma.B
   kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7481,6 +7710,7 @@ export const BookingUpdateWithoutKuponInputSchema: z.ZodType<Prisma.BookingUpdat
   katalog: z.lazy(() => KatalogUpdateOneRequiredWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7498,6 +7728,7 @@ export const BookingUncheckedUpdateWithoutKuponInputSchema: z.ZodType<Prisma.Boo
   katalogId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7531,6 +7762,7 @@ export const BookingUpdateWithoutBackgroundInputSchema: z.ZodType<Prisma.Booking
   kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7548,6 +7780,7 @@ export const BookingUncheckedUpdateWithoutBackgroundInputSchema: z.ZodType<Prism
   kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7557,6 +7790,13 @@ export const PembayaranCreateManyBookingInputSchema: z.ZodType<Prisma.Pembayaran
   id: z.string().cuid().optional(),
   dp: z.boolean(),
   jumlah: z.number().int(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const FotoUserCreateManyBookingInputSchema: z.ZodType<Prisma.FotoUserCreateManyBookingInput> = z.object({
+  id: z.string().cuid().optional(),
+  userId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -7581,6 +7821,20 @@ export const PembayaranUncheckedUpdateManyWithoutPembayaranInputSchema: z.ZodTyp
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dp: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   jumlah: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const FotoUserUpdateWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUpdateWithoutBookingInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  user: z.lazy(() => UserUpdateOneRequiredWithoutFotoUserNestedInputSchema).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const FotoUserUncheckedUpdateWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateWithoutBookingInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();

@@ -296,28 +296,32 @@ export default function Dashboard() {
 
   return (
     <>
-      <h1 className="my-8 text-center text-3xl font-bold">Studio Dashboard</h1>
-      <div className="flex min-h-full items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
-        <div className=" shadow sm:rounded-md">
-          <div className="bg-white px-4 py-5 sm:p-6">
-            <div className="grid grid-cols-4 gap-6">
-              <div className="col-span-3">
-                <canvas id="bookingChart"></canvas>
-              </div>
-              <div className="">
-                <label>Tahun:</label>
-                <Dropdown
-                  options={yearOptions}
-                  selectedValue={month}
-                  onSelect={handleSelectYear}
-                />
-                <br />
-                <label>Bulan:</label>
-                <Dropdown
-                  options={monthOptions}
-                  selectedValue={month}
-                  onSelect={handleSelectMonth}
-                />
+      <div className="min-h-screen">
+        <h1 className="my-8 text-center text-3xl font-bold">
+          Studio Dashboard
+        </h1>
+        <div className="flex min-h-full items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
+          <div className=" shadow sm:rounded-md">
+            <div className="bg-white px-4 py-5 sm:p-6">
+              <div className="grid grid-cols-4 gap-6">
+                <div className="col-span-3">
+                  <canvas id="bookingChart"></canvas>
+                </div>
+                <div className="">
+                  <label>Tahun:</label>
+                  <Dropdown
+                    options={yearOptions}
+                    selectedValue={month}
+                    onSelect={handleSelectYear}
+                  />
+                  <br />
+                  <label>Bulan:</label>
+                  <Dropdown
+                    options={monthOptions}
+                    selectedValue={month}
+                    onSelect={handleSelectMonth}
+                  />
+                </div>
               </div>
             </div>
           </div>
