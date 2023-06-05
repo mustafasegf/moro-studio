@@ -58,10 +58,12 @@ export default function DetailPemesanan(props: { id: string }) {
   const [status, setStatus] = useState("");
   const [jumlahOrang, setJumlahOrang] = useState(0);
   const [jadwal, setJadwal] = useState(new Date());
+  const [harga, setHarga] = useState(0);
 
   const { id } = props;
 
-  const { data, isLoading, error } = api.detailPemesanan.getPemesananById.useQuery({ id });
+  const { data, isLoading, error } =
+    api.detailPemesanan.getPemesananById.useQuery({ id });
 
   useEffect(() => {
     if (data) {
@@ -71,6 +73,7 @@ export default function DetailPemesanan(props: { id: string }) {
       setStatus(data.status);
       setJumlahOrang(data.jumlahOrang);
       setJadwal(data.jadwal);
+      setHarga(data.harga);
     }
   }, [data]);
 
@@ -84,7 +87,9 @@ export default function DetailPemesanan(props: { id: string }) {
 
   return (
     <>
-      <h1 className="my-8 mb-4 text-center text-3xl font-bold">Detail Pemesanan</h1>
+      <h1 className="my-8 mb-4 text-center text-3xl font-bold">
+        Detail Pemesanan
+      </h1>
 
       <div className="flex w-full flex-wrap py-4 px-4 sm:px-6 lg:px-8">
         <form className="w-full">
@@ -178,6 +183,27 @@ export default function DetailPemesanan(props: { id: string }) {
                 htmlFor="nama-kupon"
                 className="text-gray-900 block text-sm font-medium leading-6"
               >
+                Harga
+              </label>
+            </div>
+            <div className="col-span-3 flex items-center">
+              <input
+                value={harga}
+                type="text"
+                name="nama-pemesan"
+                id="nama-pemesan"
+                className="text-gray-900 focus:ring-indigo-600 mt-2 block w-full rounded-md border-0 py-1.5 px-2.5 shadow-sm ring-1 ring-inset  ring-dark-grey focus:ring-inset sm:text-sm sm:leading-6"
+                disabled
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
+              <label
+                htmlFor="nama-kupon"
+                className="text-gray-900 block text-sm font-medium leading-6"
+              >
                 Warna Background
               </label>
             </div>
@@ -226,7 +252,7 @@ export default function DetailPemesanan(props: { id: string }) {
             <div className="col-span-3 flex items-center">
               <input
                 // value={new Date(jadwal).toISOString().substr(0, 16)}
-                value={format(jadwal, "dd/MM/yyyy hh:mm aa", {locale: enUS,})}
+                value={format(jadwal, "dd/MM/yyyy hh:mm aa", { locale: enUS })}
                 name="tanggal"
                 id="tanggal"
                 className="text-gray-900 focus:ring-indigo-600 mt-2 block w-full rounded-md border-0 py-1.5 px-2.5 shadow-sm ring-1 ring-inset  ring-dark-grey focus:ring-inset sm:text-sm sm:leading-6"
