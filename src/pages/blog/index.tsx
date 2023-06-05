@@ -107,6 +107,12 @@ export default function DraftList() {
                   </button>
                 </Link>
 
+                <Link href="/blog/dashboard">
+                  <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+                    Blog Dashboard
+                  </button>
+                </Link>
+
                 <Link href="/blog/draft">
                   <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
                     Draft Blog
