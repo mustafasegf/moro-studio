@@ -32,41 +32,43 @@ export default function DevChangeRole() {
   }
 
   return (
-    <div className="m-8">
-      <h1 className="my-8 text-center text-2xl font-bold md:text-left">
-        Ubah Role
-      </h1>
-      <div className="flex flex-col gap-2 md:max-w-xs">
-        <button
-          onClick={handleAdmin}
-          className="btn border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
-        >
-          Ubah ke Admin
-        </button>
-        <button
-          onClick={handleStudioManager}
-          className="btn border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
-        >
-          Ubah ke Studio Manager
-        </button>
-        <button
-          onClick={handleBlogManager}
-          className="btn border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
-        >
-          Ubah ke Blog Manager
-        </button>
-        <button
-          onClick={handleUser}
-          className="btn border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
-        >
-          Ubah ke User
-        </button>
-        <button
-          onClick={handleLogout}
-          className="btn border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
-        >
-          Logout
-        </button>
+    <div className="min-h-screen">
+      <div className="m-8">
+        <h1 className="my-8 text-center text-2xl font-bold md:text-left">
+          Ubah Role
+        </h1>
+        <div className="flex flex-col gap-2 md:max-w-xs">
+          <button
+            onClick={handleAdmin}
+            className="btn border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
+          >
+            Ubah ke Admin
+          </button>
+          <button
+            onClick={handleStudioManager}
+            className="btn border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
+          >
+            Ubah ke Studio Manager
+          </button>
+          <button
+            onClick={handleBlogManager}
+            className="btn border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
+          >
+            Ubah ke Blog Manager
+          </button>
+          <button
+            onClick={handleUser}
+            className="btn border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
+          >
+            Ubah ke User
+          </button>
+          <button
+            onClick={handleLogout}
+            className="btn border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
+          >
+            Logout
+          </button>
+        </div>
       </div>
     </div>
   );

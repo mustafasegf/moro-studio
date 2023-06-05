@@ -473,13 +473,14 @@ export function ModalBooking({
             />
 
             <div className="flex justify-end py-3 px-4">
-              <button className="btn-error btn mr-4" onClick={onDelete}>
+              <button className="h-10 rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey" onClick={onDelete}>
                 Hapus
               </button>
-              <button className="btn-accent btn mr-4" onClick={onLeave}>
+              <button className="h-10 rounded-3xl border bg-light-grey border-light-grey px-6 py-2 text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey" onClick={onLeave}>
                 Batal
               </button>
-              <input className="btn-primary btn" type="submit" value="Simpan" />
+              <input className="h-10 rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB] hover:text-white-grey" type="submit" value="Simpan" />
+              
             </div>
           </form>
         </div>
