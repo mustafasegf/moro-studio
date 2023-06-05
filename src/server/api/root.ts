@@ -12,6 +12,7 @@ import { pembayaranRouter } from "./routers/pembayaran";
 import { blogRouter } from "./routers/blog";
 import { pertanyaanFeedbackRouter } from "./routers/pertanyaanfeedback";
 import { aksesFotoRouter } from "./routers/aksesfoto";
+import { chatRouter } from "./routers/chat";
 import { detailPemesananRouter } from "./routers/detailpemesanan";
 
 /**
@@ -33,6 +34,7 @@ export const appRouter = createTRPCRouter({
   pembayaran: pembayaranRouter,
   blog: blogRouter,
   aksesFoto: aksesFotoRouter,
+  chat: chatRouter,
   detailPemesanan: detailPemesananRouter
 });
 
