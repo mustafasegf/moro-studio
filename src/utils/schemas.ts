@@ -81,15 +81,24 @@ export const addPembayaranSchema = z.object({
 
 export type AddPembayaranSchema = z.infer<typeof addPembayaranSchema>;
 
-export const addPertanyaanFeedbackSchema =  z.object({
+export const addPertanyaanFeedbackSchema = z.object({
   pertanyaan: z.string().min(1, "pertanyaan perlu diisi"),
-})
+});
 
-export type AddPertanyaanFeedbackSchema = z.infer<typeof addPertanyaanFeedbackSchema>;
+export type AddPertanyaanFeedbackSchema = z.infer<
+  typeof addPertanyaanFeedbackSchema
+>;
 
-export const addFeedbackSchema =  z.object({
+export const addFeedbackSchema = z.object({
   namaPenulis: z.string().min(0, "Nama perlu diisi"),
   isiFeedback: z.string().min(1, "Feedback perlu diisi"),
-})
+});
 
 export type AddFeedbackSchema = z.infer<typeof addFeedbackSchema>;
+
+export const addCommentSchema = z.object({
+  id: z.string(),
+  isi: z.string().min(1, "komentar perlu diisi"),
+});
+
+export type AddCommentSchema = z.infer<typeof addCommentSchema>;

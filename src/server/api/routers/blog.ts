@@ -1,15 +1,17 @@
 import { z } from "zod";
 
-import { KontenBlogSchema} from "~/utils/zod-prisma/index"
+import { KontenBlogSchema } from "~/utils/zod-prisma/index";
 
 import {
   createTRPCRouter,
   publicProcedure,
   blogManagerProcedure,
+  userProcedure,
 } from "~/server/api/trpc";
 import { env } from "~/env.mjs";
 import { tryToCatch } from "~/utils/trycatch";
 import { TRPCError } from "@trpc/server";
+import { addCommentSchema } from "~/utils/schemas";
 
 export const blogRouter = createTRPCRouter({
   createPresignedUrl: publicProcedure.mutation(async ({ ctx }) => {
@@ -174,15 +176,16 @@ export const blogRouter = createTRPCRouter({
       return blog;
     }),
 
-  updateBlog: publicProcedure.input(KontenBlogSchema)
-  .mutation(async ({ ctx, input }) => {
-    return await ctx.prisma.kontenBlog.update({
-      where: {
-        id: input.id,
-      },
-      data: input
-    });
-  }),
+  updateBlog: publicProcedure
+    .input(KontenBlogSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.kontenBlog.update({
+        where: {
+          id: input.id,
+        },
+        data: input,
+      });
+    }),
 
   getBlogById: publicProcedure
     .input(
@@ -246,8 +249,7 @@ export const blogRouter = createTRPCRouter({
       });
 
       return blog;
-    }
-  ),
+    }),
 
   draftBlog: publicProcedure
     .input(
@@ -265,7 +267,6 @@ export const blogRouter = createTRPCRouter({
         },
       });
     }),
-    
 
   deleteBlog: publicProcedure
     .input(
@@ -274,7 +275,6 @@ export const blogRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      
       const blog = await ctx.prisma.kontenBlog.delete({
         where: {
           id: input.id,
@@ -293,7 +293,274 @@ export const blogRouter = createTRPCRouter({
           }
         );
       });
-    }
-  ),
+    }),
+
+  addComment: userProcedure
+    .input(addCommentSchema)
+    .mutation(async ({ ctx, input }) => {
+      const blog = await ctx.prisma.kontenBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!blog) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Blog not found",
+        });
+      }
+
+      await ctx.prisma.commentBlog.create({
+        data: {
+          isi: input.isi,
+          kontenBlog: {
+            connect: {
+              id: input.id,
+            },
+          },
+          user: {
+            connect: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+    }),
+
+  getAllComment: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.commentBlog.findMany({
+        where: {
+          kontenBlogId: input.id,
+        },
+        include: {
+          user: true,
+          likedBy: true,
+          dislikedBy: true,
+        },
+      });
+    }),
+
+  addLike: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.prisma.commentBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!comment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comment not found",
+        });
+      }
+
+      const isLiked = await ctx.prisma.commentBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          likedBy: {
+            where: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+
+      if (isLiked!.likedBy.length > 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Already liked",
+        });
+      }
+
+      return await ctx.prisma.commentBlog.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          likedBy: {
+            connect: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+    }),
+
+  addDislike: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.prisma.commentBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!comment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comment not found",
+        });
+      }
+
+      const isDisliked = await ctx.prisma.commentBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          dislikedBy: {
+            where: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+
+      if (isDisliked!.dislikedBy.length > 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Already disliked",
+        });
+      }
+
+      return await ctx.prisma.commentBlog.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          dislikedBy: {
+            connect: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+    }),
+
+    removeLike: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.prisma.commentBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!comment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comment not found",
+        });
+      }
+
+      const isLiked = await ctx.prisma.commentBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          likedBy: {
+            where: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+
+      if (isLiked!.likedBy.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Haven't liked",
+        });
+      }
+
+      return await ctx.prisma.commentBlog.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          likedBy: {
+            disconnect: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+    }),
+
+    removeDislike: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.prisma.commentBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!comment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comment not found",
+        });
+      }
+
+      const isDisliked = await ctx.prisma.commentBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          dislikedBy: {
+            where: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+
+      if (isDisliked!.dislikedBy.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Haven't disliked",
+        });
+      }
+
+      return await ctx.prisma.commentBlog.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          dislikedBy: {
+            disconnect: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+    }),
 
 });
