@@ -3,11 +3,13 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const chatRouter = createTRPCRouter({
-
   getChatRooms: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.chatRoom.findMany({
       orderBy: {
         createdAt: "desc",
+      },
+      include: {
+        chat: true,
       },
     });
   }),
@@ -24,25 +26,24 @@ export const chatRouter = createTRPCRouter({
           id: input.id,
         },
       });
-    }
-  ),
+    }),
 
-  createChatRoom: publicProcedure
-    .input(
-      z.object({
-        adminId: z.string(),
-        userId: z.string(),
-      })
-    )
-    .mutation(({ input, ctx }) => {
-      return ctx.prisma.chatRoom.create({
-        data: {
-          adminId: input.adminId,
-          userId: input.userId,
-        },
-      });
-    }
-  ),
+  createChatRoom: publicProcedure.mutation(({ ctx }) => {
+    return ctx.prisma.chatRoom.create({
+      data: {},
+    });
+  }),
+
+  getLatestChatRoom: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.chatRoom.findFirst({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        chat: true,
+      },
+    });
+  }),
 
   getChats: publicProcedure
     .input(
@@ -59,15 +60,14 @@ export const chatRouter = createTRPCRouter({
           createdAt: "desc",
         },
       });
-    }
-  ),
+    }),
 
   createChat: publicProcedure
     .input(
       z.object({
         chatRoomId: z.string(),
         chat: z.string(),
-        adminSend: z.boolean(),
+        staffSend: z.boolean(),
       })
     )
     .mutation(({ input, ctx }) => {
@@ -75,31 +75,8 @@ export const chatRouter = createTRPCRouter({
         data: {
           chatRoomId: input.chatRoomId,
           chat: input.chat,
-          adminSend: input.adminSend,
+          staffSend: input.staffSend,
         },
       });
-    }
-  ),
-
-  updateChatRoom: publicProcedure
-    
-    .input(
-      z.object({
-        id: z.string(),
-        adminId: z.string(),
-        userId: z.string(),
-      })
-    )
-    .mutation(({ input, ctx }) => {
-      return ctx.prisma.chatRoom.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          adminId: input.adminId,
-          userId: input.userId,
-        },
-      });
-    }
-  ),
+    }),
 });
