@@ -779,4 +779,56 @@ export const blogRouter = createTRPCRouter({
         },
       });
     }),
+
+  getDashboardData: blogManagerProcedure.query(async ({ ctx }) => {
+    const blogCount = await ctx.prisma.kontenBlog.count();
+    const commentCount = await ctx.prisma.commentBlog.count();
+    const userCount = await ctx.prisma.user.count();
+    const likedBlogCount = await ctx.prisma.kontenBlog.count({
+      where: {
+        likedBy: {
+          some: {
+            id: {
+              not: undefined,
+            },
+          },
+        },
+      },
+    });
+
+    const dislikeBlogCount = await ctx.prisma.kontenBlog.count({
+      where: {
+        dislikedBy: {
+          some: {
+            id: {
+              not: undefined,
+            },
+          },
+        },
+      },
+    });
+
+    return [
+      {
+        name: "blogCount",
+        value: blogCount,
+      },
+      {
+        name: "commentCount",
+        value: commentCount,
+      },
+      {
+        name: "userCount",
+        value: userCount,
+      },
+      {
+        name: "likedBlogCount",
+        value: likedBlogCount,
+      },
+      {
+        name: "dislikeBlogCount",
+        value: dislikeBlogCount,
+      },
+    ];
+  }),
 });
