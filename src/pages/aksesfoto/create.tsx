@@ -65,31 +65,32 @@ export default function Upload() {
       </h1>
 
       <div className="flex min-h-full items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
-          <div className="overflow-hidden shadow sm:rounded-md">
-            <div className="bg-gray-200 px-4 py-5 sm:p-6">
+          <div className="bg-grey bg-opacity-20  overflow-hidden shadow sm:rounded-md">
+            <div className="px-4 py-5 sm:p-6">
               <div className="grid grid-cols-6 gap-6">
                 <div className="col-span-6">
                   <label
                     htmlFor="paket-foto"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-base font-medium leading-6 mb-2"
                   >
                     Masukkan Foto
                   </label>
                   <input
                     onChange={uploadPhoto}
                     type="file"
-                    className="file-input file-input-bordered w-full max-w-xs"
+                    className="file-input file-input-info
+                    w-full max-w-xs"
                     accept="image/png, image/jpeg"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-300 px-4 py-3 text-right sm:px-6">
+            <div className="bg-light-grey px-4 py-3 text-right sm:px-6">
               <Link
                 href="/aksesfoto"
                 type="button"
-                className="inline-flex w-full justify-center rounded-md border border-gray-600 px-3 py-2 text-sm font-semibold text-gray-600 transition duration-300 ease-in-out hover:border-gray-700 hover:bg-gray-700 hover:text-gray-200 sm:mr-3 sm:w-auto"
+                className="h-10 mt-3 inline-flex w-full justify-center rounded-md bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-auto"
               >
                 Simpan
               </Link>

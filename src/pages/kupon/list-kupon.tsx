@@ -78,40 +78,42 @@ export default function ListKupon() {
       <div className="mb-4 flex justify-end">
         <Link
           href="/kupon/create-kupon"
-          className="mr-4 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]"
+          className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]"
         >
           + Buat Kupon
         </Link>
       </div>
 
       <div className="m-5 overflow-x-auto relative z-0">
-        <table className="table-zebra table w-full">
+        <table className="table w-full">
           <thead>
             <tr>
-              <th>Nama Kupon</th>
-              <th>Kode</th>
-              <th>Diskon</th>
-              <th>Batas Pemakaian</th>
-              <th>Digunakan</th>
-              <th>Status</th>
-              <th>Aksi</th>
+              <td className="bg-light-grey bg-opacity-80 text-base normal-case"></td>
+              <th className="bg-light-grey bg-opacity-80 text-base normal-case">Nama Kupon</th>
+              <th className="bg-light-grey bg-opacity-80 text-base normal-case">Kode</th>
+              <th className="bg-light-grey bg-opacity-80 text-base normal-case">Diskon</th>
+              <th className="bg-light-grey bg-opacity-80 text-base normal-case">Batas Pemakaian</th>
+              <th className="bg-light-grey bg-opacity-80 text-base normal-case">Digunakan</th>
+              <th className="bg-light-grey bg-opacity-80 text-base normal-case">Status</th>
+              <th className="bg-light-grey bg-opacity-80 text-base normal-case">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {data?.map((item, i) => (
               <tr key={item.id}>
-                <th>{item.nama}</th>
-                <td>{item.kode}</td>
-                <td>{item.diskon}%</td>
-                <td>{item.kuotaPemakaian}</td>
-                <td>{item.kuotaTerpakai}</td>
-                <td>
+                <td className={i % 2 === 0 ? 'bg-white-grey bg-opacity-50' : 'bg-light-grey bg-opacity-40'}>{i + 1}</td>
+                <td className={i % 2 === 0 ? 'bg-white-grey bg-opacity-50' : 'bg-light-grey bg-opacity-40'}>{item.nama}</td>
+                <td className={i % 2 === 0 ? 'bg-white-grey bg-opacity-50' : 'bg-light-grey bg-opacity-40'}>{item.kode}</td>
+                <td className={i % 2 === 0 ? 'bg-white-grey bg-opacity-50' : 'bg-light-grey bg-opacity-40'}>{item.diskon}%</td>
+                <td className={i % 2 === 0 ? 'bg-white-grey bg-opacity-50' : 'bg-light-grey bg-opacity-40'}>{item.kuotaPemakaian}</td>
+                <td className={i % 2 === 0 ? 'bg-white-grey bg-opacity-50' : 'bg-light-grey bg-opacity-40'}>{item.kuotaTerpakai}</td>
+                <td className={i % 2 === 0 ? 'bg-white-grey bg-opacity-50' : 'bg-light-grey bg-opacity-40'}>
                   {new Date(item.tanggal) >=
                   new Date(new Date().setHours(0, 0, 0, 0))
                     ? "Sedang Berjalan"
                     : "Telah Berakhir"}
                 </td>
-                <td className="flex items-center">
+                <td className={`flex items-center ${i % 2 === 0 ? 'bg-white-grey bg-opacity-50' : 'bg-light-grey bg-opacity-40'}`}>
                   <Link href={`/kupon/ubah/${item.id}`}>
                     <BiEdit className="mr-2 text-2xl" />
                   </Link>
