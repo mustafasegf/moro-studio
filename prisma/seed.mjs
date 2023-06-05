@@ -160,10 +160,23 @@ Additional Person @30.000 (include 1 printed photo each)`,
     );
   }
 
+  const homepage = await prisma.home.upsert({
+    where: {
+      id: "clfks6eab0002tbl1vzmqzv9z",
+    },
+    update: {},
+    create: {
+      id: "clfks6eab0002tbl1vzmqzv9z",
+      image: "",
+      carousel: [],
+    },
+  });
+
   console.log({
     user,
     katalog,
     backgroundFoto,
+    homepage,
   });
 }
 
