@@ -11,7 +11,8 @@ import { ModalAction } from "~/component/modal";
 import { LoadingPage } from "~/component/loading";
 
 export default function ListPemesanan() {
-  const { data, isLoading, error } = api.detailPemesanan.getAllPemesanan.useQuery();
+  const { data, isLoading, error } =
+    api.detailPemesanan.getAllPemesanan.useQuery();
   const booking = api.detailPemesanan.getAllPemesananByUserId.useQuery();
   const { session } = useAuth();
   const [selected, setSelected] = useState<Booking | undefined>(undefined);
@@ -45,23 +46,22 @@ export default function ListPemesanan() {
 
   function generateTable() {
     if (session?.role === "user") {
-      return data?.filter((item) => item.user.id === session?.id).map((item, i) => (
-        <tr key={item.id}>
-          <th>{item.id}</th>
-          <td>{item.user.nama}</td>
-          <td>{item.jadwal.toDateString()}</td>
-          <td>{item.jumlahOrang}</td>
-          <td>{item.status}</td>
-          <td className="flex items-center">
-            <Link href={`/detailpemesanan/${item.id}`}>
-              <BiEdit className="mr-2 text-2xl" />
-            </Link>
-            <button onClick={() => handleDeleteButton(item)}>
-              <MdDelete className="text-2xl" />
-            </button>
-          </td>
-        </tr>
-    ));
+      return data
+        ?.filter((item) => item.user.id === session?.id)
+        .map((item, i) => (
+          <tr key={item.id}>
+            <th>{item.id}</th>
+            <td>{item.user.nama}</td>
+            <td>{item.jadwal.toDateString()}</td>
+            <td>{item.jumlahOrang}</td>
+            <td>{item.status}</td>
+            <td className="flex items-center">
+              <Link href={`/detailpemesanan/${item.id}`}>
+                <BiEdit className="mr-2 text-2xl" />
+              </Link>
+            </td>
+          </tr>
+        ));
     } else {
       return data?.map((item, i) => (
         <tr key={item.id}>
@@ -74,9 +74,6 @@ export default function ListPemesanan() {
             <Link href={`/detailpemesanan/${item.id}`}>
               <BiEdit className="mr-2 text-2xl" />
             </Link>
-            <button onClick={() => handleDeleteButton(item)}>
-              <MdDelete className="text-2xl" />
-            </button>
           </td>
         </tr>
       ));
@@ -95,24 +92,26 @@ export default function ListPemesanan() {
         actionHandler={deleteHandler}
       />
 
-      <h1 className="my-8 text-center text-3xl font-bold">Daftar Pemesanan</h1>
+      <div className="min-h-screen">
+        <h1 className="my-8 text-center text-3xl font-bold">
+          Daftar Pemesanan
+        </h1>
 
-      <div className="m-5 overflow-x-auto relative z-0">
-        <table className="table-zebra table w-full">
-          <thead>
-            <tr>
-              <th>ID Booking</th>
-              <th>Nama Pemesan</th>
-              <th>Jadwal</th>
-              <th>Jumlah Orang</th>
-              <th>Status</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {generateTable()}
-          </tbody>
-        </table>
+        <div className="relative z-0 m-5 overflow-x-auto">
+          <table className="table-zebra table w-full">
+            <thead>
+              <tr>
+                <th>ID Booking</th>
+                <th>Nama Pemesan</th>
+                <th>Jadwal</th>
+                <th>Jumlah Orang</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>{generateTable()}</tbody>
+          </table>
+        </div>
       </div>
     </>
   );
