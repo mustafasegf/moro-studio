@@ -1,4 +1,5 @@
 import { type NextPage } from "next";
+import Link from "next/link";
 import Head from "next/head";
 import { useAuth } from "~/utils/session";
 import { api } from "~/utils/api";
@@ -8,8 +9,7 @@ import { BsInstagram } from "react-icons/bs";
 const Home: NextPage = () => {
   const homepage = api.homepage.getHomepage.useQuery();
   const { session } = useAuth();
-  const bg =
-    "homepage.jpg";
+  const bg = "homepage.jpg";
 
   function rightArrow() {
     return (
@@ -30,6 +30,17 @@ const Home: NextPage = () => {
     );
   }
 
+  function button(text: string, link: string) {
+    return (
+      <Link href={link}>
+        <button className="btn gap-2 rounded-md border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]">
+          {text}
+          {rightArrow()}
+        </button>
+      </Link>
+    );
+  }
+
   return (
     <>
       <Head>
@@ -45,57 +56,113 @@ const Home: NextPage = () => {
           }}
         >
           <div className="hero-overlay bg-opacity-60 object-fill"></div>
-          <div className="bg-white-grey hero-content w-5/6 flex-col gap-12 rounded-lg bg-opacity-70 p-8 sm:w-3/4 sm:p-16">
+          <div className="hero-content w-5/6 flex-col gap-12 rounded-lg bg-white-grey bg-opacity-70 p-8 sm:w-3/4 sm:p-16">
             <h1 className="text-5xl font-bold">Moro Studio</h1>
 
             {(!session || session?.role === "user") && (
               <>
                 <p>
-                Raih momen tak terlupakan dengan Moro Studio, self photo studio terbaik di Jogja dan Solo. Dengan fasilitas lengkap dan tim profesional, kami menghadirkan pengalaman foto yang kreatif dan berkualitas tinggi untuk mengabadikan momen berharga Anda. Kunjungi studio kami sekarang dan rasakan keajaiban potret yang tak terlupakan.
+                  Raih momen tak terlupakan dengan Moro Studio, self photo
+                  studio terbaik di Jogja dan Solo. Dengan fasilitas lengkap dan
+                  tim profesional, kami menghadirkan pengalaman foto yang
+                  kreatif dan berkualitas tinggi untuk mengabadikan momen
+                  berharga Anda. Kunjungi studio kami sekarang dan rasakan
+                  keajaiban potret yang tak terlupakan.
                 </p>
-                <button className="btn rounded-md bg-blue text-white-grey border-blue hover:bg-[#6380BB] hover:border-[#6380BB] gap-2">
-                  Pesan Sekarang!
-                  {rightArrow()}
-                </button>
+                {button("Pesan Sekarang!", "/pesan")}
               </>
             )}
 
             {session?.role === "user" && (
-              <>
-                <button className="btn rounded-md bg-blue text-white-grey border-blue hover:bg-[#6380BB] hover:border-[#6380BB] gap-2">
-                  Lihat Foto Saya
-                  {rightArrow()}
-                </button>
-              </>
+              <>{button("Lihat Pesanan Saya", "/detailpemesanan")}</>
             )}
 
             {session?.role === "admin" && (
               <>
-                <p>
-                Raih momen tak terlupakan dengan Moro Studio, self photo studio terbaik di Jogja dan Solo. Dengan fasilitas lengkap dan tim profesional, kami menghadirkan pengalaman foto yang kreatif dan berkualitas tinggi untuk mengabadikan momen berharga Anda. Kunjungi studio kami sekarang dan rasakan keajaiban potret yang tak terlupakan.
-                </p>
-                <button className="btn rounded-md bg-blue text-white-grey border-blue hover:bg-[#6380BB] hover:border-[#6380BB] gap-2">
-                  Lihat Pesanan 
-                  {rightArrow()}
-                </button>
+                {button("List Pesanan Pengguna", "/detailpemesanan")}
+                {button("List Pengguna", "/user")}
+              </>
+            )}
+
+            {session?.role === "blogManager" && (
+              <>
+                {button("List Blog", "/blog")}
+                {button("Tambah Blog", "/blog/tambah")}
+                {button("List Draft Blog", "/blog/draft")}
+              </>
+            )}
+
+            {session?.role === "studioManager" && (
+              <>
+                {button("Dashboard", "/dashboard")}
+                {button("Chat dari Pengguna", "/chat")}
+                {button("Ubah Homepage", "/homepage")}
               </>
             )}
           </div>
         </div>
-        <div className="mx-8 mt-8 flex flex-col sm:mx-12 md:mx-24 lg:mx-28 xl:mx-auto xl:max-w-6xl">
-          <h1 className="mb-8 text-center text-3xl font-bold">Gambar</h1>
-          <div className="carousel-center carousel rounded-box mb-8 space-x-4 bg-light-grey p-4">
-            {homepage.data?.carousel.map((item) => (
-              <div className="carousel-item">
-                <img
-                  src={item}
-                  className="rounded-box"
-                  style={{ height: "540px" }}
-                />
-              </div>
-            ))}
+        {homepage.data?.carousel && homepage.data?.carousel.length > 0 && (
+          <div className="mx-8 mt-8 flex flex-col sm:mx-12 md:mx-24 lg:mx-28 xl:mx-auto xl:max-w-6xl">
+            <h1 className="mb-8 text-center text-3xl font-bold">Gambar</h1>
+            <div className="carousel-center carousel rounded-box mb-8 space-x-4 bg-light-grey p-4">
+              {homepage.data?.carousel.map((item) => (
+                <div className="carousel-item">
+                  <img
+                    src={item}
+                    className="rounded-box"
+                    style={{ height: "540px" }}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+        {(!session || session?.role === "user") && (
+          <div className="bg-white px-16 py-8">
+            <div className="">
+              <h1 className="mb-8 text-center text-3xl font-bold">
+                Kenapa Memilih Moro Studio?
+              </h1>
+              <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-4">
+                  <h2 className="text-2xl font-bold">1. Fasilitas Lengkap</h2>
+                  <p>
+                    Moro Studio menawarkan fasilitas lengkap untuk memenuhi
+                    kebutuhan Anda. Dengan berbagai macam pilihan latar belakang
+                    dan properti, kami dapat menghadirkan foto yang sesuai
+                    dengan keinginan Anda.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <h2 className="text-2xl font-bold">2. Tim Profesional</h2>
+                  <p>
+                    Moro Studio memiliki tim profesional yang siap membantu Anda
+                    dalam menghadirkan foto yang sesuai dengan keinginan Anda.
+                    Dengan pengalaman bertahun-tahun, tim kami dapat
+                    menghadirkan foto yang berkualitas tinggi dan sesuai dengan
+                    keinginan Anda.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <h2 className="text-2xl font-bold">3. Pengalaman Unik</h2>
+                  <p>
+                    Moro Studio menghadirkan pengalaman foto yang unik dan
+                    berkesan untuk Anda. Dengan berbagai macam pilihan latar
+                    belakang dan properti, kami dapat menghadirkan foto yang
+                    kreatif dan sesuai dengan keinginan Anda.
+                  </p>
+                </div>
+              </div>
+              <br />
+              <h1 className="mb-8 text-center text-3xl font-bold">
+                Ada pertanyaan? Hubungi kami!
+              </h1>
+              <div className="flex flex-col place-items-center gap-4">
+                {button("Chat dengan kami", "/chat")}
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </>
   );
