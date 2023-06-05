@@ -103,7 +103,7 @@ export default function DraftList() {
       <ModalAction
         open={isKonfirmasi}
         title="Publikasi Blog"
-        content="Apakah Anda yakin akan mengpublikasi blog ini?"
+        content="Apakah Anda yakin akan mempublish konten blog ini?"
         onClose={() => setIsKonfirmasi(false)}
         kembaliHandler={() => setIsKonfirmasi(false)}
         actionHandler={konfirmasiHandler}
@@ -120,6 +120,12 @@ export default function DraftList() {
               <Link href="/blog/tambah">
                 <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
                   + Buat Blog Baru
+                </button>
+              </Link>
+
+              <Link href="/blog/dashboard">
+                <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+                  Blog Dashboard
                 </button>
               </Link>
 
