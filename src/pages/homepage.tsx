@@ -121,7 +121,7 @@ export default function Homepage() {
               <h3 className="text-lg font-medium">Update Gambar Utama</h3>
               <button
                 type="submit"
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-gray-600 py-2 px-3 text-sm font-semibold text-white hover:bg-gray-700 sm:mt-0 sm:w-auto"
+                className="ml-4 inline-flex w-full justify-center rounded-md border-blue bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]  sm:mt-0 sm:w-auto"
               >
                 Simpan
               </button>
@@ -160,7 +160,7 @@ export default function Homepage() {
 
               <button
                 type="submit"
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-gray-600 py-2 px-3 text-sm font-semibold text-white hover:bg-gray-700 sm:mt-0 sm:w-auto"
+                className="ml-4 inline-flex w-full justify-center rounded-md border-blue bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]  sm:mt-0 sm:w-auto"
               >
                 Simpan
               </button>
@@ -199,49 +199,56 @@ export default function Homepage() {
         Update Gambar Homepage
       </h1>
 
-      <div className="grid min-h-full grid-cols-2 grid-rows-2 items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
+      <div className="grid min-h-full grid-cols-1 items-center justify-center gap-4 py-8 px-4 sm:grid-cols-2 sm:px-6 md:grid-cols-2 lg:grid-cols-2 lg:px-8">
         <div className="flex justify-center">
-          <button className="btn rounded-md bg-blue text-white-grey border-blue hover:bg-[#6380BB] hover:border-[#6380BB] gap-2" onClick={handleOpenModal}>
+          <button
+            className="btn gap-2 rounded-md border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
+            onClick={handleOpenModal}
+          >
             Ubah gambar utama
           </button>
         </div>
 
         <div className="row-span-2 overflow-hidden shadow sm:rounded-md">
-          <div className="bg-light-grey px-4 py-5 sm:p-6">
+          <div className="bg-grey bg-opacity-20 px-4 py-5 sm:p-6">
             <div className="grid grid-cols-6 gap-6">
               <div className="col-span-6">
                 <label
                   htmlFor="paket-foto"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm font-medium leading-6"
                 >
                   Masukkan Foto
                 </label>
                 <input
                   onChange={uploadPhoto}
                   type="file"
-                  className="file-input-bordered file-input w-full max-w-xs"
+                  className="file-input-bordered file-input-info file-input mt-2 w-full max-w-xs"
                   accept="image/png, image/jpeg"
                 />
               </div>
             </div>
           </div>
 
-          <div className="bg-grey bg-opacity-80 px-4 py-3 text-right sm:px-6">
+          <div className="bg-light-grey px-4 py-3 text-right sm:px-6">
             <button
               type="submit"
-              className="mt-3 inline-flex w-full justify-center rounded-md bg-blue text-white-grey border-blue hover:bg-[#6380BB] hover:border-[#6380BB] py-2 px-3 text-sm font-semibold  sm:mt-0 sm:w-auto"
+              className="mt-3 inline-flex w-full justify-center rounded-md border-blue bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]  sm:mt-0 sm:w-auto"
             >
               Simpan
             </button>
           </div>
         </div>
 
-        <div className="flex justify-center">
-          <button className="btn rounded-md bg-blue text-white-grey border-blue hover:bg-[#6380BB] hover:border-[#6380BB] gap-2" onClick={handleOpenModal2}>
+        <div className="flex justify-center sm:flex-col md:flex-col lg:flex-row">
+          <button
+            className="btn gap-2 rounded-md border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
+            onClick={handleOpenModal2}
+          >
             Ubah gambar carousel
           </button>
         </div>
       </div>
+
       <div className="flex flex-col place-content-center">
         <h1 className="my-8 mb-4 text-center text-3xl font-bold">
           Daftar Gambar
@@ -268,7 +275,7 @@ export default function Homepage() {
                 >
                   <img className="max-h-72 object-contain" src={image.url} />
                   <button
-                    className="btn bg-red border-red text-white-grey"
+                    className="rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
                     onClick={() => handleDelete(image.id)}
                   >
                     Delete

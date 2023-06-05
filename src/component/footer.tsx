@@ -3,7 +3,7 @@ import { BsInstagram } from "react-icons/bs";
 
 export function Footer() {
   return (
-        <footer className="footer bg-dark-grey md:grid-cols-4 p-8 text-base-content">
+    <footer className="footer bg-dark-grey md:grid-cols-4 p-8 text-base-content">
           <div className="md:ml-20">
             <Image
               className="block w-auto"

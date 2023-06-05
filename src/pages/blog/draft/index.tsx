@@ -41,7 +41,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 export default function DraftList() {
-  const { session } = useAuth()
+  const { session } = useAuth();
   const { data: blogs } = api.blog.getAllBlogDraft.useQuery();
   const ids = blogs?.map((blog) => blog.gambarBlogId)!;
   const { data: images } = api.blog.getImagesById.useQuery({ ids });
@@ -52,14 +52,14 @@ export default function DraftList() {
   const [isKonfirmasi, setIsKonfirmasi] = useState(false);
 
   const hapusBlog = api.blog.deleteBlog.useMutation({
-    onSuccess(){
+    onSuccess() {
       utils.blog.getAllBlogDraft.invalidate();
-    }
+    },
   });
   const konfirmasiBlog = api.blog.konfirmasiBlog.useMutation({
-    onSuccess(){
+    onSuccess() {
       utils.blog.getAllBlogDraft.invalidate();
-    }
+    },
   });
 
   const utils = api.useContext();
@@ -108,46 +108,54 @@ export default function DraftList() {
         kembaliHandler={() => setIsKonfirmasi(false)}
         actionHandler={konfirmasiHandler}
       />
-      <div className="m-8">
-        <div className="flex flex-col items-end justify-end gap-4 md:flex-row md:items-center">
-          <div className="flex w-full flex-col items-center justify-end gap-2">
-            {blogs?.map((blog) => (
-              <Link key={blog.id} href={`/blog/draft/${blog.id}`}>
-                <div className="bg-white flex w-full flex-col rounded-lg p-4 shadow-md">
-                  <div className="flex flex-row items-center justify-between">
-                    <div className="flex flex-col">
-                      <h3 className="text-lg font-semibold">{blog.judul}</h3>
-                      <div className="flex gap-4">
-                        <img
-                          className="max-h-48"
-                          width={200} 
-                          src={
-                            images?.find(
-                              (image) => image.id === blog.gambarBlogId
-                            )?.url
-                          }
-                        />
-                        <p className="text-gray-500 text-sm">
-                          {blog.isi.substring(0, 500)}...
-                        </p>
-
-                        <div>
-                          {session?.role === "admin" && (
-                            /*@ts-ignore*/
-                            <button className="btn btn-success w-40 mb-4" onClick={(e) => onKonfirmasi(e, blog.id)}>Konfirmasi</button>
-
-                          )}
-                          {/*@ts-ignore*/}
-                          <button className="btn btn-error w-40" onClick={(e) => onDelete(e, blog.id) }>hapus</button>
-
+      <div className="min-h-screen">
+        <div className="m-8">
+          <div className="flex flex-col items-center justify-end gap-4 md:flex-row md:items-center">
+            <div className="w-full">
+              {blogs?.map((blog) => (
+                <Link key={blog.id} href={`/blog/draft/${blog.id}`}>
+                  <div className="mb-4 w-full flex-col rounded-lg bg-white-grey p-4 shadow-md">
+                    <div className="flex flex-row items-center justify-between">
+                      <div className="flex flex-col">
+                        <h3 className="text-lg font-semibold">{blog.judul}</h3>
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                          <img
+                            className="max-h-48 md:w-1/3"
+                            src={
+                              images?.find(
+                                (image) => image.id === blog.gambarBlogId
+                              )?.url
+                            }
+                            alt="Blog Image"
+                          />
+                          <p className="text-sm md:w-2/3 md:pl-4">
+                            {blog.isi.substring(0, 500)}...
+                          </p>
+                          <div className="mt-4 flex gap-2 sm:mt-0 md:ml-4 md:mb-0 md:w-auto">
+                            {session?.role === "admin" && (
+                              <button
+                                className="rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]"
+                                /*@ts-ignore*/
+                                onClick={(e) => onKonfirmasi(e, blog.id)}
+                              >
+                                Konfirmasi
+                              </button>
+                            )}
+                            <button
+                              className="rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
+                              /*@ts-ignore*/
+                              onClick={(e) => onDelete(e, blog.id)}
+                            >
+                              Hapus
+                            </button>
+                          </div>
                         </div>
                       </div>
-
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>
