@@ -36,7 +36,7 @@ export default function Book() {
                 >
                 <div>
                   <h3 className="text-left text-lg font-bold">{item.nama}</h3>
-                  <div className="mt-4 rounded-md bg-base-300 p-4">
+                  <div className="mt-4 rounded-md bg-light-grey bg-opacity-60 p-4">
                     <p className="whitespace-pre-line">{item.deskripsi}</p>
                   </div>
 

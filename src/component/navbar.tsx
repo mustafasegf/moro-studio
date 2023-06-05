@@ -11,9 +11,14 @@ export function Navbar() {
       role: undefined,
     },
     {
+      name: "Blog",
+      path: "/blog",
+      role: undefined,
+    },
+    {
       name: "Feedback",
-      path: "/feedback/list",
-      role: "user",
+      path: "/feedback",
+      role: undefined,
     },
     {
       name: "Katalog",
@@ -22,8 +27,13 @@ export function Navbar() {
     },
     {
       name: "Edit Homepage",
-      path: "/homepage/edit",
+      path: "/homepage",
       role: "admin",
+    },
+    {
+      name: "Konfirmasi Pesanan",
+      path: "/pesan/konfirmasi",
+      role: "studioManager",
     },
     {
       name: "Kupon",
@@ -35,11 +45,16 @@ export function Navbar() {
       path: "/dashboard",
       role: "admin" || "studioManager",
     },
+    {
+      name: "Detail Pesanan",
+      path: "/detailpemesanan",
+      role: "studioManager" || "admin",
+    },
   ];
 
   return (
     <>
-      <div className="navbar bg-dark-grey">
+      <div className="navbar fixed top-0 left-0 right-0 z-10 bg-dark-grey">
         <div className="flex-1">
           <div className="dropdown">
             <label tabIndex={0} className="btn-ghost btn lg:hidden">
@@ -68,7 +83,7 @@ export function Navbar() {
                     <li key={page.path}>
                       <Link
                         href={page.path}
-                        className="mr-2 text-white-grey text-base-content hover:bg-base-300 hover:text-black"
+                        className="text-white-grey hover:bg-light-grey hover:text-black"
                       >
                         {page.name}
                       </Link>
@@ -79,14 +94,14 @@ export function Navbar() {
                 {session ? (
                   <p
                     onClick={logout}
-                    className="text-white-grey hover:bg-light-grey hover:text-black"
+                    className="border text-white-grey hover:border-light-grey hover:bg-light-grey hover:text-black"
                   >
                     Logout
                   </p>
                 ) : (
                   <Link
                     href="/login"
-                    className="text-white-grey hover:bg-light-grey hover:text-black"
+                    className="border text-white-grey hover:border-light-grey hover:bg-light-grey hover:text-black"
                   >
                     Login
                   </Link>
@@ -128,39 +143,13 @@ export function Navbar() {
 
         <div className="flex-none">
           <ul className="menu menu-horizontal hidden px-1 lg:flex">
-            {/* <li>
-              <Link
-                href="/listfeedback"
-                className="text-white-grey mr-2 underline-offset-8 hover:underline"
-              >
-                Feedback
-              </Link>
-            </li> */}
-            {/* <li>
-              <Link
-                href="/katalog/list-catalogue"
-                className="text-white-grey mr-2 underline-offset-8 hover:underline"
-              >
-                Catalogue
-              </Link>
-            </li> */}
-            {/* <li>
-              <Link
-                href="/kupon/list-kupon"
-                className="text-white-grey mr-2 underline-offset-8 hover:underline"
-              >
-                Kupon
-              </Link>
-            </li> */}
-          </ul>
-          <ul className="menu menu-horizontal hidden px-1 lg:flex">
             {pages.map(
               (page) =>
                 (session?.role === page.role || page.role === undefined) && (
                   <li key={page.path}>
                     <Link
                       href={page.path}
-                      className="mr-2 text-base-100 hover:bg-base-300 hover:text-base-content"
+                      className="mr-2 text-white-grey hover:bg-light-grey hover:text-black"
                     >
                       {page.name}
                     </Link>
@@ -173,12 +162,14 @@ export function Navbar() {
           <ul className="menu menu-horizontal px-1">
             {session && session?.role !== "user" && (
               <li className="hidden sm:block">
-                <p className="mr-2 text-white-grey">role: {session?.role}</p>
+                <p className="mr-2 bg-dark-grey text-white-grey">
+                  role: {session?.role}
+                </p>
               </li>
             )}
             {session && (
               <li className="hidden sm:block">
-                <p className="mr-2 bg-[#595959] text-white-grey">
+                <p className="mr-2 bg-dark-grey font-semibold text-white-grey">
                   Hi {session?.nama}!
                 </p>
               </li>
@@ -188,14 +179,14 @@ export function Navbar() {
               {session ? (
                 <p
                   onClick={logout}
-                  className="mr-3 border-2 border-white-grey bg-transparent py-2 px-4 font-semibold text-white-grey transition duration-300 ease-in-out hover:border-light-grey hover:bg-light-grey hover:text-black"
+                  className="mr-3 mt-1 border border-white-grey bg-transparent py-2 px-4 font-medium text-white-grey transition duration-300 ease-in-out hover:border-light-grey hover:bg-light-grey hover:text-black"
                 >
                   Logout
                 </p>
               ) : (
                 <Link
                   href="/login"
-                  className="mr-3 border-2 border-white-grey bg-transparent py-2 px-4 font-semibold text-white-grey transition duration-300 ease-in-out hover:border-light-grey hover:bg-light-grey hover:text-black"
+                  className="mr-3 mt-1 border border-white-grey bg-transparent py-2 px-4 font-medium text-white-grey transition duration-300 ease-in-out hover:border-light-grey hover:bg-light-grey hover:text-black"
                 >
                   Login
                 </Link>
@@ -204,6 +195,7 @@ export function Navbar() {
           </ul>
         </div>
       </div>
+      <div className="py-8 px-4 sm:px-6"></div>
     </>
   );
 }

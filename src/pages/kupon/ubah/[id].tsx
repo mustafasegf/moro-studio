@@ -136,13 +136,13 @@ export default function UpdateKupon(props: { id: string }) {
 
       <h1 className="my-8 mb-4 text-center text-3xl font-bold">Ubah Kupon</h1>
 
-      <div className="flex w-full flex-wrap">
+      <div className="flex w-full flex-wrap py-4 px-4 sm:px-6 lg:px-8">
         <form className="w-full" onSubmit={handleUpdateKupon}>
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="nama-kupon"
-                className="text-gray-900 block text-sm font-medium leading-6"
+                className="block text-sm font-medium leading-6"
               >
                 Nama Kupon
               </label>
@@ -153,17 +153,17 @@ export default function UpdateKupon(props: { id: string }) {
                 type="text"
                 name="nama-kupon"
                 id="nama-kupon"
-                className="text-gray-900 focus:ring-indigo-600 mt-2 block w-full rounded-md border-0 py-1.5 px-2.5 shadow-sm ring-1 ring-inset  ring-dark-grey focus:ring-inset sm:text-sm sm:leading-6"
+                className="mt-2 block w-full rounded-md border-0 py-1.5 px-2.5 shadow-sm ring-1 ring-inset  ring-dark-grey focus:ring-inset sm:text-sm sm:leading-6"
                 onChange={(e) => setNama(e.target.value)}
               />
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="kode-kupon"
-                className="text-gray-900 block text-sm font-medium leading-6"
+                className="block text-sm font-medium leading-6"
               >
                 Kode Kupon
               </label>
@@ -175,17 +175,17 @@ export default function UpdateKupon(props: { id: string }) {
                 name="kode-kupon"
                 id="kode-kupon"
                 disabled
-                className="mt-2 block w-full rounded-md border-0 bg-white-grey py-1.5 px-2.5 shadow-sm ring-1 ring-inset ring-dark-grey focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                className="mt-2 block w-full rounded-md border-0 bg-light-grey bg-opacity-50 py-1.5 px-2.5 shadow-sm ring-1 ring-inset ring-dark-grey focus:ring-inset sm:text-sm sm:leading-6"
                 onChange={(e) => setKode(e.target.value)}
               />
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="diskon"
-                className="text-gray-900 block text-sm font-medium leading-6"
+                className="block text-sm font-medium leading-6"
               >
                 Diskon
               </label>
@@ -199,19 +199,19 @@ export default function UpdateKupon(props: { id: string }) {
                   name="diskon"
                   id="diskon"
                   disabled
-                  className="input-bordered input h-9 w-full bg-white-grey ring-1 ring-dark-grey"
+                  className="mt-2 input h-9 w-full ring-1 bg-light-grey bg-opacity-50 ring-dark-grey"
                   onChange={(e) => setDiskon(parseFloat(e.target.value))}
                 />
-                <span className="ring-1 ring-dark-grey">%DISKON</span>
+                <span className="mt-2 ring-1 ring-dark-grey">%DISKON</span>
               </label>
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="kuota"
-                className="text-gray-900 block text-sm font-medium leading-6"
+                className="block text-sm font-medium leading-6"
               >
                 Kuota Pemakaian
               </label>
@@ -223,17 +223,17 @@ export default function UpdateKupon(props: { id: string }) {
                 min={1}
                 name="kuota"
                 id="kuota"
-                className="text-gray-900 focus:ring-indigo-600 mt-2 block w-full rounded-md border-0 py-1.5 px-2.5 shadow-sm ring-1 ring-inset ring-dark-grey focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+                className="mt-2 block w-full rounded-md border-0 py-1.5 px-2.5 shadow-sm ring-1 ring-inset ring-dark-grey focus:ring-inset sm:text-sm sm:leading-6"
                 onChange={(e) => setKuotaPemakaian(parseInt(e.target.value))}
               />
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-4 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+          <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="tanggal"
-                className="text-gray-900 block text-sm font-medium leading-6"
+                className="block text-sm font-medium leading-6"
               >
                 Tanggal Kadaluarsa
               </label>
@@ -245,23 +245,23 @@ export default function UpdateKupon(props: { id: string }) {
                 min={new Date().toISOString().split("T")[0]}
                 name="tanggal"
                 id="tanggal"
-                className="focus:shadow-outline text-gray-700 w-full appearance-none rounded border py-2 px-3 leading-tight shadow focus:outline-none"
+                className="focus:shadow-outline w-full appearance-none rounded border py-2 px-3 leading-tight shadow focus:outline-none"
                 onChange={(e) => setTanggal(new Date(e.target.value))}
               />
             </div>
           </div>
 
-          <div className="mt-6 flex w-full flex-wrap">
+          <div className="mt-4 flex w-full flex-wrap py-4 px-6 sm:px-6">
             <Link
               href="/kupon/list-kupon"
               type="button"
-              className="ml-8 inline-flex w-full justify-center rounded-md bg-light-grey px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-28"
+              className="mb-2 inline-flex w-full justify-center rounded-md bg-light-grey px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-28"
             >
               Kembali
             </Link>
             <button
               type="submit"
-              className="mt-2 inline-flex w-full justify-center rounded-md bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28"
+              className="mb-2 inline-flex w-full justify-center rounded-md bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28"
             >
               Konfirmasi
             </button>

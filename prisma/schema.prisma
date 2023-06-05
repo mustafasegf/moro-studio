@@ -29,12 +29,11 @@ model User {
   // sessions       Session[]
   booking        Booking[]
   blastMarketing BlastMarketing[]
-  chatRoomAdmin  ChatRoom[]       @relation("ChatRoomAdmin")
+  chatRoomStaff  ChatRoom[]       @relation("ChatRoomStaff")
   chatRoomUser   ChatRoom[]       @relation("ChatRoomUser")
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   deleted        Boolean          @default(false)
-  // feedback       Feedback[]
   ContohImage    ContohImage[]
   Feedback       Feedback[]
   FotoUser       FotoUser[]
@@ -113,9 +112,8 @@ model Booking {
   kuponId         String?
   kupon           Kupon?         @relation(fields: [kuponId], references: [id])
   status          BookinStatus
-  // foto FotoUser[]
   Pembayaran      Pembayaran[]
-  // FotoUser        FotoUser[]
+  fotoUser        FotoUser[]
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   deleted         Boolean        @default(false)
@@ -131,17 +129,10 @@ model Pembayaran {
   updatedAt DateTime @updatedAt
 }
 
-// model FotoUser {
-//   id        String   @id @default(cuid())
-//   gambar    String
-//   bookingId String
-//   booking   Booking  @relation(fields: [bookingId], references: [id])
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
-
 model FotoUser {
   id        String   @id @default(cuid())
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id])
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
@@ -149,15 +140,23 @@ model FotoUser {
 }
 
 model KontenBlog {
-  id        String        @id @default(cuid())
-  judul     String
-  comment   CommentBlog[]
-  thumbnail String
-  isi       String        @db.Text
-  posted    Boolean
-  like      Int
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id           String        @id @default(cuid())
+  judul        String
+  comment      CommentBlog[]
+  isi          String        @db.Text
+  posted       Boolean
+  like         Int
+  gambarBlogId String        @unique
+  gambarBlog   GambarBlog    @relation(fields: [gambarBlogId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model GambarBlog {
+  id         String      @id @default(cuid())
+  KontenBlog KontenBlog?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 model CommentBlog {
@@ -190,12 +189,12 @@ model Home {
 }
 
 model ChatRoom {
-  Id        String   @id @default(cuid())
-  adminId   String
-  admin     User     @relation("ChatRoomAdmin", fields: [adminId], references: [id])
+  id        String   @id @default(cuid())
+  staffId   String?
+  staff     User?    @relation("ChatRoomStaff", fields: [staffId], references: [id])
   userId    String?
-  User      User?    @relation("ChatRoomUser", fields: [userId], references: [id])
-  Chat      Chat[]
+  user      User?    @relation("ChatRoomUser", fields: [userId], references: [id])
+  chat      Chat[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -203,9 +202,9 @@ model ChatRoom {
 model Chat {
   id         String   @id @default(cuid())
   chatRoomId String
-  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [Id])
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
   chat       String   @db.Text
-  adminSend  Boolean
+  staffSend  Boolean
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

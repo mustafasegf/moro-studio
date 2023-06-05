@@ -8,8 +8,12 @@ import { userRouter } from "./routers/user";
 import { kuponRouter } from "./routers/kupon";
 import { bookingRouter } from "./routers/booking";
 import { imageRouter } from "./routers/images";
+import { pembayaranRouter } from "./routers/pembayaran";
+import { blogRouter } from "./routers/blog";
 import { pertanyaanFeedbackRouter } from "./routers/pertanyaanfeedback";
 import { aksesFotoRouter } from "./routers/aksesfoto";
+import { chatRouter } from "./routers/chat";
+import { detailPemesananRouter } from "./routers/detailpemesanan";
 
 /**
  * This is the primary router for your server.
@@ -27,7 +31,11 @@ export const appRouter = createTRPCRouter({
   kupon: kuponRouter,
   booking: bookingRouter,
   image: imageRouter,
-  aksesFoto: aksesFotoRouter
+  pembayaran: pembayaranRouter,
+  blog: blogRouter,
+  aksesFoto: aksesFotoRouter,
+  chat: chatRouter,
+  detailPemesanan: detailPemesananRouter
 });
 
 // export type definition of API

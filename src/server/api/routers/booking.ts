@@ -1,6 +1,11 @@
+import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  studioManagerProcedure,
+} from "~/server/api/trpc";
 import { addBookingSchema } from "~/utils/schemas";
 import { sendEmail } from "~/utils/sendemail";
 
@@ -85,6 +90,74 @@ export const bookingRouter = createTRPCRouter({
       return sendEmail(user.email, ctx.transport);
     }),
 
+  getAllBooking: publicProcedure
+    .input(
+      z.object({
+        from: z.date(),
+        to: z.date(),
+      })
+    )
+    .query(({ ctx, input }) => {
+      return ctx.prisma.booking.findMany({
+        where: {
+          deleted: false,
+          AND: [
+            {
+              jadwal: {
+                gte: input.from,
+              },
+            },
+            {
+              jadwal: {
+                lte: input.to,
+              },
+            },
+          ],
+        },
+        include: {
+          katalog: true,
+          Pembayaran: true,
+          // FotoUser: true,
+          kupon: true,
+        },
+      });
+    }),
+
+  getAllBackground: publicProcedure.query(({ ctx }) => {
+    return ctx.prisma.backgroundFoto.findMany({
+      where: {
+        deleted: false,
+      },
+    });
+  }),
+
+  deleteBooking: studioManagerProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      let booking = await ctx.prisma.booking.findFirst({
+        where: {
+          id: input.id,
+          deleted: false,
+        },
+      });
+
+      if (!booking) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Booking tidak ditemukan",
+        });
+      }
+
+      await ctx.prisma.booking.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          deleted: true,
+        },
+      });
+    }),
+
   findAllBooking: publicProcedure.query(async ({ ctx }) => {
     return ctx.prisma.booking.findMany({
       where: {
@@ -95,4 +168,18 @@ export const bookingRouter = createTRPCRouter({
       },
     });
   }),
+
+  getBookingByBookingId: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(({ input, ctx }) => {
+      return ctx.prisma.booking.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });

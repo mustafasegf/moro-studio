@@ -42,7 +42,7 @@ export default function UpdateCatalogue(props: { id: string }) {
   const updateCatalogue = api.catalogue.updateCatalogue.useMutation();
 
   useEffect(
-    function() {
+    function () {
       if (updateCatalogue.isSuccess) {
         setTimeout(() => {
 
@@ -133,19 +133,19 @@ export default function UpdateCatalogue(props: { id: string }) {
       <div className="flex min-h-full items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="overflow-hidden shadow sm:rounded-md">
-            <div className="bg-[#e5e7eb] px-4 py-5 sm:p-6">
+            <div className="bg-grey bg-opacity-20 px-4 py-5 sm:p-6">
               <div className="grid grid-cols-6 gap-6">
                 <div className="col-span-6">
                   <label
                     htmlFor="paket-foto"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-sm font-medium leading-6"
                   >
                     Nama Paket Foto
                   </label>
                   <input
                     type="text"
                     id="paket-foto"
-                    className="mt-2 block w-full rounded-md border-0 py-1.5 pl-2.5 pr-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="mt-2 block w-full rounded-md border-0 py-1.5 pl-2.5 pr-2.5 shadow-sm ring-1 ring-inset ring-grey focus:ring-1 focus:ring-inset sm:text-sm sm:leading-6"
                     {...register("nama")}
                   />
                   {errors.nama && (
@@ -158,13 +158,13 @@ export default function UpdateCatalogue(props: { id: string }) {
                 <div className="col-span-6 sm:col-span-3">
                   <label
                     htmlFor="durasi"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-sm font-medium leading-6"
                   >
                     Durasi
                   </label>
                   <select
                     id="durasi"
-                    className="mt-2 block w-full rounded-md border-0 bg-white py-1.5 pl-2.5 pr-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="mt-2 block w-full rounded-md border-0 py-1.5 pl-2.5 pr-2.5 shadow-sm ring-1 ring-inset ring-grey focus:ring-1 focus:ring-inset sm:text-sm sm:leading-6"
                     {...register("durasi", { valueAsNumber: true })}
                   >
                     {/* <option value={0}>0 menit</option> */}
@@ -188,20 +188,20 @@ export default function UpdateCatalogue(props: { id: string }) {
                 <div className="col-span-6 sm:col-span-3">
                   <label
                     htmlFor="harga"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-sm font-medium leading-6"
                   >
                     Harga
                   </label>
                   <div className="mt-2 flex flex-col">
                     <div className="flex rounded-md shadow-sm">
-                      <span className="inline-flex items-center rounded-l-md border border-r-0 px-3 text-gray-500 sm:text-sm">
+                      <span className="inline-flex items-center rounded-l-md border border-grey border-r-0 px-3 sm:text-sm">
                         Rp
                       </span>
                       <input
                         type="number"
                         min={1}
                         id="harga"
-                        className="block w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 pl-2.5 pr-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        className="block w-full flex-1 rounded-none rounded-r-md border-0 py-1.5 pl-2.5 pr-2.5 ring-1 ring-inset ring-grey focus:ring-1 focus:ring-inset sm:text-sm sm:leading-6"
                         placeholder="50000"
                         {...register("harga", {
                           setValueAs: (v) => (!v ? 0 : parseInt(v)),
@@ -221,7 +221,7 @@ export default function UpdateCatalogue(props: { id: string }) {
                 <div className="col-span-6">
                   <label
                     htmlFor="jumlah"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-sm font-medium leading-6"
                   >
                     Jumlah Orang
                   </label>
@@ -230,7 +230,7 @@ export default function UpdateCatalogue(props: { id: string }) {
                       type="number"
                       min={1}
                       id="jumlah"
-                      className="mt-1 block w-full rounded-md border-0 py-1.5 pl-2.5 pr-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
+                      className="mt-1 block w-full rounded-md border-0 py-1.5 pl-2.5 pr-2.5 shadow-sm ring-1 ring-inset ring-grey focus:ring-1 focus:ring-inset sm:py-1.5 sm:text-sm sm:leading-6"
                       placeholder="jumlah orang"
                       {...register("jumlahOrang", {
                         setValueAs: (v) => (!v ? undefined : parseInt(v)),
@@ -252,7 +252,7 @@ export default function UpdateCatalogue(props: { id: string }) {
                 <div className="col-span-6">
                   <label
                     htmlFor="deskripsi"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-sm font-medium leading-6"
                   >
                     Deskripsi
                   </label>
@@ -260,7 +260,7 @@ export default function UpdateCatalogue(props: { id: string }) {
                     <textarea
                       id="deskripsi"
                       rows={5}
-                      className="mt-1 block w-full rounded-md border-0 py-1.5 pl-2.5 pr-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
+                      className="mt-1 block w-full rounded-md border-0 py-1.5 pl-2.5 pr-2.5 shadow-sm ring-1 ring-inset ring-grey placeholder:text-gray-400 focus:ring-1 focus:ring-inset sm:py-1.5 sm:text-sm sm:leading-6"
                       placeholder="deskripsi paket foto"
                       {...register("deskripsi")}
                     ></textarea>
@@ -283,13 +283,13 @@ export default function UpdateCatalogue(props: { id: string }) {
               <Link
                 href="/katalog"
                 type="button"
-                className="inline-flex w-full justify-center rounded-md border border-gray-600 px-3 py-2 text-sm font-semibold text-gray-600 transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-auto"
+                className="h-10 inline-flex w-full justify-center rounded-md border px-3 py-2 text-sm font-semibold transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-auto"
               >
                 Kembali
               </Link>
               <button
                 type="submit"
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-dark-grey py-2 px-3 text-sm font-semibold text-white-grey hover:bg-medium-grey sm:mt-0 sm:w-auto"
+                className="h-10 mt-3 inline-flex w-full justify-center rounded-md bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-auto"
               >
                 Simpan
               </button>
