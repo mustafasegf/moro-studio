@@ -21,6 +21,8 @@ html {
   flex-direction: column;
   gap: 10px;
   align-items: flex-start;
+  flex-grow: 1;
+  padding: 10px;
 }
 
 .chat-bubble {
