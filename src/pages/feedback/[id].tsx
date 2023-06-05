@@ -19,7 +19,7 @@ export default function UpdateFeedback() {
   useEffect(
     function () {
       if (updateFeedback.isSuccess) {
-        void router.push("/feedback/list");
+        void router.push("/feedback");
       }
     },
     [updateFeedback.isSuccess]
