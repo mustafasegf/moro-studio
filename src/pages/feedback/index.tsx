@@ -60,6 +60,7 @@ export default function Feedback() {
   return (
     <>
       <h1 className="my-8 mb-4 text-center text-3xl font-bold">Buat Feedback</h1>
+      
       <div className="flex min-h-full items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
         <form onSubmit={handleSubmit(onSubmit)} className="max-w-lg w-full">
           <div className="bg-grey bg-opacity-20 overflow-hidden shadow sm:rounded-md">
