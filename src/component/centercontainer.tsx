@@ -3,7 +3,7 @@ type CenterContainerProps = {
   className?: string
 }
 export function CenterContainer({ children }: CenterContainerProps) {
-  const classNameDefault = "mx-8 mt-8 flex flex-col sm:mx-12 md:mx-24 lg:mx-28 xl:mx-auto xl:max-w-6xl"
+  const classNameDefault = "mx-8 mt-8 mb-5 flex flex-col sm:mx-12 md:mx-24 lg:mx-28 xl:mx-auto xl:max-w-6xl"
 
   return (
     <div className={classNameDefault} >

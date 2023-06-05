@@ -137,7 +137,7 @@ export default function CreateDraft() {
   return (
     <>
       <CenterContainer>
-        <h3 className="mx-4 text-center text-2xl font-bold">
+        <h3 className="mx-4 mb-8 text-center text-3xl font-bold">
           Buat Draft Blog Baru
         </h3>
 
@@ -153,7 +153,7 @@ export default function CreateDraft() {
             <input
               type="file"
               id="thumbnail"
-              className="file-input-bordered file-input"
+              className="file-input-bordered file-input-info file-input"
               disabled={!!image}
               onChange={uploadPhoto}
             />
@@ -162,7 +162,7 @@ export default function CreateDraft() {
           {image && (
             <div key={image.id}>
                <img width={400} src={image.url} />
-               <button className="btn btn-error" onClick={() => handleDelete(image.id) }>Delete</button>
+               <button className="mt-3 rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey" onClick={() => handleDelete(image.id) }>Delete</button>
              </div>
           )}
 
@@ -174,7 +174,7 @@ export default function CreateDraft() {
             type="text"
             id="judul"
             placeholder="Judul Blog"
-            className="bg-white input-bordered input rounded-lg"
+            className="input-bordered input rounded-lg"
             value={judul}
             onChange={(e) => setJudul(e.target.value)}
           />
@@ -203,7 +203,7 @@ export default function CreateDraft() {
             }}
           />
 
-          <input className="btn mt-4" type="submit" value="Simpan" />
+          <input className="mb-6 mt-3 border rounded-3xl bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]" type="submit" value="Simpan" />
         </form>
       </CenterContainer>
     </>

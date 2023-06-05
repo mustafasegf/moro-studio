@@ -131,11 +131,16 @@ export default function ListUser() {
               <option key={role}>{role}</option>
             ))}
           </select>
-          <Link href="/user/tambah" className="btn my-4">
-            Add Account +
-          </Link>
+          <div className="flex items-center">
+      <Link
+        href="/user/tambah"
+        className="bg-blue h-10 rounded-3xl text-center w-40 px-4 py-2 text-white hover:bg-[#6380BB] my-4 text-sm"
+      >
+        Add Account +
+      </Link>
+    </div>
         </div>
-        <div className="overflow-x-auto">
+        <div className="relative z-0 m-5 overflow-x-auto">
           {isLoading ? (
             <LoadingPage />
           ) : (
@@ -164,7 +169,7 @@ export default function ListUser() {
                       <td>
                         <button
                           onClick={() => openModal(item)}
-                          className="btn-error btn"
+                          className="rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
                         >
                           Hapus
                         </button>

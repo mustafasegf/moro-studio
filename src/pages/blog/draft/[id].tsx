@@ -151,7 +151,7 @@ export default function CreateDraft({ id }: { id: string }) {
   return (
     <>
       <CenterContainer>
-        <h3 className="mx-4 text-center text-2xl font-bold">Ubah Draft Blog</h3>
+        <h3 className="mx-4 mb-8 text-center text-3xl font-bold">Ubah Draft Blog</h3>
 
         <form className="form-control gap-4" onSubmit={onSubmit}>
           <label htmlFor="thumbnail" className="text-sm font-medium leading-6">
@@ -161,7 +161,7 @@ export default function CreateDraft({ id }: { id: string }) {
             <input
               type="file"
               id="thumbnail"
-              className="file-input-bordered file-input"
+              className="file-input-bordered file-input file-input-info"
               disabled={!!image}
               onChange={uploadPhoto}
             />
@@ -171,7 +171,7 @@ export default function CreateDraft({ id }: { id: string }) {
             <div key={image.id}>
               <img width={400} src={image.url} />
               <button
-                className="btn-error btn"
+                className="mt-3 rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
                 onClick={() => handleDelete(image.id)}
               >
                 Delete
@@ -186,7 +186,7 @@ export default function CreateDraft({ id }: { id: string }) {
             type="text"
             id="judul"
             placeholder="Judul Blog"
-            className="bg-white input-bordered input rounded-lg"
+            className="input-bordered input rounded-lg"
             value={judul}
             onChange={(e) => setJudul(e.target.value)}
           />
@@ -215,7 +215,7 @@ export default function CreateDraft({ id }: { id: string }) {
             }}
           />
 
-          <input className="btn mt-4" type="submit" value="Simpan" />
+          <input className="mb-6 mt-3 border rounded-3xl bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]" type="submit" value="Simpan" />
         </form>
       </CenterContainer>
     </>

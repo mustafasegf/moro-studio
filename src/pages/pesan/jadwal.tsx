@@ -202,7 +202,7 @@ function DatesButton({ now, date, idx }: DatesButtonProps) {
         "mt-3 rounded-xl border-2 border-neutral-400 bg-base-100 py-3 px-2 text-center text-lg",
         { "border-neutral-200 text-neutral-500 opacity-70 bg-base-300": !enabled },
         {
-          "-translate-y-[2px] bg-neutral-300 transition duration-75 ease-in-out":
+          "-translate-y-[2px] bg-light-grey transition duration-75 ease-in-out":
             hover && (idx != hoverIndex || clickable),
         }
       )}

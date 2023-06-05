@@ -232,7 +232,7 @@ export default function BlogView({ id }: { id: string }) {
   return (
     <>
       <CenterContainer>
-        <h1 className="mx-4 text-center text-2xl font-bold">{blog?.judul}</h1>
+        <h3 className="mx-4 text-center text-2xl font-bold">{blog?.judul}</h3>
         <img src={image?.url} className="mx-auto my-4" />
 
         <MarkdownView

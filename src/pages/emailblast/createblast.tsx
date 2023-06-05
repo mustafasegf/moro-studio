@@ -3,11 +3,11 @@ import React from "react";
 export default function CreateBlast() {
   return (
     <>
-      <div className=" bg-white py-5">
+      <div className="bg-white py-5">
         <div>
-          <p className="mx-5 flex justify-center text-2xl font-bold text-black">
+          <h1 className="my-8 text-center text-3xl font-bold">
             Buat Blast Email Baru
-          </p>
+          </h1>
         </div>
 
         <form>
@@ -83,7 +83,10 @@ export default function CreateBlast() {
                 ></textarea>
               </div>
 
-              <a href="blastlist" className="btn mx-10 my-10">
+              <a
+                href="blastlist"
+                className="mb-6 mt-3 flex justify-center rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]"
+              >
                 Kirim Blast Email
               </a>
             </div>

@@ -41,7 +41,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
 }
 
 export default function DraftList() {
-  const { session } = useAuth()
+  const { session } = useAuth();
   const { data: blogs } = api.blog.getAllBlogDraft.useQuery();
   const ids = blogs?.map((blog) => blog.gambarBlogId)!;
   const { data: images } = api.blog.getImagesById.useQuery({ ids });
@@ -52,14 +52,14 @@ export default function DraftList() {
   const [isKonfirmasi, setIsKonfirmasi] = useState(false);
 
   const hapusBlog = api.blog.deleteBlog.useMutation({
-    onSuccess(){
+    onSuccess() {
       utils.blog.getAllBlogDraft.invalidate();
-    }
+    },
   });
   const konfirmasiBlog = api.blog.konfirmasiBlog.useMutation({
-    onSuccess(){
+    onSuccess() {
       utils.blog.getAllBlogDraft.invalidate();
-    }
+    },
   });
 
   const utils = api.useContext();
@@ -108,42 +108,64 @@ export default function DraftList() {
         kembaliHandler={() => setIsKonfirmasi(false)}
         actionHandler={konfirmasiHandler}
       />
-      <div className="m-8">
-        <div className="flex flex-col items-end justify-end gap-4 md:flex-row md:items-center">
-          <div className="flex w-full flex-col items-center justify-end gap-2">
-            <h1 className="text-2xl font-semibold">Daftar Blog Draft</h1>
+
+      <div className="min-h-screen">
+        <div className="mx-auto mx-2 px-4 sm:mx-16">
+          <h1 className="my-8 text-center text-3xl font-bold">
+            Daftar Blog Draft
+          </h1>
+          <div className="mb-4 flex justify-end">
+            {(session?.role === "admin" || session?.role === "blogManager") && (
+              <>
+              <Link href="/blog/tambah">
+                <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+                  + Buat Blog Baru
+                </button>
+              </Link>
+
+              <Link href="/blog">
+                <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+                  Blog 
+                </button>
+              </Link>
+              </>
+            )}
+          </div>
+
+          <div className="mb-5 grid grid-cols-1 gap-8">
             {blogs?.map((blog) => (
               <Link key={blog.id} href={`/blog/draft/${blog.id}`}>
-                <div className="bg-white flex w-full flex-col rounded-lg p-4 shadow-md">
-                  <div className="flex flex-row items-center justify-between">
-                    <div className="flex flex-col">
+                <div className="rounded-lg border-dark-grey bg-white-grey shadow-lg hover:border">
+                  <div className="flex h-full flex-col p-4 lg:flex-row lg:items-stretch">
+                    <img
+                      className="mb-4 mr-2 h-48 w-auto object-cover lg:mb-0"
+                      src={
+                        images?.find((image) => image.id === blog.gambarBlogId)
+                          ?.url
+                      }
+                      alt="Blog Image"
+                    />
+                    <div className="flex flex-grow flex-col">
                       <h3 className="text-lg font-semibold">{blog.judul}</h3>
-                      <div className="flex gap-4">
-                        <img
-                          className="max-h-48"
-                          width={200} 
-                          src={
-                            images?.find(
-                              (image) => image.id === blog.gambarBlogId
-                            )?.url
-                          }
-                        />
-                        <p className="text-gray-500 text-sm">
-                          {blog.isi.substring(0, 500)}...
-                        </p>
-
-                        <div>
-                          {session?.role === "admin" && (
+                      <p className="text-sm">{blog.isi.substring(0, 500)}...</p>
+                      <div className="mt-4">
+                        {session?.role === "admin" && (
+                          <button
+                            className="rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]"
                             /*@ts-ignore*/
-                            <button className="btn btn-success w-40 mb-4" onClick={(e) => onKonfirmasi(e, blog.id)}>Publikasi</button>
-
-                          )}
-                          {/*@ts-ignore*/}
-                          <button className="btn btn-error w-40" onClick={(e) => onDelete(e, blog.id) }>hapus</button>
-
-                        </div>
+                            onClick={(e) => onKonfirmasi(e, blog.id)}
+                          >
+                            Konfirmasi
+                          </button>
+                        )}
+                        <button
+                          className="rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
+                          /*@ts-ignore*/
+                          onClick={(e) => onDelete(e, blog.id)}
+                        >
+                          Hapus
+                        </button>
                       </div>
-
                     </div>
                   </div>
                 </div>

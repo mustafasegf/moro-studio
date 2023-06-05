@@ -16,9 +16,9 @@ export const BlastMarketingScalarFieldEnumSchema = z.enum(['id','subjek','isi','
 
 export const BookingScalarFieldEnumSchema = z.enum(['id','userId','backgroundWarna','peliharaan','harga','jadwal','durasi','jumlahOrang','katalogId','kuponId','status','createdAt','updatedAt','deleted']);
 
-export const ChatRoomScalarFieldEnumSchema = z.enum(['Id','adminId','userId','createdAt','updatedAt']);
+export const ChatRoomScalarFieldEnumSchema = z.enum(['id','staffId','userId','createdAt','updatedAt']);
 
-export const ChatScalarFieldEnumSchema = z.enum(['id','chatRoomId','chat','adminSend','createdAt','updatedAt']);
+export const ChatScalarFieldEnumSchema = z.enum(['id','chatRoomId','chat','staffSend','createdAt','updatedAt']);
 
 export const CommentBlogScalarFieldEnumSchema = z.enum(['id','kontenBlogId','userId','isi','createdAt','updatedAt']);
 
@@ -32,7 +32,7 @@ export const FeedbackQuestionScalarFieldEnumSchema = z.enum(['id','pertanyaan','
 
 export const FeedbackScalarFieldEnumSchema = z.enum(['id','userId','isiFeedback','namaPenulis','createdAt','updatedAt']);
 
-export const FotoUserScalarFieldEnumSchema = z.enum(['id','userId','createdAt','updatedAt']);
+export const FotoUserScalarFieldEnumSchema = z.enum(['id','bookingId','userId','createdAt','updatedAt']);
 
 export const GambarBlogScalarFieldEnumSchema = z.enum(['id','createdAt','updatedAt']);
 
@@ -178,6 +178,7 @@ export type Pembayaran = z.infer<typeof PembayaranSchema>
 
 export const FotoUserSchema = z.object({
   id: z.string().cuid(),
+  bookingId: z.string(),
   userId: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -261,8 +262,8 @@ export type Home = z.infer<typeof HomeSchema>
 /////////////////////////////////////////
 
 export const ChatRoomSchema = z.object({
-  Id: z.string().cuid(),
-  adminId: z.string(),
+  id: z.string().cuid(),
+  staffId: z.string().nullable(),
   userId: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -278,7 +279,7 @@ export const ChatSchema = z.object({
   id: z.string().cuid(),
   chatRoomId: z.string(),
   chat: z.string(),
-  adminSend: z.boolean(),
+  staffSend: z.boolean(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -358,7 +359,7 @@ export type ContohImage = z.infer<typeof ContohImageSchema>
 export const UserIncludeSchema: z.ZodType<Prisma.UserInclude> = z.object({
   booking: z.union([z.boolean(),z.lazy(() => BookingFindManyArgsSchema)]).optional(),
   blastMarketing: z.union([z.boolean(),z.lazy(() => BlastMarketingFindManyArgsSchema)]).optional(),
-  chatRoomAdmin: z.union([z.boolean(),z.lazy(() => ChatRoomFindManyArgsSchema)]).optional(),
+  chatRoomStaff: z.union([z.boolean(),z.lazy(() => ChatRoomFindManyArgsSchema)]).optional(),
   chatRoomUser: z.union([z.boolean(),z.lazy(() => ChatRoomFindManyArgsSchema)]).optional(),
   ContohImage: z.union([z.boolean(),z.lazy(() => ContohImageFindManyArgsSchema)]).optional(),
   Feedback: z.union([z.boolean(),z.lazy(() => FeedbackFindManyArgsSchema)]).optional(),
@@ -383,7 +384,7 @@ export const UserCountOutputTypeArgsSchema: z.ZodType<Prisma.UserCountOutputType
 export const UserCountOutputTypeSelectSchema: z.ZodType<Prisma.UserCountOutputTypeSelect> = z.object({
   booking: z.boolean().optional(),
   blastMarketing: z.boolean().optional(),
-  chatRoomAdmin: z.boolean().optional(),
+  chatRoomStaff: z.boolean().optional(),
   chatRoomUser: z.boolean().optional(),
   ContohImage: z.boolean().optional(),
   Feedback: z.boolean().optional(),
@@ -404,7 +405,7 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
   role: z.boolean().optional(),
   booking: z.union([z.boolean(),z.lazy(() => BookingFindManyArgsSchema)]).optional(),
   blastMarketing: z.union([z.boolean(),z.lazy(() => BlastMarketingFindManyArgsSchema)]).optional(),
-  chatRoomAdmin: z.union([z.boolean(),z.lazy(() => ChatRoomFindManyArgsSchema)]).optional(),
+  chatRoomStaff: z.union([z.boolean(),z.lazy(() => ChatRoomFindManyArgsSchema)]).optional(),
   chatRoomUser: z.union([z.boolean(),z.lazy(() => ChatRoomFindManyArgsSchema)]).optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
@@ -530,6 +531,7 @@ export const BookingIncludeSchema: z.ZodType<Prisma.BookingInclude> = z.object({
   katalog: z.union([z.boolean(),z.lazy(() => KatalogArgsSchema)]).optional(),
   kupon: z.union([z.boolean(),z.lazy(() => KuponArgsSchema)]).optional(),
   Pembayaran: z.union([z.boolean(),z.lazy(() => PembayaranFindManyArgsSchema)]).optional(),
+  fotoUser: z.union([z.boolean(),z.lazy(() => FotoUserFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => BookingCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -544,6 +546,7 @@ export const BookingCountOutputTypeArgsSchema: z.ZodType<Prisma.BookingCountOutp
 
 export const BookingCountOutputTypeSelectSchema: z.ZodType<Prisma.BookingCountOutputTypeSelect> = z.object({
   Pembayaran: z.boolean().optional(),
+  fotoUser: z.boolean().optional(),
 }).strict();
 
 export const BookingSelectSchema: z.ZodType<Prisma.BookingSelect> = z.object({
@@ -563,6 +566,7 @@ export const BookingSelectSchema: z.ZodType<Prisma.BookingSelect> = z.object({
   kupon: z.union([z.boolean(),z.lazy(() => KuponArgsSchema)]).optional(),
   status: z.boolean().optional(),
   Pembayaran: z.union([z.boolean(),z.lazy(() => PembayaranFindManyArgsSchema)]).optional(),
+  fotoUser: z.union([z.boolean(),z.lazy(() => FotoUserFindManyArgsSchema)]).optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   deleted: z.boolean().optional(),
@@ -595,6 +599,7 @@ export const PembayaranSelectSchema: z.ZodType<Prisma.PembayaranSelect> = z.obje
 //------------------------------------------------------
 
 export const FotoUserIncludeSchema: z.ZodType<Prisma.FotoUserInclude> = z.object({
+  booking: z.union([z.boolean(),z.lazy(() => BookingArgsSchema)]).optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
 
@@ -605,6 +610,8 @@ export const FotoUserArgsSchema: z.ZodType<Prisma.FotoUserArgs> = z.object({
 
 export const FotoUserSelectSchema: z.ZodType<Prisma.FotoUserSelect> = z.object({
   id: z.boolean().optional(),
+  bookingId: z.boolean().optional(),
+  booking: z.union([z.boolean(),z.lazy(() => BookingArgsSchema)]).optional(),
   userId: z.boolean().optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   createdAt: z.boolean().optional(),
@@ -756,9 +763,9 @@ export const HomeSelectSchema: z.ZodType<Prisma.HomeSelect> = z.object({
 //------------------------------------------------------
 
 export const ChatRoomIncludeSchema: z.ZodType<Prisma.ChatRoomInclude> = z.object({
-  admin: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-  User: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-  Chat: z.union([z.boolean(),z.lazy(() => ChatFindManyArgsSchema)]).optional(),
+  staff: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+  chat: z.union([z.boolean(),z.lazy(() => ChatFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => ChatRoomCountOutputTypeArgsSchema)]).optional(),
 }).strict()
 
@@ -772,16 +779,16 @@ export const ChatRoomCountOutputTypeArgsSchema: z.ZodType<Prisma.ChatRoomCountOu
 }).strict();
 
 export const ChatRoomCountOutputTypeSelectSchema: z.ZodType<Prisma.ChatRoomCountOutputTypeSelect> = z.object({
-  Chat: z.boolean().optional(),
+  chat: z.boolean().optional(),
 }).strict();
 
 export const ChatRoomSelectSchema: z.ZodType<Prisma.ChatRoomSelect> = z.object({
-  Id: z.boolean().optional(),
-  adminId: z.boolean().optional(),
-  admin: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+  id: z.boolean().optional(),
+  staffId: z.boolean().optional(),
+  staff: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   userId: z.boolean().optional(),
-  User: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
-  Chat: z.union([z.boolean(),z.lazy(() => ChatFindManyArgsSchema)]).optional(),
+  user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
+  chat: z.union([z.boolean(),z.lazy(() => ChatFindManyArgsSchema)]).optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   _count: z.union([z.boolean(),z.lazy(() => ChatRoomCountOutputTypeArgsSchema)]).optional(),
@@ -804,7 +811,7 @@ export const ChatSelectSchema: z.ZodType<Prisma.ChatSelect> = z.object({
   chatRoomId: z.boolean().optional(),
   chatRoom: z.union([z.boolean(),z.lazy(() => ChatRoomArgsSchema)]).optional(),
   chat: z.boolean().optional(),
-  adminSend: z.boolean().optional(),
+  staffSend: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
 }).strict()
@@ -938,7 +945,7 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z.object({
   role: z.union([ z.lazy(() => EnumRoleFilterSchema),z.lazy(() => RoleSchema) ]).optional(),
   booking: z.lazy(() => BookingListRelationFilterSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingListRelationFilterSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomListRelationFilterSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomListRelationFilterSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomListRelationFilterSchema).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -962,7 +969,7 @@ export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWit
   role: z.lazy(() => SortOrderSchema).optional(),
   booking: z.lazy(() => BookingOrderByRelationAggregateInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingOrderByRelationAggregateInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomOrderByRelationAggregateInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomOrderByRelationAggregateInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomOrderByRelationAggregateInputSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -1209,6 +1216,7 @@ export const BookingWhereInputSchema: z.ZodType<Prisma.BookingWhereInput> = z.ob
   kupon: z.union([ z.lazy(() => KuponRelationFilterSchema),z.lazy(() => KuponWhereInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => EnumBookinStatusFilterSchema),z.lazy(() => BookinStatusSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranListRelationFilterSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserListRelationFilterSchema).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   deleted: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
@@ -1231,6 +1239,7 @@ export const BookingOrderByWithRelationInputSchema: z.ZodType<Prisma.BookingOrde
   kupon: z.lazy(() => KuponOrderByWithRelationInputSchema).optional(),
   status: z.lazy(() => SortOrderSchema).optional(),
   Pembayaran: z.lazy(() => PembayaranOrderByRelationAggregateInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserOrderByRelationAggregateInputSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   deleted: z.lazy(() => SortOrderSchema).optional()
@@ -1340,6 +1349,8 @@ export const FotoUserWhereInputSchema: z.ZodType<Prisma.FotoUserWhereInput> = z.
   OR: z.lazy(() => FotoUserWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => FotoUserWhereInputSchema),z.lazy(() => FotoUserWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  bookingId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  booking: z.union([ z.lazy(() => BookingRelationFilterSchema),z.lazy(() => BookingWhereInputSchema) ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -1348,6 +1359,8 @@ export const FotoUserWhereInputSchema: z.ZodType<Prisma.FotoUserWhereInput> = z.
 
 export const FotoUserOrderByWithRelationInputSchema: z.ZodType<Prisma.FotoUserOrderByWithRelationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
+  bookingId: z.lazy(() => SortOrderSchema).optional(),
+  booking: z.lazy(() => BookingOrderByWithRelationInputSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   user: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
@@ -1360,6 +1373,7 @@ export const FotoUserWhereUniqueInputSchema: z.ZodType<Prisma.FotoUserWhereUniqu
 
 export const FotoUserOrderByWithAggregationInputSchema: z.ZodType<Prisma.FotoUserOrderByWithAggregationInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
+  bookingId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -1373,6 +1387,7 @@ export const FotoUserScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Foto
   OR: z.lazy(() => FotoUserScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => FotoUserScalarWhereWithAggregatesInputSchema),z.lazy(() => FotoUserScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  bookingId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
@@ -1632,34 +1647,34 @@ export const ChatRoomWhereInputSchema: z.ZodType<Prisma.ChatRoomWhereInput> = z.
   AND: z.union([ z.lazy(() => ChatRoomWhereInputSchema),z.lazy(() => ChatRoomWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => ChatRoomWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => ChatRoomWhereInputSchema),z.lazy(() => ChatRoomWhereInputSchema).array() ]).optional(),
-  Id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  adminId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  admin: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  staffId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  staff: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
   userId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
-  User: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
-  Chat: z.lazy(() => ChatListRelationFilterSchema).optional(),
+  user: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
+  chat: z.lazy(() => ChatListRelationFilterSchema).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
 export const ChatRoomOrderByWithRelationInputSchema: z.ZodType<Prisma.ChatRoomOrderByWithRelationInput> = z.object({
-  Id: z.lazy(() => SortOrderSchema).optional(),
-  adminId: z.lazy(() => SortOrderSchema).optional(),
-  admin: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
+  id: z.lazy(() => SortOrderSchema).optional(),
+  staffId: z.lazy(() => SortOrderSchema).optional(),
+  staff: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
-  User: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
-  Chat: z.lazy(() => ChatOrderByRelationAggregateInputSchema).optional(),
+  user: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
+  chat: z.lazy(() => ChatOrderByRelationAggregateInputSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const ChatRoomWhereUniqueInputSchema: z.ZodType<Prisma.ChatRoomWhereUniqueInput> = z.object({
-  Id: z.string().cuid().optional()
+  id: z.string().cuid().optional()
 }).strict();
 
 export const ChatRoomOrderByWithAggregationInputSchema: z.ZodType<Prisma.ChatRoomOrderByWithAggregationInput> = z.object({
-  Id: z.lazy(() => SortOrderSchema).optional(),
-  adminId: z.lazy(() => SortOrderSchema).optional(),
+  id: z.lazy(() => SortOrderSchema).optional(),
+  staffId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
@@ -1672,8 +1687,8 @@ export const ChatRoomScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Chat
   AND: z.union([ z.lazy(() => ChatRoomScalarWhereWithAggregatesInputSchema),z.lazy(() => ChatRoomScalarWhereWithAggregatesInputSchema).array() ]).optional(),
   OR: z.lazy(() => ChatRoomScalarWhereWithAggregatesInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => ChatRoomScalarWhereWithAggregatesInputSchema),z.lazy(() => ChatRoomScalarWhereWithAggregatesInputSchema).array() ]).optional(),
-  Id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  adminId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
+  staffId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   userId: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
@@ -1687,7 +1702,7 @@ export const ChatWhereInputSchema: z.ZodType<Prisma.ChatWhereInput> = z.object({
   chatRoomId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   chatRoom: z.union([ z.lazy(() => ChatRoomRelationFilterSchema),z.lazy(() => ChatRoomWhereInputSchema) ]).optional(),
   chat: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  adminSend: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
+  staffSend: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
@@ -1697,7 +1712,7 @@ export const ChatOrderByWithRelationInputSchema: z.ZodType<Prisma.ChatOrderByWit
   chatRoomId: z.lazy(() => SortOrderSchema).optional(),
   chatRoom: z.lazy(() => ChatRoomOrderByWithRelationInputSchema).optional(),
   chat: z.lazy(() => SortOrderSchema).optional(),
-  adminSend: z.lazy(() => SortOrderSchema).optional(),
+  staffSend: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -1710,7 +1725,7 @@ export const ChatOrderByWithAggregationInputSchema: z.ZodType<Prisma.ChatOrderBy
   id: z.lazy(() => SortOrderSchema).optional(),
   chatRoomId: z.lazy(() => SortOrderSchema).optional(),
   chat: z.lazy(() => SortOrderSchema).optional(),
-  adminSend: z.lazy(() => SortOrderSchema).optional(),
+  staffSend: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => ChatCountOrderByAggregateInputSchema).optional(),
@@ -1725,7 +1740,7 @@ export const ChatScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.ChatScal
   id: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   chatRoomId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   chat: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
-  adminSend: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
+  staffSend: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
@@ -1948,7 +1963,7 @@ export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z.object
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -1972,7 +1987,7 @@ export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreat
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -1996,7 +2011,7 @@ export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z.object
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2020,7 +2035,7 @@ export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdat
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2320,6 +2335,7 @@ export const BookingCreateInputSchema: z.ZodType<Prisma.BookingCreateInput> = z.
   kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -2338,6 +2354,7 @@ export const BookingUncheckedCreateInputSchema: z.ZodType<Prisma.BookingUnchecke
   kuponId: z.string().optional().nullable(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -2356,6 +2373,7 @@ export const BookingUpdateInputSchema: z.ZodType<Prisma.BookingUpdateInput> = z.
   kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2374,6 +2392,7 @@ export const BookingUncheckedUpdateInputSchema: z.ZodType<Prisma.BookingUnchecke
   kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2490,6 +2509,7 @@ export const PembayaranUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Pembayar
 
 export const FotoUserCreateInputSchema: z.ZodType<Prisma.FotoUserCreateInput> = z.object({
   id: z.string().cuid().optional(),
+  booking: z.lazy(() => BookingCreateNestedOneWithoutFotoUserInputSchema),
   user: z.lazy(() => UserCreateNestedOneWithoutFotoUserInputSchema),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -2497,6 +2517,7 @@ export const FotoUserCreateInputSchema: z.ZodType<Prisma.FotoUserCreateInput> = 
 
 export const FotoUserUncheckedCreateInputSchema: z.ZodType<Prisma.FotoUserUncheckedCreateInput> = z.object({
   id: z.string().cuid().optional(),
+  bookingId: z.string(),
   userId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -2504,6 +2525,7 @@ export const FotoUserUncheckedCreateInputSchema: z.ZodType<Prisma.FotoUserUnchec
 
 export const FotoUserUpdateInputSchema: z.ZodType<Prisma.FotoUserUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  booking: z.lazy(() => BookingUpdateOneRequiredWithoutFotoUserNestedInputSchema).optional(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutFotoUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2511,6 +2533,7 @@ export const FotoUserUpdateInputSchema: z.ZodType<Prisma.FotoUserUpdateInput> = 
 
 export const FotoUserUncheckedUpdateInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  bookingId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2518,6 +2541,7 @@ export const FotoUserUncheckedUpdateInputSchema: z.ZodType<Prisma.FotoUserUnchec
 
 export const FotoUserCreateManyInputSchema: z.ZodType<Prisma.FotoUserCreateManyInput> = z.object({
   id: z.string().cuid().optional(),
+  bookingId: z.string(),
   userId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -2531,6 +2555,7 @@ export const FotoUserUpdateManyMutationInputSchema: z.ZodType<Prisma.FotoUserUpd
 
 export const FotoUserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateManyInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  bookingId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2849,58 +2874,58 @@ export const HomeUncheckedUpdateManyInputSchema: z.ZodType<Prisma.HomeUncheckedU
 }).strict();
 
 export const ChatRoomCreateInputSchema: z.ZodType<Prisma.ChatRoomCreateInput> = z.object({
-  Id: z.string().cuid().optional(),
-  admin: z.lazy(() => UserCreateNestedOneWithoutChatRoomAdminInputSchema),
-  User: z.lazy(() => UserCreateNestedOneWithoutChatRoomUserInputSchema).optional(),
-  Chat: z.lazy(() => ChatCreateNestedManyWithoutChatRoomInputSchema).optional(),
+  id: z.string().cuid().optional(),
+  staff: z.lazy(() => UserCreateNestedOneWithoutChatRoomStaffInputSchema).optional(),
+  user: z.lazy(() => UserCreateNestedOneWithoutChatRoomUserInputSchema).optional(),
+  chat: z.lazy(() => ChatCreateNestedManyWithoutChatRoomInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ChatRoomUncheckedCreateInputSchema: z.ZodType<Prisma.ChatRoomUncheckedCreateInput> = z.object({
-  Id: z.string().cuid().optional(),
-  adminId: z.string(),
+  id: z.string().cuid().optional(),
+  staffId: z.string().optional().nullable(),
   userId: z.string().optional().nullable(),
-  Chat: z.lazy(() => ChatUncheckedCreateNestedManyWithoutChatRoomInputSchema).optional(),
+  chat: z.lazy(() => ChatUncheckedCreateNestedManyWithoutChatRoomInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ChatRoomUpdateInputSchema: z.ZodType<Prisma.ChatRoomUpdateInput> = z.object({
-  Id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  admin: z.lazy(() => UserUpdateOneRequiredWithoutChatRoomAdminNestedInputSchema).optional(),
-  User: z.lazy(() => UserUpdateOneWithoutChatRoomUserNestedInputSchema).optional(),
-  Chat: z.lazy(() => ChatUpdateManyWithoutChatRoomNestedInputSchema).optional(),
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  staff: z.lazy(() => UserUpdateOneWithoutChatRoomStaffNestedInputSchema).optional(),
+  user: z.lazy(() => UserUpdateOneWithoutChatRoomUserNestedInputSchema).optional(),
+  chat: z.lazy(() => ChatUpdateManyWithoutChatRoomNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const ChatRoomUncheckedUpdateInputSchema: z.ZodType<Prisma.ChatRoomUncheckedUpdateInput> = z.object({
-  Id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  staffId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  Chat: z.lazy(() => ChatUncheckedUpdateManyWithoutChatRoomNestedInputSchema).optional(),
+  chat: z.lazy(() => ChatUncheckedUpdateManyWithoutChatRoomNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const ChatRoomCreateManyInputSchema: z.ZodType<Prisma.ChatRoomCreateManyInput> = z.object({
-  Id: z.string().cuid().optional(),
-  adminId: z.string(),
+  id: z.string().cuid().optional(),
+  staffId: z.string().optional().nullable(),
   userId: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ChatRoomUpdateManyMutationInputSchema: z.ZodType<Prisma.ChatRoomUpdateManyMutationInput> = z.object({
-  Id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const ChatRoomUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ChatRoomUncheckedUpdateManyInput> = z.object({
-  Id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  staffId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2910,7 +2935,7 @@ export const ChatCreateInputSchema: z.ZodType<Prisma.ChatCreateInput> = z.object
   id: z.string().cuid().optional(),
   chatRoom: z.lazy(() => ChatRoomCreateNestedOneWithoutChatInputSchema),
   chat: z.string(),
-  adminSend: z.boolean(),
+  staffSend: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -2919,7 +2944,7 @@ export const ChatUncheckedCreateInputSchema: z.ZodType<Prisma.ChatUncheckedCreat
   id: z.string().cuid().optional(),
   chatRoomId: z.string(),
   chat: z.string(),
-  adminSend: z.boolean(),
+  staffSend: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -2928,7 +2953,7 @@ export const ChatUpdateInputSchema: z.ZodType<Prisma.ChatUpdateInput> = z.object
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chatRoom: z.lazy(() => ChatRoomUpdateOneRequiredWithoutChatNestedInputSchema).optional(),
   chat: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  staffSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -2937,7 +2962,7 @@ export const ChatUncheckedUpdateInputSchema: z.ZodType<Prisma.ChatUncheckedUpdat
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chatRoomId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chat: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  staffSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -2946,7 +2971,7 @@ export const ChatCreateManyInputSchema: z.ZodType<Prisma.ChatCreateManyInput> = 
   id: z.string().cuid().optional(),
   chatRoomId: z.string(),
   chat: z.string(),
-  adminSend: z.boolean(),
+  staffSend: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -2954,7 +2979,7 @@ export const ChatCreateManyInputSchema: z.ZodType<Prisma.ChatCreateManyInput> = 
 export const ChatUpdateManyMutationInputSchema: z.ZodType<Prisma.ChatUpdateManyMutationInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chat: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  staffSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -2963,7 +2988,7 @@ export const ChatUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ChatUncheckedU
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chatRoomId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chat: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  staffSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -3642,8 +3667,8 @@ export const BackgroundFotoMinOrderByAggregateInputSchema: z.ZodType<Prisma.Back
 }).strict();
 
 export const UserRelationFilterSchema: z.ZodType<Prisma.UserRelationFilter> = z.object({
-  is: z.lazy(() => UserWhereInputSchema).optional(),
-  isNot: z.lazy(() => UserWhereInputSchema).optional()
+  is: z.lazy(() => UserWhereInputSchema).optional().nullable(),
+  isNot: z.lazy(() => UserWhereInputSchema).optional().nullable()
 }).strict();
 
 export const BackgroundFotoRelationFilterSchema: z.ZodType<Prisma.BackgroundFotoRelationFilter> = z.object({
@@ -3793,6 +3818,7 @@ export const PembayaranSumOrderByAggregateInputSchema: z.ZodType<Prisma.Pembayar
 
 export const FotoUserCountOrderByAggregateInputSchema: z.ZodType<Prisma.FotoUserCountOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
+  bookingId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -3800,6 +3826,7 @@ export const FotoUserCountOrderByAggregateInputSchema: z.ZodType<Prisma.FotoUser
 
 export const FotoUserMaxOrderByAggregateInputSchema: z.ZodType<Prisma.FotoUserMaxOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
+  bookingId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -3807,6 +3834,7 @@ export const FotoUserMaxOrderByAggregateInputSchema: z.ZodType<Prisma.FotoUserMa
 
 export const FotoUserMinOrderByAggregateInputSchema: z.ZodType<Prisma.FotoUserMinOrderByAggregateInput> = z.object({
   id: z.lazy(() => SortOrderSchema).optional(),
+  bookingId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -3972,24 +4000,24 @@ export const ChatOrderByRelationAggregateInputSchema: z.ZodType<Prisma.ChatOrder
 }).strict();
 
 export const ChatRoomCountOrderByAggregateInputSchema: z.ZodType<Prisma.ChatRoomCountOrderByAggregateInput> = z.object({
-  Id: z.lazy(() => SortOrderSchema).optional(),
-  adminId: z.lazy(() => SortOrderSchema).optional(),
+  id: z.lazy(() => SortOrderSchema).optional(),
+  staffId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const ChatRoomMaxOrderByAggregateInputSchema: z.ZodType<Prisma.ChatRoomMaxOrderByAggregateInput> = z.object({
-  Id: z.lazy(() => SortOrderSchema).optional(),
-  adminId: z.lazy(() => SortOrderSchema).optional(),
+  id: z.lazy(() => SortOrderSchema).optional(),
+  staffId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const ChatRoomMinOrderByAggregateInputSchema: z.ZodType<Prisma.ChatRoomMinOrderByAggregateInput> = z.object({
-  Id: z.lazy(() => SortOrderSchema).optional(),
-  adminId: z.lazy(() => SortOrderSchema).optional(),
+  id: z.lazy(() => SortOrderSchema).optional(),
+  staffId: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
@@ -4004,7 +4032,7 @@ export const ChatCountOrderByAggregateInputSchema: z.ZodType<Prisma.ChatCountOrd
   id: z.lazy(() => SortOrderSchema).optional(),
   chatRoomId: z.lazy(() => SortOrderSchema).optional(),
   chat: z.lazy(() => SortOrderSchema).optional(),
-  adminSend: z.lazy(() => SortOrderSchema).optional(),
+  staffSend: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -4013,7 +4041,7 @@ export const ChatMaxOrderByAggregateInputSchema: z.ZodType<Prisma.ChatMaxOrderBy
   id: z.lazy(() => SortOrderSchema).optional(),
   chatRoomId: z.lazy(() => SortOrderSchema).optional(),
   chat: z.lazy(() => SortOrderSchema).optional(),
-  adminSend: z.lazy(() => SortOrderSchema).optional(),
+  staffSend: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -4022,7 +4050,7 @@ export const ChatMinOrderByAggregateInputSchema: z.ZodType<Prisma.ChatMinOrderBy
   id: z.lazy(() => SortOrderSchema).optional(),
   chatRoomId: z.lazy(() => SortOrderSchema).optional(),
   chat: z.lazy(() => SortOrderSchema).optional(),
-  adminSend: z.lazy(() => SortOrderSchema).optional(),
+  staffSend: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
@@ -4159,10 +4187,10 @@ export const BlastMarketingCreateNestedManyWithoutPenerimaInputSchema: z.ZodType
   connect: z.union([ z.lazy(() => BlastMarketingWhereUniqueInputSchema),z.lazy(() => BlastMarketingWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
-export const ChatRoomCreateNestedManyWithoutAdminInputSchema: z.ZodType<Prisma.ChatRoomCreateNestedManyWithoutAdminInput> = z.object({
-  create: z.union([ z.lazy(() => ChatRoomCreateWithoutAdminInputSchema),z.lazy(() => ChatRoomCreateWithoutAdminInputSchema).array(),z.lazy(() => ChatRoomUncheckedCreateWithoutAdminInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutAdminInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => ChatRoomCreateOrConnectWithoutAdminInputSchema),z.lazy(() => ChatRoomCreateOrConnectWithoutAdminInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => ChatRoomCreateManyAdminInputEnvelopeSchema).optional(),
+export const ChatRoomCreateNestedManyWithoutStaffInputSchema: z.ZodType<Prisma.ChatRoomCreateNestedManyWithoutStaffInput> = z.object({
+  create: z.union([ z.lazy(() => ChatRoomCreateWithoutStaffInputSchema),z.lazy(() => ChatRoomCreateWithoutStaffInputSchema).array(),z.lazy(() => ChatRoomUncheckedCreateWithoutStaffInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutStaffInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChatRoomCreateOrConnectWithoutStaffInputSchema),z.lazy(() => ChatRoomCreateOrConnectWithoutStaffInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChatRoomCreateManyStaffInputEnvelopeSchema).optional(),
   connect: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
@@ -4238,10 +4266,10 @@ export const BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema: 
   connect: z.union([ z.lazy(() => BlastMarketingWhereUniqueInputSchema),z.lazy(() => BlastMarketingWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
-export const ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema: z.ZodType<Prisma.ChatRoomUncheckedCreateNestedManyWithoutAdminInput> = z.object({
-  create: z.union([ z.lazy(() => ChatRoomCreateWithoutAdminInputSchema),z.lazy(() => ChatRoomCreateWithoutAdminInputSchema).array(),z.lazy(() => ChatRoomUncheckedCreateWithoutAdminInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutAdminInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => ChatRoomCreateOrConnectWithoutAdminInputSchema),z.lazy(() => ChatRoomCreateOrConnectWithoutAdminInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => ChatRoomCreateManyAdminInputEnvelopeSchema).optional(),
+export const ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema: z.ZodType<Prisma.ChatRoomUncheckedCreateNestedManyWithoutStaffInput> = z.object({
+  create: z.union([ z.lazy(() => ChatRoomCreateWithoutStaffInputSchema),z.lazy(() => ChatRoomCreateWithoutStaffInputSchema).array(),z.lazy(() => ChatRoomUncheckedCreateWithoutStaffInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutStaffInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChatRoomCreateOrConnectWithoutStaffInputSchema),z.lazy(() => ChatRoomCreateOrConnectWithoutStaffInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChatRoomCreateManyStaffInputEnvelopeSchema).optional(),
   connect: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
@@ -4343,17 +4371,17 @@ export const BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema: z.ZodType
   deleteMany: z.union([ z.lazy(() => BlastMarketingScalarWhereInputSchema),z.lazy(() => BlastMarketingScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
-export const ChatRoomUpdateManyWithoutAdminNestedInputSchema: z.ZodType<Prisma.ChatRoomUpdateManyWithoutAdminNestedInput> = z.object({
-  create: z.union([ z.lazy(() => ChatRoomCreateWithoutAdminInputSchema),z.lazy(() => ChatRoomCreateWithoutAdminInputSchema).array(),z.lazy(() => ChatRoomUncheckedCreateWithoutAdminInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutAdminInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => ChatRoomCreateOrConnectWithoutAdminInputSchema),z.lazy(() => ChatRoomCreateOrConnectWithoutAdminInputSchema).array() ]).optional(),
-  upsert: z.union([ z.lazy(() => ChatRoomUpsertWithWhereUniqueWithoutAdminInputSchema),z.lazy(() => ChatRoomUpsertWithWhereUniqueWithoutAdminInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => ChatRoomCreateManyAdminInputEnvelopeSchema).optional(),
+export const ChatRoomUpdateManyWithoutStaffNestedInputSchema: z.ZodType<Prisma.ChatRoomUpdateManyWithoutStaffNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChatRoomCreateWithoutStaffInputSchema),z.lazy(() => ChatRoomCreateWithoutStaffInputSchema).array(),z.lazy(() => ChatRoomUncheckedCreateWithoutStaffInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutStaffInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChatRoomCreateOrConnectWithoutStaffInputSchema),z.lazy(() => ChatRoomCreateOrConnectWithoutStaffInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ChatRoomUpsertWithWhereUniqueWithoutStaffInputSchema),z.lazy(() => ChatRoomUpsertWithWhereUniqueWithoutStaffInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChatRoomCreateManyStaffInputEnvelopeSchema).optional(),
   set: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
   disconnect: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
   delete: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
   connect: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
-  update: z.union([ z.lazy(() => ChatRoomUpdateWithWhereUniqueWithoutAdminInputSchema),z.lazy(() => ChatRoomUpdateWithWhereUniqueWithoutAdminInputSchema).array() ]).optional(),
-  updateMany: z.union([ z.lazy(() => ChatRoomUpdateManyWithWhereWithoutAdminInputSchema),z.lazy(() => ChatRoomUpdateManyWithWhereWithoutAdminInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ChatRoomUpdateWithWhereUniqueWithoutStaffInputSchema),z.lazy(() => ChatRoomUpdateWithWhereUniqueWithoutStaffInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ChatRoomUpdateManyWithWhereWithoutStaffInputSchema),z.lazy(() => ChatRoomUpdateManyWithWhereWithoutStaffInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => ChatRoomScalarWhereInputSchema),z.lazy(() => ChatRoomScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
@@ -4514,17 +4542,17 @@ export const BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema: 
   deleteMany: z.union([ z.lazy(() => BlastMarketingScalarWhereInputSchema),z.lazy(() => BlastMarketingScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
-export const ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema: z.ZodType<Prisma.ChatRoomUncheckedUpdateManyWithoutAdminNestedInput> = z.object({
-  create: z.union([ z.lazy(() => ChatRoomCreateWithoutAdminInputSchema),z.lazy(() => ChatRoomCreateWithoutAdminInputSchema).array(),z.lazy(() => ChatRoomUncheckedCreateWithoutAdminInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutAdminInputSchema).array() ]).optional(),
-  connectOrCreate: z.union([ z.lazy(() => ChatRoomCreateOrConnectWithoutAdminInputSchema),z.lazy(() => ChatRoomCreateOrConnectWithoutAdminInputSchema).array() ]).optional(),
-  upsert: z.union([ z.lazy(() => ChatRoomUpsertWithWhereUniqueWithoutAdminInputSchema),z.lazy(() => ChatRoomUpsertWithWhereUniqueWithoutAdminInputSchema).array() ]).optional(),
-  createMany: z.lazy(() => ChatRoomCreateManyAdminInputEnvelopeSchema).optional(),
+export const ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema: z.ZodType<Prisma.ChatRoomUncheckedUpdateManyWithoutStaffNestedInput> = z.object({
+  create: z.union([ z.lazy(() => ChatRoomCreateWithoutStaffInputSchema),z.lazy(() => ChatRoomCreateWithoutStaffInputSchema).array(),z.lazy(() => ChatRoomUncheckedCreateWithoutStaffInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutStaffInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => ChatRoomCreateOrConnectWithoutStaffInputSchema),z.lazy(() => ChatRoomCreateOrConnectWithoutStaffInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => ChatRoomUpsertWithWhereUniqueWithoutStaffInputSchema),z.lazy(() => ChatRoomUpsertWithWhereUniqueWithoutStaffInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => ChatRoomCreateManyStaffInputEnvelopeSchema).optional(),
   set: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
   disconnect: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
   delete: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
   connect: z.union([ z.lazy(() => ChatRoomWhereUniqueInputSchema),z.lazy(() => ChatRoomWhereUniqueInputSchema).array() ]).optional(),
-  update: z.union([ z.lazy(() => ChatRoomUpdateWithWhereUniqueWithoutAdminInputSchema),z.lazy(() => ChatRoomUpdateWithWhereUniqueWithoutAdminInputSchema).array() ]).optional(),
-  updateMany: z.union([ z.lazy(() => ChatRoomUpdateManyWithWhereWithoutAdminInputSchema),z.lazy(() => ChatRoomUpdateManyWithWhereWithoutAdminInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => ChatRoomUpdateWithWhereUniqueWithoutStaffInputSchema),z.lazy(() => ChatRoomUpdateWithWhereUniqueWithoutStaffInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => ChatRoomUpdateManyWithWhereWithoutStaffInputSchema),z.lazy(() => ChatRoomUpdateManyWithWhereWithoutStaffInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => ChatRoomScalarWhereInputSchema),z.lazy(() => ChatRoomScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
@@ -4831,11 +4859,25 @@ export const PembayaranCreateNestedManyWithoutBookingInputSchema: z.ZodType<Pris
   connect: z.union([ z.lazy(() => PembayaranWhereUniqueInputSchema),z.lazy(() => PembayaranWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
+export const FotoUserCreateNestedManyWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserCreateNestedManyWithoutBookingInput> = z.object({
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserCreateWithoutBookingInputSchema).array(),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema),z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => FotoUserCreateManyBookingInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
 export const PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema: z.ZodType<Prisma.PembayaranUncheckedCreateNestedManyWithoutBookingInput> = z.object({
   create: z.union([ z.lazy(() => PembayaranCreateWithoutBookingInputSchema),z.lazy(() => PembayaranCreateWithoutBookingInputSchema).array(),z.lazy(() => PembayaranUncheckedCreateWithoutBookingInputSchema),z.lazy(() => PembayaranUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => PembayaranCreateOrConnectWithoutBookingInputSchema),z.lazy(() => PembayaranCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
   createMany: z.lazy(() => PembayaranCreateManyBookingInputEnvelopeSchema).optional(),
   connect: z.union([ z.lazy(() => PembayaranWhereUniqueInputSchema),z.lazy(() => PembayaranWhereUniqueInputSchema).array() ]).optional(),
+}).strict();
+
+export const FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUncheckedCreateNestedManyWithoutBookingInput> = z.object({
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserCreateWithoutBookingInputSchema).array(),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema),z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => FotoUserCreateManyBookingInputEnvelopeSchema).optional(),
+  connect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
 export const UserUpdateOneRequiredWithoutBookingNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutBookingNestedInput> = z.object({
@@ -4890,6 +4932,20 @@ export const PembayaranUpdateManyWithoutBookingNestedInputSchema: z.ZodType<Pris
   deleteMany: z.union([ z.lazy(() => PembayaranScalarWhereInputSchema),z.lazy(() => PembayaranScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
+export const FotoUserUpdateManyWithoutBookingNestedInputSchema: z.ZodType<Prisma.FotoUserUpdateManyWithoutBookingNestedInput> = z.object({
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserCreateWithoutBookingInputSchema).array(),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema),z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => FotoUserUpsertWithWhereUniqueWithoutBookingInputSchema),z.lazy(() => FotoUserUpsertWithWhereUniqueWithoutBookingInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => FotoUserCreateManyBookingInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => FotoUserUpdateWithWhereUniqueWithoutBookingInputSchema),z.lazy(() => FotoUserUpdateWithWhereUniqueWithoutBookingInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => FotoUserUpdateManyWithWhereWithoutBookingInputSchema),z.lazy(() => FotoUserUpdateManyWithWhereWithoutBookingInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => FotoUserScalarWhereInputSchema),z.lazy(() => FotoUserScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
 export const PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema: z.ZodType<Prisma.PembayaranUncheckedUpdateManyWithoutBookingNestedInput> = z.object({
   create: z.union([ z.lazy(() => PembayaranCreateWithoutBookingInputSchema),z.lazy(() => PembayaranCreateWithoutBookingInputSchema).array(),z.lazy(() => PembayaranUncheckedCreateWithoutBookingInputSchema),z.lazy(() => PembayaranUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
   connectOrCreate: z.union([ z.lazy(() => PembayaranCreateOrConnectWithoutBookingInputSchema),z.lazy(() => PembayaranCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
@@ -4902,6 +4958,20 @@ export const PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema: z.Zod
   update: z.union([ z.lazy(() => PembayaranUpdateWithWhereUniqueWithoutBookingInputSchema),z.lazy(() => PembayaranUpdateWithWhereUniqueWithoutBookingInputSchema).array() ]).optional(),
   updateMany: z.union([ z.lazy(() => PembayaranUpdateManyWithWhereWithoutBookingInputSchema),z.lazy(() => PembayaranUpdateManyWithWhereWithoutBookingInputSchema).array() ]).optional(),
   deleteMany: z.union([ z.lazy(() => PembayaranScalarWhereInputSchema),z.lazy(() => PembayaranScalarWhereInputSchema).array() ]).optional(),
+}).strict();
+
+export const FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateManyWithoutBookingNestedInput> = z.object({
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserCreateWithoutBookingInputSchema).array(),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema).array() ]).optional(),
+  connectOrCreate: z.union([ z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema),z.lazy(() => FotoUserCreateOrConnectWithoutBookingInputSchema).array() ]).optional(),
+  upsert: z.union([ z.lazy(() => FotoUserUpsertWithWhereUniqueWithoutBookingInputSchema),z.lazy(() => FotoUserUpsertWithWhereUniqueWithoutBookingInputSchema).array() ]).optional(),
+  createMany: z.lazy(() => FotoUserCreateManyBookingInputEnvelopeSchema).optional(),
+  set: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  disconnect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  delete: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  connect: z.union([ z.lazy(() => FotoUserWhereUniqueInputSchema),z.lazy(() => FotoUserWhereUniqueInputSchema).array() ]).optional(),
+  update: z.union([ z.lazy(() => FotoUserUpdateWithWhereUniqueWithoutBookingInputSchema),z.lazy(() => FotoUserUpdateWithWhereUniqueWithoutBookingInputSchema).array() ]).optional(),
+  updateMany: z.union([ z.lazy(() => FotoUserUpdateManyWithWhereWithoutBookingInputSchema),z.lazy(() => FotoUserUpdateManyWithWhereWithoutBookingInputSchema).array() ]).optional(),
+  deleteMany: z.union([ z.lazy(() => FotoUserScalarWhereInputSchema),z.lazy(() => FotoUserScalarWhereInputSchema).array() ]).optional(),
 }).strict();
 
 export const BookingCreateNestedOneWithoutPembayaranInputSchema: z.ZodType<Prisma.BookingCreateNestedOneWithoutPembayaranInput> = z.object({
@@ -4918,10 +4988,24 @@ export const BookingUpdateOneRequiredWithoutPembayaranNestedInputSchema: z.ZodTy
   update: z.union([ z.lazy(() => BookingUpdateWithoutPembayaranInputSchema),z.lazy(() => BookingUncheckedUpdateWithoutPembayaranInputSchema) ]).optional(),
 }).strict();
 
+export const BookingCreateNestedOneWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingCreateNestedOneWithoutFotoUserInput> = z.object({
+  create: z.union([ z.lazy(() => BookingCreateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedCreateWithoutFotoUserInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => BookingCreateOrConnectWithoutFotoUserInputSchema).optional(),
+  connect: z.lazy(() => BookingWhereUniqueInputSchema).optional()
+}).strict();
+
 export const UserCreateNestedOneWithoutFotoUserInputSchema: z.ZodType<Prisma.UserCreateNestedOneWithoutFotoUserInput> = z.object({
   create: z.union([ z.lazy(() => UserCreateWithoutFotoUserInputSchema),z.lazy(() => UserUncheckedCreateWithoutFotoUserInputSchema) ]).optional(),
   connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutFotoUserInputSchema).optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional()
+}).strict();
+
+export const BookingUpdateOneRequiredWithoutFotoUserNestedInputSchema: z.ZodType<Prisma.BookingUpdateOneRequiredWithoutFotoUserNestedInput> = z.object({
+  create: z.union([ z.lazy(() => BookingCreateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedCreateWithoutFotoUserInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => BookingCreateOrConnectWithoutFotoUserInputSchema).optional(),
+  upsert: z.lazy(() => BookingUpsertWithoutFotoUserInputSchema).optional(),
+  connect: z.lazy(() => BookingWhereUniqueInputSchema).optional(),
+  update: z.union([ z.lazy(() => BookingUpdateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedUpdateWithoutFotoUserInputSchema) ]).optional(),
 }).strict();
 
 export const UserUpdateOneRequiredWithoutFotoUserNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutFotoUserNestedInput> = z.object({
@@ -5247,9 +5331,9 @@ export const HomeUpdatecarouselInputSchema: z.ZodType<Prisma.HomeUpdatecarouselI
   push: z.union([ z.string(),z.string().array() ]).optional(),
 }).strict();
 
-export const UserCreateNestedOneWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserCreateNestedOneWithoutChatRoomAdminInput> = z.object({
-  create: z.union([ z.lazy(() => UserCreateWithoutChatRoomAdminInputSchema),z.lazy(() => UserUncheckedCreateWithoutChatRoomAdminInputSchema) ]).optional(),
-  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutChatRoomAdminInputSchema).optional(),
+export const UserCreateNestedOneWithoutChatRoomStaffInputSchema: z.ZodType<Prisma.UserCreateNestedOneWithoutChatRoomStaffInput> = z.object({
+  create: z.union([ z.lazy(() => UserCreateWithoutChatRoomStaffInputSchema),z.lazy(() => UserUncheckedCreateWithoutChatRoomStaffInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutChatRoomStaffInputSchema).optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional()
 }).strict();
 
@@ -5273,12 +5357,14 @@ export const ChatUncheckedCreateNestedManyWithoutChatRoomInputSchema: z.ZodType<
   connect: z.union([ z.lazy(() => ChatWhereUniqueInputSchema),z.lazy(() => ChatWhereUniqueInputSchema).array() ]).optional(),
 }).strict();
 
-export const UserUpdateOneRequiredWithoutChatRoomAdminNestedInputSchema: z.ZodType<Prisma.UserUpdateOneRequiredWithoutChatRoomAdminNestedInput> = z.object({
-  create: z.union([ z.lazy(() => UserCreateWithoutChatRoomAdminInputSchema),z.lazy(() => UserUncheckedCreateWithoutChatRoomAdminInputSchema) ]).optional(),
-  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutChatRoomAdminInputSchema).optional(),
-  upsert: z.lazy(() => UserUpsertWithoutChatRoomAdminInputSchema).optional(),
+export const UserUpdateOneWithoutChatRoomStaffNestedInputSchema: z.ZodType<Prisma.UserUpdateOneWithoutChatRoomStaffNestedInput> = z.object({
+  create: z.union([ z.lazy(() => UserCreateWithoutChatRoomStaffInputSchema),z.lazy(() => UserUncheckedCreateWithoutChatRoomStaffInputSchema) ]).optional(),
+  connectOrCreate: z.lazy(() => UserCreateOrConnectWithoutChatRoomStaffInputSchema).optional(),
+  upsert: z.lazy(() => UserUpsertWithoutChatRoomStaffInputSchema).optional(),
+  disconnect: z.boolean().optional(),
+  delete: z.boolean().optional(),
   connect: z.lazy(() => UserWhereUniqueInputSchema).optional(),
-  update: z.union([ z.lazy(() => UserUpdateWithoutChatRoomAdminInputSchema),z.lazy(() => UserUncheckedUpdateWithoutChatRoomAdminInputSchema) ]).optional(),
+  update: z.union([ z.lazy(() => UserUpdateWithoutChatRoomStaffInputSchema),z.lazy(() => UserUncheckedUpdateWithoutChatRoomStaffInputSchema) ]).optional(),
 }).strict();
 
 export const UserUpdateOneWithoutChatRoomUserNestedInputSchema: z.ZodType<Prisma.UserUpdateOneWithoutChatRoomUserNestedInput> = z.object({
@@ -5711,6 +5797,7 @@ export const BookingCreateWithoutUserInputSchema: z.ZodType<Prisma.BookingCreate
   kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -5728,6 +5815,7 @@ export const BookingUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.Book
   kuponId: z.string().optional().nullable(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -5764,44 +5852,44 @@ export const BlastMarketingCreateOrConnectWithoutPenerimaInputSchema: z.ZodType<
   create: z.union([ z.lazy(() => BlastMarketingCreateWithoutPenerimaInputSchema),z.lazy(() => BlastMarketingUncheckedCreateWithoutPenerimaInputSchema) ]),
 }).strict();
 
-export const ChatRoomCreateWithoutAdminInputSchema: z.ZodType<Prisma.ChatRoomCreateWithoutAdminInput> = z.object({
-  Id: z.string().optional(),
-  User: z.lazy(() => UserCreateNestedOneWithoutChatRoomUserInputSchema).optional(),
-  Chat: z.lazy(() => ChatCreateNestedManyWithoutChatRoomInputSchema).optional(),
+export const ChatRoomCreateWithoutStaffInputSchema: z.ZodType<Prisma.ChatRoomCreateWithoutStaffInput> = z.object({
+  id: z.string().optional(),
+  user: z.lazy(() => UserCreateNestedOneWithoutChatRoomUserInputSchema).optional(),
+  chat: z.lazy(() => ChatCreateNestedManyWithoutChatRoomInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
-export const ChatRoomUncheckedCreateWithoutAdminInputSchema: z.ZodType<Prisma.ChatRoomUncheckedCreateWithoutAdminInput> = z.object({
-  Id: z.string().optional(),
+export const ChatRoomUncheckedCreateWithoutStaffInputSchema: z.ZodType<Prisma.ChatRoomUncheckedCreateWithoutStaffInput> = z.object({
+  id: z.string().optional(),
   userId: z.string().optional().nullable(),
-  Chat: z.lazy(() => ChatUncheckedCreateNestedManyWithoutChatRoomInputSchema).optional(),
+  chat: z.lazy(() => ChatUncheckedCreateNestedManyWithoutChatRoomInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
-export const ChatRoomCreateOrConnectWithoutAdminInputSchema: z.ZodType<Prisma.ChatRoomCreateOrConnectWithoutAdminInput> = z.object({
+export const ChatRoomCreateOrConnectWithoutStaffInputSchema: z.ZodType<Prisma.ChatRoomCreateOrConnectWithoutStaffInput> = z.object({
   where: z.lazy(() => ChatRoomWhereUniqueInputSchema),
-  create: z.union([ z.lazy(() => ChatRoomCreateWithoutAdminInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutAdminInputSchema) ]),
+  create: z.union([ z.lazy(() => ChatRoomCreateWithoutStaffInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutStaffInputSchema) ]),
 }).strict();
 
-export const ChatRoomCreateManyAdminInputEnvelopeSchema: z.ZodType<Prisma.ChatRoomCreateManyAdminInputEnvelope> = z.object({
-  data: z.lazy(() => ChatRoomCreateManyAdminInputSchema).array(),
+export const ChatRoomCreateManyStaffInputEnvelopeSchema: z.ZodType<Prisma.ChatRoomCreateManyStaffInputEnvelope> = z.object({
+  data: z.lazy(() => ChatRoomCreateManyStaffInputSchema).array(),
   skipDuplicates: z.boolean().optional()
 }).strict();
 
 export const ChatRoomCreateWithoutUserInputSchema: z.ZodType<Prisma.ChatRoomCreateWithoutUserInput> = z.object({
-  Id: z.string().optional(),
-  admin: z.lazy(() => UserCreateNestedOneWithoutChatRoomAdminInputSchema),
-  Chat: z.lazy(() => ChatCreateNestedManyWithoutChatRoomInputSchema).optional(),
+  id: z.string().optional(),
+  staff: z.lazy(() => UserCreateNestedOneWithoutChatRoomStaffInputSchema).optional(),
+  chat: z.lazy(() => ChatCreateNestedManyWithoutChatRoomInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ChatRoomUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.ChatRoomUncheckedCreateWithoutUserInput> = z.object({
-  Id: z.string().optional(),
-  adminId: z.string(),
-  Chat: z.lazy(() => ChatUncheckedCreateNestedManyWithoutChatRoomInputSchema).optional(),
+  id: z.string().optional(),
+  staffId: z.string().optional().nullable(),
+  chat: z.lazy(() => ChatUncheckedCreateNestedManyWithoutChatRoomInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -5864,12 +5952,14 @@ export const FeedbackCreateManyUserInputEnvelopeSchema: z.ZodType<Prisma.Feedbac
 
 export const FotoUserCreateWithoutUserInputSchema: z.ZodType<Prisma.FotoUserCreateWithoutUserInput> = z.object({
   id: z.string().optional(),
+  booking: z.lazy(() => BookingCreateNestedOneWithoutFotoUserInputSchema),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const FotoUserUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.FotoUserUncheckedCreateWithoutUserInput> = z.object({
   id: z.string().optional(),
+  bookingId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -6085,28 +6175,28 @@ export const BlastMarketingScalarWhereInputSchema: z.ZodType<Prisma.BlastMarketi
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
-export const ChatRoomUpsertWithWhereUniqueWithoutAdminInputSchema: z.ZodType<Prisma.ChatRoomUpsertWithWhereUniqueWithoutAdminInput> = z.object({
+export const ChatRoomUpsertWithWhereUniqueWithoutStaffInputSchema: z.ZodType<Prisma.ChatRoomUpsertWithWhereUniqueWithoutStaffInput> = z.object({
   where: z.lazy(() => ChatRoomWhereUniqueInputSchema),
-  update: z.union([ z.lazy(() => ChatRoomUpdateWithoutAdminInputSchema),z.lazy(() => ChatRoomUncheckedUpdateWithoutAdminInputSchema) ]),
-  create: z.union([ z.lazy(() => ChatRoomCreateWithoutAdminInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutAdminInputSchema) ]),
+  update: z.union([ z.lazy(() => ChatRoomUpdateWithoutStaffInputSchema),z.lazy(() => ChatRoomUncheckedUpdateWithoutStaffInputSchema) ]),
+  create: z.union([ z.lazy(() => ChatRoomCreateWithoutStaffInputSchema),z.lazy(() => ChatRoomUncheckedCreateWithoutStaffInputSchema) ]),
 }).strict();
 
-export const ChatRoomUpdateWithWhereUniqueWithoutAdminInputSchema: z.ZodType<Prisma.ChatRoomUpdateWithWhereUniqueWithoutAdminInput> = z.object({
+export const ChatRoomUpdateWithWhereUniqueWithoutStaffInputSchema: z.ZodType<Prisma.ChatRoomUpdateWithWhereUniqueWithoutStaffInput> = z.object({
   where: z.lazy(() => ChatRoomWhereUniqueInputSchema),
-  data: z.union([ z.lazy(() => ChatRoomUpdateWithoutAdminInputSchema),z.lazy(() => ChatRoomUncheckedUpdateWithoutAdminInputSchema) ]),
+  data: z.union([ z.lazy(() => ChatRoomUpdateWithoutStaffInputSchema),z.lazy(() => ChatRoomUncheckedUpdateWithoutStaffInputSchema) ]),
 }).strict();
 
-export const ChatRoomUpdateManyWithWhereWithoutAdminInputSchema: z.ZodType<Prisma.ChatRoomUpdateManyWithWhereWithoutAdminInput> = z.object({
+export const ChatRoomUpdateManyWithWhereWithoutStaffInputSchema: z.ZodType<Prisma.ChatRoomUpdateManyWithWhereWithoutStaffInput> = z.object({
   where: z.lazy(() => ChatRoomScalarWhereInputSchema),
-  data: z.union([ z.lazy(() => ChatRoomUpdateManyMutationInputSchema),z.lazy(() => ChatRoomUncheckedUpdateManyWithoutChatRoomAdminInputSchema) ]),
+  data: z.union([ z.lazy(() => ChatRoomUpdateManyMutationInputSchema),z.lazy(() => ChatRoomUncheckedUpdateManyWithoutChatRoomStaffInputSchema) ]),
 }).strict();
 
 export const ChatRoomScalarWhereInputSchema: z.ZodType<Prisma.ChatRoomScalarWhereInput> = z.object({
   AND: z.union([ z.lazy(() => ChatRoomScalarWhereInputSchema),z.lazy(() => ChatRoomScalarWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => ChatRoomScalarWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => ChatRoomScalarWhereInputSchema),z.lazy(() => ChatRoomScalarWhereInputSchema).array() ]).optional(),
-  Id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  adminId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  staffId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   userId: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -6201,6 +6291,7 @@ export const FotoUserScalarWhereInputSchema: z.ZodType<Prisma.FotoUserScalarWher
   OR: z.lazy(() => FotoUserScalarWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => FotoUserScalarWhereInputSchema),z.lazy(() => FotoUserScalarWhereInputSchema).array() ]).optional(),
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
+  bookingId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
@@ -6323,6 +6414,7 @@ export const BookingCreateWithoutKatalogInputSchema: z.ZodType<Prisma.BookingCre
   kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -6340,6 +6432,7 @@ export const BookingUncheckedCreateWithoutKatalogInputSchema: z.ZodType<Prisma.B
   kuponId: z.string().optional().nullable(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -6383,6 +6476,7 @@ export const BookingCreateWithoutKuponInputSchema: z.ZodType<Prisma.BookingCreat
   katalog: z.lazy(() => KatalogCreateNestedOneWithoutBookingInputSchema),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -6400,6 +6494,7 @@ export const BookingUncheckedCreateWithoutKuponInputSchema: z.ZodType<Prisma.Boo
   katalogId: z.string(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -6443,6 +6538,7 @@ export const BookingCreateWithoutBackgroundInputSchema: z.ZodType<Prisma.Booking
   kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -6460,6 +6556,7 @@ export const BookingUncheckedCreateWithoutBackgroundInputSchema: z.ZodType<Prism
   kuponId: z.string().optional().nullable(),
   status: z.lazy(() => BookinStatusSchema),
   Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -6499,7 +6596,7 @@ export const UserCreateWithoutBookingInputSchema: z.ZodType<Prisma.UserCreateWit
   instagram: z.string().optional().nullable(),
   role: z.lazy(() => RoleSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -6522,7 +6619,7 @@ export const UserUncheckedCreateWithoutBookingInputSchema: z.ZodType<Prisma.User
   instagram: z.string().optional().nullable(),
   role: z.lazy(() => RoleSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -6647,6 +6744,30 @@ export const PembayaranCreateManyBookingInputEnvelopeSchema: z.ZodType<Prisma.Pe
   skipDuplicates: z.boolean().optional()
 }).strict();
 
+export const FotoUserCreateWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserCreateWithoutBookingInput> = z.object({
+  id: z.string().optional(),
+  user: z.lazy(() => UserCreateNestedOneWithoutFotoUserInputSchema),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const FotoUserUncheckedCreateWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUncheckedCreateWithoutBookingInput> = z.object({
+  id: z.string().optional(),
+  userId: z.string(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const FotoUserCreateOrConnectWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserCreateOrConnectWithoutBookingInput> = z.object({
+  where: z.lazy(() => FotoUserWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema) ]),
+}).strict();
+
+export const FotoUserCreateManyBookingInputEnvelopeSchema: z.ZodType<Prisma.FotoUserCreateManyBookingInputEnvelope> = z.object({
+  data: z.lazy(() => FotoUserCreateManyBookingInputSchema).array(),
+  skipDuplicates: z.boolean().optional()
+}).strict();
+
 export const UserUpsertWithoutBookingInputSchema: z.ZodType<Prisma.UserUpsertWithoutBookingInput> = z.object({
   update: z.union([ z.lazy(() => UserUpdateWithoutBookingInputSchema),z.lazy(() => UserUncheckedUpdateWithoutBookingInputSchema) ]),
   create: z.union([ z.lazy(() => UserCreateWithoutBookingInputSchema),z.lazy(() => UserUncheckedCreateWithoutBookingInputSchema) ]),
@@ -6660,7 +6781,7 @@ export const UserUpdateWithoutBookingInputSchema: z.ZodType<Prisma.UserUpdateWit
   instagram: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6683,7 +6804,7 @@ export const UserUncheckedUpdateWithoutBookingInputSchema: z.ZodType<Prisma.User
   instagram: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6805,6 +6926,22 @@ export const PembayaranScalarWhereInputSchema: z.ZodType<Prisma.PembayaranScalar
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
+export const FotoUserUpsertWithWhereUniqueWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUpsertWithWhereUniqueWithoutBookingInput> = z.object({
+  where: z.lazy(() => FotoUserWhereUniqueInputSchema),
+  update: z.union([ z.lazy(() => FotoUserUpdateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedUpdateWithoutBookingInputSchema) ]),
+  create: z.union([ z.lazy(() => FotoUserCreateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedCreateWithoutBookingInputSchema) ]),
+}).strict();
+
+export const FotoUserUpdateWithWhereUniqueWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUpdateWithWhereUniqueWithoutBookingInput> = z.object({
+  where: z.lazy(() => FotoUserWhereUniqueInputSchema),
+  data: z.union([ z.lazy(() => FotoUserUpdateWithoutBookingInputSchema),z.lazy(() => FotoUserUncheckedUpdateWithoutBookingInputSchema) ]),
+}).strict();
+
+export const FotoUserUpdateManyWithWhereWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUpdateManyWithWhereWithoutBookingInput> = z.object({
+  where: z.lazy(() => FotoUserScalarWhereInputSchema),
+  data: z.union([ z.lazy(() => FotoUserUpdateManyMutationInputSchema),z.lazy(() => FotoUserUncheckedUpdateManyWithoutFotoUserInputSchema) ]),
+}).strict();
+
 export const BookingCreateWithoutPembayaranInputSchema: z.ZodType<Prisma.BookingCreateWithoutPembayaranInput> = z.object({
   id: z.string().optional(),
   user: z.lazy(() => UserCreateNestedOneWithoutBookingInputSchema),
@@ -6817,6 +6954,7 @@ export const BookingCreateWithoutPembayaranInputSchema: z.ZodType<Prisma.Booking
   katalog: z.lazy(() => KatalogCreateNestedOneWithoutBookingInputSchema),
   kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
   status: z.lazy(() => BookinStatusSchema),
+  fotoUser: z.lazy(() => FotoUserCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -6834,6 +6972,7 @@ export const BookingUncheckedCreateWithoutPembayaranInputSchema: z.ZodType<Prism
   katalogId: z.string(),
   kuponId: z.string().optional().nullable(),
   status: z.lazy(() => BookinStatusSchema),
+  fotoUser: z.lazy(() => FotoUserUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional()
@@ -6861,6 +7000,7 @@ export const BookingUpdateWithoutPembayaranInputSchema: z.ZodType<Prisma.Booking
   katalog: z.lazy(() => KatalogUpdateOneRequiredWithoutBookingNestedInputSchema).optional(),
   kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6878,9 +7018,51 @@ export const BookingUncheckedUpdateWithoutPembayaranInputSchema: z.ZodType<Prism
   katalogId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const BookingCreateWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingCreateWithoutFotoUserInput> = z.object({
+  id: z.string().optional(),
+  user: z.lazy(() => UserCreateNestedOneWithoutBookingInputSchema),
+  background: z.lazy(() => BackgroundFotoCreateNestedOneWithoutBookingInputSchema),
+  peliharaan: z.boolean().optional(),
+  harga: z.number(),
+  jadwal: z.coerce.date(),
+  durasi: z.number(),
+  jumlahOrang: z.number(),
+  katalog: z.lazy(() => KatalogCreateNestedOneWithoutBookingInputSchema),
+  kupon: z.lazy(() => KuponCreateNestedOneWithoutBookingInputSchema).optional(),
+  status: z.lazy(() => BookinStatusSchema),
+  Pembayaran: z.lazy(() => PembayaranCreateNestedManyWithoutBookingInputSchema).optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  deleted: z.boolean().optional()
+}).strict();
+
+export const BookingUncheckedCreateWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingUncheckedCreateWithoutFotoUserInput> = z.object({
+  id: z.string().optional(),
+  userId: z.string(),
+  backgroundWarna: z.string(),
+  peliharaan: z.boolean().optional(),
+  harga: z.number(),
+  jadwal: z.coerce.date(),
+  durasi: z.number(),
+  jumlahOrang: z.number(),
+  katalogId: z.string(),
+  kuponId: z.string().optional().nullable(),
+  status: z.lazy(() => BookinStatusSchema),
+  Pembayaran: z.lazy(() => PembayaranUncheckedCreateNestedManyWithoutBookingInputSchema).optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+  deleted: z.boolean().optional()
+}).strict();
+
+export const BookingCreateOrConnectWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingCreateOrConnectWithoutFotoUserInput> = z.object({
+  where: z.lazy(() => BookingWhereUniqueInputSchema),
+  create: z.union([ z.lazy(() => BookingCreateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedCreateWithoutFotoUserInputSchema) ]),
 }).strict();
 
 export const UserCreateWithoutFotoUserInputSchema: z.ZodType<Prisma.UserCreateWithoutFotoUserInput> = z.object({
@@ -6892,7 +7074,7 @@ export const UserCreateWithoutFotoUserInputSchema: z.ZodType<Prisma.UserCreateWi
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -6915,7 +7097,7 @@ export const UserUncheckedCreateWithoutFotoUserInputSchema: z.ZodType<Prisma.Use
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -6934,6 +7116,47 @@ export const UserCreateOrConnectWithoutFotoUserInputSchema: z.ZodType<Prisma.Use
   create: z.union([ z.lazy(() => UserCreateWithoutFotoUserInputSchema),z.lazy(() => UserUncheckedCreateWithoutFotoUserInputSchema) ]),
 }).strict();
 
+export const BookingUpsertWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingUpsertWithoutFotoUserInput> = z.object({
+  update: z.union([ z.lazy(() => BookingUpdateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedUpdateWithoutFotoUserInputSchema) ]),
+  create: z.union([ z.lazy(() => BookingCreateWithoutFotoUserInputSchema),z.lazy(() => BookingUncheckedCreateWithoutFotoUserInputSchema) ]),
+}).strict();
+
+export const BookingUpdateWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingUpdateWithoutFotoUserInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  user: z.lazy(() => UserUpdateOneRequiredWithoutBookingNestedInputSchema).optional(),
+  background: z.lazy(() => BackgroundFotoUpdateOneRequiredWithoutBookingNestedInputSchema).optional(),
+  peliharaan: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  harga: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  jadwal: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  durasi: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  jumlahOrang: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  katalog: z.lazy(() => KatalogUpdateOneRequiredWithoutBookingNestedInputSchema).optional(),
+  kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
+  status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const BookingUncheckedUpdateWithoutFotoUserInputSchema: z.ZodType<Prisma.BookingUncheckedUpdateWithoutFotoUserInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  backgroundWarna: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  peliharaan: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  harga: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  jadwal: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  durasi: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  jumlahOrang: z.union([ z.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  katalogId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
+  Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
 export const UserUpsertWithoutFotoUserInputSchema: z.ZodType<Prisma.UserUpsertWithoutFotoUserInput> = z.object({
   update: z.union([ z.lazy(() => UserUpdateWithoutFotoUserInputSchema),z.lazy(() => UserUncheckedUpdateWithoutFotoUserInputSchema) ]),
   create: z.union([ z.lazy(() => UserCreateWithoutFotoUserInputSchema),z.lazy(() => UserUncheckedCreateWithoutFotoUserInputSchema) ]),
@@ -6948,7 +7171,7 @@ export const UserUpdateWithoutFotoUserInputSchema: z.ZodType<Prisma.UserUpdateWi
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6971,7 +7194,7 @@ export const UserUncheckedUpdateWithoutFotoUserInputSchema: z.ZodType<Prisma.Use
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7024,7 +7247,7 @@ export const UserCreateWithoutLikedBlogsInputSchema: z.ZodType<Prisma.UserCreate
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7047,7 +7270,7 @@ export const UserUncheckedCreateWithoutLikedBlogsInputSchema: z.ZodType<Prisma.U
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7075,7 +7298,7 @@ export const UserCreateWithoutDislikedBlogsInputSchema: z.ZodType<Prisma.UserCre
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7098,7 +7321,7 @@ export const UserUncheckedCreateWithoutDislikedBlogsInputSchema: z.ZodType<Prism
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7310,7 +7533,7 @@ export const UserCreateWithoutCommentBlogInputSchema: z.ZodType<Prisma.UserCreat
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7333,7 +7556,7 @@ export const UserUncheckedCreateWithoutCommentBlogInputSchema: z.ZodType<Prisma.
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7361,7 +7584,7 @@ export const UserCreateWithoutLikedCommentsInputSchema: z.ZodType<Prisma.UserCre
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7384,7 +7607,7 @@ export const UserUncheckedCreateWithoutLikedCommentsInputSchema: z.ZodType<Prism
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7412,7 +7635,7 @@ export const UserCreateWithoutDislikedCommentsInputSchema: z.ZodType<Prisma.User
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7435,7 +7658,7 @@ export const UserUncheckedCreateWithoutDislikedCommentsInputSchema: z.ZodType<Pr
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7497,7 +7720,7 @@ export const UserUpdateWithoutCommentBlogInputSchema: z.ZodType<Prisma.UserUpdat
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7520,7 +7743,7 @@ export const UserUncheckedUpdateWithoutCommentBlogInputSchema: z.ZodType<Prisma.
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7574,7 +7797,7 @@ export const UserCreateWithoutBlastMarketingInputSchema: z.ZodType<Prisma.UserCr
   instagram: z.string().optional().nullable(),
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7597,7 +7820,7 @@ export const UserUncheckedCreateWithoutBlastMarketingInputSchema: z.ZodType<Pris
   instagram: z.string().optional().nullable(),
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7633,7 +7856,7 @@ export const UserUpdateManyWithWhereWithoutBlastMarketingInputSchema: z.ZodType<
   data: z.union([ z.lazy(() => UserUpdateManyMutationInputSchema),z.lazy(() => UserUncheckedUpdateManyWithoutPenerimaInputSchema) ]),
 }).strict();
 
-export const UserCreateWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserCreateWithoutChatRoomAdminInput> = z.object({
+export const UserCreateWithoutChatRoomStaffInputSchema: z.ZodType<Prisma.UserCreateWithoutChatRoomStaffInput> = z.object({
   id: z.string().optional(),
   nama: z.string(),
   email: z.string(),
@@ -7656,7 +7879,7 @@ export const UserCreateWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserCre
   dislikedBlogs: z.lazy(() => KontenBlogCreateNestedManyWithoutDislikedByInputSchema).optional()
 }).strict();
 
-export const UserUncheckedCreateWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutChatRoomAdminInput> = z.object({
+export const UserUncheckedCreateWithoutChatRoomStaffInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutChatRoomStaffInput> = z.object({
   id: z.string().optional(),
   nama: z.string(),
   email: z.string(),
@@ -7679,9 +7902,9 @@ export const UserUncheckedCreateWithoutChatRoomAdminInputSchema: z.ZodType<Prism
   dislikedBlogs: z.lazy(() => KontenBlogUncheckedCreateNestedManyWithoutDislikedByInputSchema).optional()
 }).strict();
 
-export const UserCreateOrConnectWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutChatRoomAdminInput> = z.object({
+export const UserCreateOrConnectWithoutChatRoomStaffInputSchema: z.ZodType<Prisma.UserCreateOrConnectWithoutChatRoomStaffInput> = z.object({
   where: z.lazy(() => UserWhereUniqueInputSchema),
-  create: z.union([ z.lazy(() => UserCreateWithoutChatRoomAdminInputSchema),z.lazy(() => UserUncheckedCreateWithoutChatRoomAdminInputSchema) ]),
+  create: z.union([ z.lazy(() => UserCreateWithoutChatRoomStaffInputSchema),z.lazy(() => UserUncheckedCreateWithoutChatRoomStaffInputSchema) ]),
 }).strict();
 
 export const UserCreateWithoutChatRoomUserInputSchema: z.ZodType<Prisma.UserCreateWithoutChatRoomUserInput> = z.object({
@@ -7693,7 +7916,7 @@ export const UserCreateWithoutChatRoomUserInputSchema: z.ZodType<Prisma.UserCrea
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional(),
@@ -7716,7 +7939,7 @@ export const UserUncheckedCreateWithoutChatRoomUserInputSchema: z.ZodType<Prisma
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deleted: z.boolean().optional(),
@@ -7738,7 +7961,7 @@ export const UserCreateOrConnectWithoutChatRoomUserInputSchema: z.ZodType<Prisma
 export const ChatCreateWithoutChatRoomInputSchema: z.ZodType<Prisma.ChatCreateWithoutChatRoomInput> = z.object({
   id: z.string().optional(),
   chat: z.string(),
-  adminSend: z.boolean(),
+  staffSend: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -7746,7 +7969,7 @@ export const ChatCreateWithoutChatRoomInputSchema: z.ZodType<Prisma.ChatCreateWi
 export const ChatUncheckedCreateWithoutChatRoomInputSchema: z.ZodType<Prisma.ChatUncheckedCreateWithoutChatRoomInput> = z.object({
   id: z.string().optional(),
   chat: z.string(),
-  adminSend: z.boolean(),
+  staffSend: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -7761,12 +7984,12 @@ export const ChatCreateManyChatRoomInputEnvelopeSchema: z.ZodType<Prisma.ChatCre
   skipDuplicates: z.boolean().optional()
 }).strict();
 
-export const UserUpsertWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserUpsertWithoutChatRoomAdminInput> = z.object({
-  update: z.union([ z.lazy(() => UserUpdateWithoutChatRoomAdminInputSchema),z.lazy(() => UserUncheckedUpdateWithoutChatRoomAdminInputSchema) ]),
-  create: z.union([ z.lazy(() => UserCreateWithoutChatRoomAdminInputSchema),z.lazy(() => UserUncheckedCreateWithoutChatRoomAdminInputSchema) ]),
+export const UserUpsertWithoutChatRoomStaffInputSchema: z.ZodType<Prisma.UserUpsertWithoutChatRoomStaffInput> = z.object({
+  update: z.union([ z.lazy(() => UserUpdateWithoutChatRoomStaffInputSchema),z.lazy(() => UserUncheckedUpdateWithoutChatRoomStaffInputSchema) ]),
+  create: z.union([ z.lazy(() => UserCreateWithoutChatRoomStaffInputSchema),z.lazy(() => UserUncheckedCreateWithoutChatRoomStaffInputSchema) ]),
 }).strict();
 
-export const UserUpdateWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserUpdateWithoutChatRoomAdminInput> = z.object({
+export const UserUpdateWithoutChatRoomStaffInputSchema: z.ZodType<Prisma.UserUpdateWithoutChatRoomStaffInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nama: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7789,7 +8012,7 @@ export const UserUpdateWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserUpd
   dislikedBlogs: z.lazy(() => KontenBlogUpdateManyWithoutDislikedByNestedInputSchema).optional()
 }).strict();
 
-export const UserUncheckedUpdateWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutChatRoomAdminInput> = z.object({
+export const UserUncheckedUpdateWithoutChatRoomStaffInputSchema: z.ZodType<Prisma.UserUncheckedUpdateWithoutChatRoomStaffInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   nama: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7826,7 +8049,7 @@ export const UserUpdateWithoutChatRoomUserInputSchema: z.ZodType<Prisma.UserUpda
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7849,7 +8072,7 @@ export const UserUncheckedUpdateWithoutChatRoomUserInputSchema: z.ZodType<Prisma
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7886,22 +8109,22 @@ export const ChatScalarWhereInputSchema: z.ZodType<Prisma.ChatScalarWhereInput> 
   id: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   chatRoomId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   chat: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
-  adminSend: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
+  staffSend: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
 export const ChatRoomCreateWithoutChatInputSchema: z.ZodType<Prisma.ChatRoomCreateWithoutChatInput> = z.object({
-  Id: z.string().optional(),
-  admin: z.lazy(() => UserCreateNestedOneWithoutChatRoomAdminInputSchema),
-  User: z.lazy(() => UserCreateNestedOneWithoutChatRoomUserInputSchema).optional(),
+  id: z.string().optional(),
+  staff: z.lazy(() => UserCreateNestedOneWithoutChatRoomStaffInputSchema).optional(),
+  user: z.lazy(() => UserCreateNestedOneWithoutChatRoomUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ChatRoomUncheckedCreateWithoutChatInputSchema: z.ZodType<Prisma.ChatRoomUncheckedCreateWithoutChatInput> = z.object({
-  Id: z.string().optional(),
-  adminId: z.string(),
+  id: z.string().optional(),
+  staffId: z.string().optional().nullable(),
   userId: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
@@ -7918,16 +8141,16 @@ export const ChatRoomUpsertWithoutChatInputSchema: z.ZodType<Prisma.ChatRoomUpse
 }).strict();
 
 export const ChatRoomUpdateWithoutChatInputSchema: z.ZodType<Prisma.ChatRoomUpdateWithoutChatInput> = z.object({
-  Id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  admin: z.lazy(() => UserUpdateOneRequiredWithoutChatRoomAdminNestedInputSchema).optional(),
-  User: z.lazy(() => UserUpdateOneWithoutChatRoomUserNestedInputSchema).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  staff: z.lazy(() => UserUpdateOneWithoutChatRoomStaffNestedInputSchema).optional(),
+  user: z.lazy(() => UserUpdateOneWithoutChatRoomUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const ChatRoomUncheckedUpdateWithoutChatInputSchema: z.ZodType<Prisma.ChatRoomUncheckedUpdateWithoutChatInput> = z.object({
-  Id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  staffId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -7942,7 +8165,7 @@ export const UserCreateWithoutFeedbackInputSchema: z.ZodType<Prisma.UserCreateWi
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -7965,7 +8188,7 @@ export const UserUncheckedCreateWithoutFeedbackInputSchema: z.ZodType<Prisma.Use
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -8020,7 +8243,7 @@ export const UserUpdateWithoutFeedbackInputSchema: z.ZodType<Prisma.UserUpdateWi
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8043,7 +8266,7 @@ export const UserUncheckedUpdateWithoutFeedbackInputSchema: z.ZodType<Prisma.Use
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8214,7 +8437,7 @@ export const UserCreateWithoutContohImageInputSchema: z.ZodType<Prisma.UserCreat
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -8237,7 +8460,7 @@ export const UserUncheckedCreateWithoutContohImageInputSchema: z.ZodType<Prisma.
   role: z.lazy(() => RoleSchema).optional(),
   booking: z.lazy(() => BookingUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedCreateNestedManyWithoutPenerimaInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutAdminInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutStaffInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedCreateNestedManyWithoutUserInputSchema).optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
@@ -8270,7 +8493,7 @@ export const UserUpdateWithoutContohImageInputSchema: z.ZodType<Prisma.UserUpdat
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8293,7 +8516,7 @@ export const UserUncheckedUpdateWithoutContohImageInputSchema: z.ZodType<Prisma.
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8323,16 +8546,16 @@ export const BookingCreateManyUserInputSchema: z.ZodType<Prisma.BookingCreateMan
   deleted: z.boolean().optional()
 }).strict();
 
-export const ChatRoomCreateManyAdminInputSchema: z.ZodType<Prisma.ChatRoomCreateManyAdminInput> = z.object({
-  Id: z.string().cuid().optional(),
+export const ChatRoomCreateManyStaffInputSchema: z.ZodType<Prisma.ChatRoomCreateManyStaffInput> = z.object({
+  id: z.string().cuid().optional(),
   userId: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ChatRoomCreateManyUserInputSchema: z.ZodType<Prisma.ChatRoomCreateManyUserInput> = z.object({
-  Id: z.string().cuid().optional(),
-  adminId: z.string(),
+  id: z.string().cuid().optional(),
+  staffId: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -8351,6 +8574,7 @@ export const FeedbackCreateManyUserInputSchema: z.ZodType<Prisma.FeedbackCreateM
 
 export const FotoUserCreateManyUserInputSchema: z.ZodType<Prisma.FotoUserCreateManyUserInput> = z.object({
   id: z.string().cuid().optional(),
+  bookingId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -8375,6 +8599,7 @@ export const BookingUpdateWithoutUserInputSchema: z.ZodType<Prisma.BookingUpdate
   kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8392,6 +8617,7 @@ export const BookingUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.Book
   kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8437,48 +8663,48 @@ export const BlastMarketingUncheckedUpdateManyWithoutBlastMarketingInputSchema: 
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
-export const ChatRoomUpdateWithoutAdminInputSchema: z.ZodType<Prisma.ChatRoomUpdateWithoutAdminInput> = z.object({
-  Id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  User: z.lazy(() => UserUpdateOneWithoutChatRoomUserNestedInputSchema).optional(),
-  Chat: z.lazy(() => ChatUpdateManyWithoutChatRoomNestedInputSchema).optional(),
+export const ChatRoomUpdateWithoutStaffInputSchema: z.ZodType<Prisma.ChatRoomUpdateWithoutStaffInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  user: z.lazy(() => UserUpdateOneWithoutChatRoomUserNestedInputSchema).optional(),
+  chat: z.lazy(() => ChatUpdateManyWithoutChatRoomNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
-export const ChatRoomUncheckedUpdateWithoutAdminInputSchema: z.ZodType<Prisma.ChatRoomUncheckedUpdateWithoutAdminInput> = z.object({
-  Id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+export const ChatRoomUncheckedUpdateWithoutStaffInputSchema: z.ZodType<Prisma.ChatRoomUncheckedUpdateWithoutStaffInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  Chat: z.lazy(() => ChatUncheckedUpdateManyWithoutChatRoomNestedInputSchema).optional(),
+  chat: z.lazy(() => ChatUncheckedUpdateManyWithoutChatRoomNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
-export const ChatRoomUncheckedUpdateManyWithoutChatRoomAdminInputSchema: z.ZodType<Prisma.ChatRoomUncheckedUpdateManyWithoutChatRoomAdminInput> = z.object({
-  Id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+export const ChatRoomUncheckedUpdateManyWithoutChatRoomStaffInputSchema: z.ZodType<Prisma.ChatRoomUncheckedUpdateManyWithoutChatRoomStaffInput> = z.object({
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const ChatRoomUpdateWithoutUserInputSchema: z.ZodType<Prisma.ChatRoomUpdateWithoutUserInput> = z.object({
-  Id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  admin: z.lazy(() => UserUpdateOneRequiredWithoutChatRoomAdminNestedInputSchema).optional(),
-  Chat: z.lazy(() => ChatUpdateManyWithoutChatRoomNestedInputSchema).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  staff: z.lazy(() => UserUpdateOneWithoutChatRoomStaffNestedInputSchema).optional(),
+  chat: z.lazy(() => ChatUpdateManyWithoutChatRoomNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const ChatRoomUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.ChatRoomUncheckedUpdateWithoutUserInput> = z.object({
-  Id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  Chat: z.lazy(() => ChatUncheckedUpdateManyWithoutChatRoomNestedInputSchema).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  staffId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  chat: z.lazy(() => ChatUncheckedUpdateManyWithoutChatRoomNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const ChatRoomUncheckedUpdateManyWithoutChatRoomUserInputSchema: z.ZodType<Prisma.ChatRoomUncheckedUpdateManyWithoutChatRoomUserInput> = z.object({
-  Id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  staffId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -8523,18 +8749,21 @@ export const FeedbackUncheckedUpdateManyWithoutFeedbackInputSchema: z.ZodType<Pr
 
 export const FotoUserUpdateWithoutUserInputSchema: z.ZodType<Prisma.FotoUserUpdateWithoutUserInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  booking: z.lazy(() => BookingUpdateOneRequiredWithoutFotoUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const FotoUserUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateWithoutUserInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  bookingId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const FotoUserUncheckedUpdateManyWithoutFotoUserInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateManyWithoutFotoUserInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  bookingId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -8721,6 +8950,7 @@ export const BookingUpdateWithoutKatalogInputSchema: z.ZodType<Prisma.BookingUpd
   kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8738,6 +8968,7 @@ export const BookingUncheckedUpdateWithoutKatalogInputSchema: z.ZodType<Prisma.B
   kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8771,6 +9002,7 @@ export const BookingUpdateWithoutKuponInputSchema: z.ZodType<Prisma.BookingUpdat
   katalog: z.lazy(() => KatalogUpdateOneRequiredWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8788,6 +9020,7 @@ export const BookingUncheckedUpdateWithoutKuponInputSchema: z.ZodType<Prisma.Boo
   katalogId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8821,6 +9054,7 @@ export const BookingUpdateWithoutBackgroundInputSchema: z.ZodType<Prisma.Booking
   kupon: z.lazy(() => KuponUpdateOneWithoutBookingNestedInputSchema).optional(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8838,6 +9072,7 @@ export const BookingUncheckedUpdateWithoutBackgroundInputSchema: z.ZodType<Prism
   kuponId: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => BookinStatusSchema),z.lazy(() => EnumBookinStatusFieldUpdateOperationsInputSchema) ]).optional(),
   Pembayaran: z.lazy(() => PembayaranUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
+  fotoUser: z.lazy(() => FotoUserUncheckedUpdateManyWithoutBookingNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8847,6 +9082,13 @@ export const PembayaranCreateManyBookingInputSchema: z.ZodType<Prisma.Pembayaran
   id: z.string().cuid().optional(),
   dp: z.boolean(),
   jumlah: z.number().int(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional()
+}).strict();
+
+export const FotoUserCreateManyBookingInputSchema: z.ZodType<Prisma.FotoUserCreateManyBookingInput> = z.object({
+  id: z.string().cuid().optional(),
+  userId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -8871,6 +9113,20 @@ export const PembayaranUncheckedUpdateManyWithoutPembayaranInputSchema: z.ZodTyp
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dp: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   jumlah: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const FotoUserUpdateWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUpdateWithoutBookingInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  user: z.lazy(() => UserUpdateOneRequiredWithoutFotoUserNestedInputSchema).optional(),
+  createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+  updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
+}).strict();
+
+export const FotoUserUncheckedUpdateWithoutBookingInputSchema: z.ZodType<Prisma.FotoUserUncheckedUpdateWithoutBookingInput> = z.object({
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -8920,7 +9176,7 @@ export const UserUpdateWithoutLikedBlogsInputSchema: z.ZodType<Prisma.UserUpdate
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8943,7 +9199,7 @@ export const UserUncheckedUpdateWithoutLikedBlogsInputSchema: z.ZodType<Prisma.U
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8978,7 +9234,7 @@ export const UserUpdateWithoutDislikedBlogsInputSchema: z.ZodType<Prisma.UserUpd
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -9001,7 +9257,7 @@ export const UserUncheckedUpdateWithoutDislikedBlogsInputSchema: z.ZodType<Prism
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -9036,7 +9292,7 @@ export const UserUpdateWithoutLikedCommentsInputSchema: z.ZodType<Prisma.UserUpd
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -9059,7 +9315,7 @@ export const UserUncheckedUpdateWithoutLikedCommentsInputSchema: z.ZodType<Prism
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -9082,7 +9338,7 @@ export const UserUpdateWithoutDislikedCommentsInputSchema: z.ZodType<Prisma.User
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -9105,7 +9361,7 @@ export const UserUncheckedUpdateWithoutDislikedCommentsInputSchema: z.ZodType<Pr
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   blastMarketing: z.lazy(() => BlastMarketingUncheckedUpdateManyWithoutPenerimaNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -9127,7 +9383,7 @@ export const UserUpdateWithoutBlastMarketingInputSchema: z.ZodType<Prisma.UserUp
   instagram: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUpdateManyWithoutUserNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -9150,7 +9406,7 @@ export const UserUncheckedUpdateWithoutBlastMarketingInputSchema: z.ZodType<Pris
   instagram: z.union([ z.string(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   role: z.union([ z.lazy(() => RoleSchema),z.lazy(() => EnumRoleFieldUpdateOperationsInputSchema) ]).optional(),
   booking: z.lazy(() => BookingUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
-  chatRoomAdmin: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutAdminNestedInputSchema).optional(),
+  chatRoomStaff: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutStaffNestedInputSchema).optional(),
   chatRoomUser: z.lazy(() => ChatRoomUncheckedUpdateManyWithoutUserNestedInputSchema).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -9180,7 +9436,7 @@ export const UserUncheckedUpdateManyWithoutPenerimaInputSchema: z.ZodType<Prisma
 export const ChatCreateManyChatRoomInputSchema: z.ZodType<Prisma.ChatCreateManyChatRoomInput> = z.object({
   id: z.string().cuid().optional(),
   chat: z.string(),
-  adminSend: z.boolean(),
+  staffSend: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional()
 }).strict();
@@ -9188,7 +9444,7 @@ export const ChatCreateManyChatRoomInputSchema: z.ZodType<Prisma.ChatCreateManyC
 export const ChatUpdateWithoutChatRoomInputSchema: z.ZodType<Prisma.ChatUpdateWithoutChatRoomInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chat: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  staffSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -9196,7 +9452,7 @@ export const ChatUpdateWithoutChatRoomInputSchema: z.ZodType<Prisma.ChatUpdateWi
 export const ChatUncheckedUpdateWithoutChatRoomInputSchema: z.ZodType<Prisma.ChatUncheckedUpdateWithoutChatRoomInput> = z.object({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chat: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  staffSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
@@ -9204,7 +9460,7 @@ export const ChatUncheckedUpdateWithoutChatRoomInputSchema: z.ZodType<Prisma.Cha
 export const ChatUncheckedUpdateManyWithoutChatInputSchema: z.ZodType<Prisma.ChatUncheckedUpdateManyWithoutChatInput> = z.object({
   id: z.union([ z.string().cuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   chat: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  adminSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
+  staffSend: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();

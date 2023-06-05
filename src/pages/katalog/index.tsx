@@ -5,11 +5,10 @@ import Link from "next/link";
 import { GetServerSidePropsContext } from "next";
 import { getServerAuthSession } from "~/utils/session";
 import { useState } from "react";
-import { MdDelete } from "react-icons/md";
 import { Katalog } from "@prisma/client";
-import { Modal } from "~/component/modal";
 import { createSSG } from "~/server/SSGHelper";
 import { LoadingPage } from "~/component/loading";
+import { ModalAction } from "~/component/modal";
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = getServerAuthSession(ctx);
@@ -33,11 +32,11 @@ export default function ListCatalogue() {
   const { data, isLoading, error } = api.catalogue.getAllCatalogue.useQuery();
 
   const [selected, setSelected] = useState<Katalog | undefined>(undefined);
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleDeleteButton = (item: Katalog) => {
     setSelected(item);
-    setIsOpen(true);
+    setOpen(true);
   };
 
   const utils = api.useContext();
@@ -50,11 +49,11 @@ export default function ListCatalogue() {
   function onDelete() {
     if (!selected) return;
     deleteCatalogue.mutate({ id: selected.id });
-    setIsOpen(false);
+    setOpen(false);
   }
 
   if (isLoading) {
-    return <LoadingPage />
+    return <LoadingPage />;
   }
 
   if (error) {
@@ -63,106 +62,86 @@ export default function ListCatalogue() {
 
   return (
     <>
-      <h1 className="my-8 text-center text-3xl font-bold">Photo Catalogue</h1>
+      <div className="min-h-screen">
+        <h1 className="my-8 text-center text-3xl font-bold">Photo Catalogue</h1>
 
-      <div className="mb-4 flex justify-end">
-        <Link
-          href="/katalog/tambah"
-          className="mr-4 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]"
-        >
-          + Tambah Paket Foto
-        </Link>
-      </div>
-
-      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="modal-content z-50 overflow-y-auto">
-          <div className="modal-header flex items-center py-3 px-4">
-            <MdDelete className="mr-2 text-2xl text-gray-600" />
-            <span>
-              <h2 className="text-lg font-medium">Hapus Katalog</h2>
-            </span>
-          </div>
-
-          <div className="modal-body py-4 px-4">
-            <p className="text-gray-700">
-              Apakah Anda yakin akan menghapus katalog ini?
-            </p>
-          </div>
-          <div className="modal-footer flex justify-end py-3 px-4">
-            <button
-              className="focus:shadow-outline mr-2 rounded bg-light-grey py-2 px-4 font-bold hover:bg-medium-grey hover:text-white-grey focus:outline-none"
-              onClick={() => setIsOpen(false)}
-            >
-              Batal
-            </button>
-            <button
-              className="focus:shadow-outline rounded bg-[#FC182A] py-2 px-4 font-bold text-white-grey hover:bg-red focus:outline-none"
-              onClick={onDelete}
-            >
-              Hapus
-            </button>
-          </div>
+        <div className="mb-4 flex justify-end">
+          <Link
+            href="/katalog/tambah"
+            className="mr-4 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]"
+          >
+            + Tambah Paket Foto
+          </Link>
         </div>
-      </Modal>
 
-      {data?.map((item) => (
-        <div
-          key={item.id}
-          className="mx-4 my-6 rounded-lg bg-[#e5e7eb] p-6 shadow-lg md:mx-10 lg:mx-20"
-        >
-          <h2 className="text-left text-lg font-bold">{item.nama}</h2>
-          <div className="mt-4 rounded-md bg-light-grey p-4 text-black">
-            <div className="text">
-              <pre>{item.deskripsi}</pre>
+        <ModalAction
+          isDelete
+          open={open}
+          title="Hapus Katalog"
+          content="Apakah Anda yakin akan menghapus katalog ini?"
+          onClose={() => setOpen(false)}
+          kembaliHandler={() => setOpen(false)}
+          actionHandler={onDelete}
+        />
+
+        {data?.map((item) => (
+          <div
+            key={item.id}
+            className="mx-4 my-6 rounded-lg bg-grey bg-opacity-20 p-6 shadow-lg md:mx-10 lg:mx-20"
+          >
+            <h2 className="text-left text-lg font-bold">{item.nama}</h2>
+            <div className="mt-4 rounded-md bg-light-grey p-4 text-black">
+              <div className="text">
+                <pre>{item.deskripsi}</pre>
+              </div>
             </div>
-          </div>
-          <div className="mt-6 flex items-center justify-between">
-            <div className="flex flex-col">
-              <div className="mb-4 flex items-center">
-                <BiTimeFive className="mr-2 text-2xl text-gray-600" />
-                <span>
-                  {item.durasi > 60 && Math.floor(item.durasi / 60) + " Jam"}
-                  {item.durasi % 60 + " Menit"}
-                </span>
-              </div>
-              <div className="mb-4 flex items-center">
-                <IoIosPricetag className="mr-2 text-2xl text-gray-600" />
-                <span>
-                  {item.harga.toLocaleString("id-ID", {
-                    style: "currency",
-                    currency: "IDR",
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                  })}
-                </span>
-              </div>
-              {item.jumlahOrang &&
-                <div className="flex items-center">
-                  <IoMdPeople className="mr-2 text-2xl text-gray-600" />
-                  <span>{item.jumlahOrang} orang</span>
+            <div className="mt-6 flex items-center justify-between">
+              <div className="flex flex-col">
+                <div className="mb-4 flex items-center">
+                  <BiTimeFive className="mr-2 text-2xl" />
+                  <span>
+                    {item.durasi > 60 && Math.floor(item.durasi / 60) + " Jam "}
+                    {(item.durasi % 60) + " Menit"}
+                  </span>
                 </div>
-              }
-            </div>
-            <div className="text-right">
-              <Link
-                href={`/katalog/ubah/${item.id}`}
-                className="mr-2 rounded-md border border-gray-600 px-6 py-2 text-gray-600 transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey"
-              >
-                Ubah
-              </Link>
-              <button
-                onClick={() => handleDeleteButton(item)}
-                className="rounded-md border border-red bg-red px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:border-[#dc2626] hover:bg-[#dc2626] hover:text-white-grey"
-              >
-                Hapus
-              </button>
-              {/* <button className="rounded-md bg-gray-600 px-6 py-2 text-white hover:bg-gray-700">
-                Pilih Jadwal
-              </button> */}
+                <div className="mb-4 flex items-center">
+                  <IoIosPricetag className="mr-2 text-2xl" />
+                  <span>
+                    {item.harga.toLocaleString("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    })}
+                  </span>
+                </div>
+                {item.jumlahOrang && (
+                  <div className="flex items-center">
+                    <IoMdPeople className="mr-2 text-2xl" />
+                    <span>{item.jumlahOrang} orang</span>
+                  </div>
+                )}
+              </div>
+              <div className="text-right">
+                <div className="mr-2 inline-block">
+                  <Link
+                    href={`/katalog/ubah/${item.id}`}
+                    className="h-10 rounded-md border border-dark-grey px-6 py-2 transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey"
+                  >
+                    Ubah
+                  </Link>
+                </div>
+                <button
+                  onClick={() => handleDeleteButton(item)}
+                  className="h-10 rounded-md border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
+                >
+                  Hapus
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </>
   );
 }

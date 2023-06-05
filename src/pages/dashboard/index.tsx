@@ -19,7 +19,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   if (!session) {
     return { redirect: { destination: "/login" } };
   }
-  if (session.role !== ("admin" || "studioManager")) {
+  if (session.role !== "studioManager") {
     return { redirect: { destination: "/" } };
   }
 
@@ -48,7 +48,7 @@ export default function Dashboard() {
               value: katalogId,
               label:
                 katalog.data.find((katalog) => katalog.id === katalogId)
-                  ?.nama || "Katalog tidak ditemukan",
+                  ?.nama || "",
             })
           )
         );
@@ -101,7 +101,7 @@ export default function Dashboard() {
     bookingData.forEach((booking) => {
       const katalogName =
         katalogNames.find((katalog) => katalog.value === booking.katalogId)
-          ?.label || "Katalog Asing";
+          ?.label || "";
       console.log(katalogName); // penting!!
       const bookingYear = booking.jadwal.getFullYear();
       const bookingMonth = booking.jadwal.getMonth() + 1;
@@ -171,7 +171,7 @@ export default function Dashboard() {
         bookingData.map(
           (booking) =>
             katalogNames.find((katalog) => katalog.value === booking.katalogId)
-              ?.label || "Katalog Asing"
+              ?.label || ""
         )
       )
     );
@@ -296,30 +296,28 @@ export default function Dashboard() {
 
   return (
     <>
-      <h1 className="my-8 text-center text-3xl font-bold">Studio Dashboard</h1>
-      <div className="flex min-h-full items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
-        <div className=" shadow sm:rounded-md">
-          <div className="bg-white px-4 py-5 sm:p-6">
-            <div className="grid grid-cols-4 gap-6">
-              <div className="col-span-3">
-                <canvas id="bookingChart"></canvas>
-              </div>
-              <div className="">
-                <label>Tahun:</label>
-                <Dropdown
-                  options={yearOptions}
-                  selectedValue={month}
-                  onSelect={handleSelectYear}
-                />
-                <br />
-                <label>Bulan:</label>
-                <Dropdown
-                  options={monthOptions}
-                  selectedValue={month}
-                  onSelect={handleSelectMonth}
-                />
-              </div>
-            </div>
+      <div className="min-h-screen">
+        <h1 className="my-8 text-center text-3xl font-bold">
+          Studio Dashboard
+        </h1>
+        <div className="bg-white px-16 py-8">
+          <div className="">
+            <label>Tahun:</label>
+            <Dropdown
+              options={yearOptions}
+              selectedValue={month}
+              onSelect={handleSelectYear}
+            />
+            <br />
+            <label>Bulan:</label>
+            <Dropdown
+              options={monthOptions}
+              selectedValue={month}
+              onSelect={handleSelectMonth}
+            />
+          </div>
+          <div className="">
+            <canvas id="bookingChart"></canvas>
           </div>
         </div>
       </div>
