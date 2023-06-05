@@ -111,6 +111,7 @@ export default function DraftList() {
       <div className="m-8">
         <div className="flex flex-col items-end justify-end gap-4 md:flex-row md:items-center">
           <div className="flex w-full flex-col items-center justify-end gap-2">
+            <h1 className="text-2xl font-semibold">Daftar Blog Draft</h1>
             {blogs?.map((blog) => (
               <Link key={blog.id} href={`/blog/draft/${blog.id}`}>
                 <div className="bg-white flex w-full flex-col rounded-lg p-4 shadow-md">
@@ -134,7 +135,7 @@ export default function DraftList() {
                         <div>
                           {session?.role === "admin" && (
                             /*@ts-ignore*/
-                            <button className="btn btn-success w-40 mb-4" onClick={(e) => onKonfirmasi(e, blog.id)}>Konfirmasi</button>
+                            <button className="btn btn-success w-40 mb-4" onClick={(e) => onKonfirmasi(e, blog.id)}>Publikasi</button>
 
                           )}
                           {/*@ts-ignore*/}

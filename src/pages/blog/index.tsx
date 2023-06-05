@@ -103,6 +103,7 @@ export default function DraftList() {
                 Buat Blog Baru{" "}
               </Link>
             )}
+            <h1 className="text-2xl font-semibold">Daftar Blog</h1>
             {blogs?.map((blog) => (
               <Link key={blog.id} href={`/blog/${blog.id}`}>
                 <div className="bg-white flex w-full flex-col rounded-lg p-4 shadow-md">
