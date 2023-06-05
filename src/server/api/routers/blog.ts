@@ -833,7 +833,7 @@ export const blogRouter = createTRPCRouter({
     ];
   }),
 
-  deleteComment: adminProcedure
+  deleteComment: userProcedure
     .input(
       z.object({
         id: z.string(),
@@ -850,6 +850,13 @@ export const blogRouter = createTRPCRouter({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Comment not found",
+        });
+      }
+
+      if (ctx.session.role !== "admin" && comment.userId !== ctx.session.id) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Unauthorized",
         });
       }
 

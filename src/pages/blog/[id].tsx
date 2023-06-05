@@ -377,7 +377,7 @@ export default function BlogView({ id }: { id: string }) {
                     {comment.dislikedBy.length}
                   </button>
 
-                  {session && session.role === "admin" && (
+                  {session && (session.role === "admin" || session.id == comment.userId) && (
                     <button
                       className="btn-error btn-sm btn"
                       onClick={() => handleDeleteComment(comment.id)}
