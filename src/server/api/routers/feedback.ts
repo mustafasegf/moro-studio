@@ -2,34 +2,15 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
+  adminProcedure,
   createTRPCRouter,
   publicProcedure,
   userProcedure,
   // protectedProcedure,
 } from "~/server/api/trpc";
-import { addFeedbackSchema } from "~/utils/schemas";
+import { addFeedbackSchema, updateFeedbackSchema } from "~/utils/schemas";
 
 export const feedbackRouter = createTRPCRouter({
-  // addFeedback: userProcedure
-  //   .input(
-  //     z.object({
-  //       namaPenulis: z.string(),
-  //       isiFeedback: z.string(),
-  //     })
-  //   )
-  //   .mutation(({ input, ctx }) => {
-  //     return ctx.prisma.feedback.create({
-  //       data: {
-  //         user: {
-  //           connect: {
-  //             id: ctx.session.id,
-  //           },
-  //         },
-  //         namaPenulis: input.namaPenulis,
-  //         isiFeedback: input.isiFeedback,
-  //       },
-  //     });
-  //   }),
   addFeedback: userProcedure
   .input(addFeedbackSchema)
   .mutation(async ({ input, ctx }) => {
@@ -66,7 +47,11 @@ export const feedbackRouter = createTRPCRouter({
     }),
   
   getAllFeedback: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.feedback.findMany();
+    return ctx.prisma.feedback.findMany({
+      include :{
+        user: true,
+      }
+    });
   }),
 
   getFeedbackById: publicProcedure
@@ -83,7 +68,7 @@ export const feedbackRouter = createTRPCRouter({
       });
     }),
 
-  deleteFeedback: publicProcedure
+  deleteFeedback: adminProcedure
   .input(
     z.object({
       id: z.string(),
@@ -115,4 +100,17 @@ export const feedbackRouter = createTRPCRouter({
         },
       });
     }),
+
+  // updateFeedback: publicProcedure
+  //   .input(updateFeedbackSchema)
+  //   .mutation(({ input, ctx }) => {
+  //     return ctx.prisma.feedback.update({
+  //       where: {
+  //         id: input.id,
+  //       },
+  //       data: {
+  //         isiFeedback: input.isiFeedback,
+  //       },
+  //     });
+  //   }),
 });

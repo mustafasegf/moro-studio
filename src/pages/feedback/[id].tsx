@@ -101,7 +101,7 @@ export default function UpdateFeedback() {
 
               <div className="bg-light-grey px-4 py-3 text-right sm:px-6">
                 <Link
-                  href="/feedback/list"
+                  href="/feedback"
                   type="button"
                   className="inline-flex h-10 w-full justify-center rounded-md border px-3 py-2 text-sm font-semibold transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-auto"
                 >

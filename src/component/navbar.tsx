@@ -17,8 +17,8 @@ export function Navbar() {
     },
     {
       name: "Feedback",
-      path: "/feedback/list",
-      role: "user",
+      path: "/feedback",
+      role: undefined,
     },
     {
       name: "Katalog",
@@ -44,6 +44,11 @@ export function Navbar() {
       name: "Dashboard",
       path: "/dashboard",
       role: "admin" || "studioManager",
+    },
+    {
+      name: "Detail Pesanan",
+      path: "/detailpemesanan",
+      role: "studioManager" || "admin",
     },
   ];
 
