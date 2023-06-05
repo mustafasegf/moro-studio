@@ -74,6 +74,30 @@ export default function BlogView({ id }: { id: string }) {
     },
   });
 
+  const addLikeBlog = api.blog.addBlogLike.useMutation({
+    onSuccess() {
+      utils.blog.getBlogById.invalidate({ id });
+    },
+  });
+
+  const addDislikeBlog = api.blog.addBlogDislike.useMutation({
+    onSuccess() {
+      utils.blog.getBlogById.invalidate({ id });
+    },
+  });
+
+  const removeLikeBlog = api.blog.removeBlogLike.useMutation({
+    onSuccess() {
+      utils.blog.getBlogById.invalidate({ id });
+    },
+  });
+
+  const removeDislikeBlog = api.blog.removeBlogDislike.useMutation({
+    onSuccess() {
+      utils.blog.getBlogById.invalidate({ id });
+    },
+  });
+
   const addLike = api.blog.addLike.useMutation({
     onSuccess() {
       utils.blog.getAllComment.invalidate({ id });
@@ -85,7 +109,6 @@ export default function BlogView({ id }: { id: string }) {
       utils.blog.getAllComment.invalidate({ id });
     },
   });
-
 
   const removeLike = api.blog.removeLike.useMutation({
     onSuccess() {
@@ -120,6 +143,22 @@ export default function BlogView({ id }: { id: string }) {
       addLike.mutate({ id });
     } else {
       removeLike.mutate({ id });
+    }
+  }
+
+  function handleBlogDislike(id: string) {
+    if (!blog?.dislikedBy?.some((user) => user.id === session?.id)) {
+      addDislikeBlog.mutate({ id });
+    } else {
+      removeDislikeBlog.mutate({ id });
+    }
+  }
+
+  function handleBlogLike(id: string) {
+    if (!blog?.likedBy?.some((user) => user.id === session?.id)) {
+      addLikeBlog.mutate({ id });
+    } else {
+      removeLikeBlog.mutate({ id });
     }
   }
 
@@ -206,6 +245,15 @@ export default function BlogView({ id }: { id: string }) {
           }}
         />
 
+        <div className="mt-8">
+          <div className="flex items-center justify-center gap-2">
+            <span>{blog?.likedBy.length}</span>
+            <RiThumbUpLine onClick={() => handleBlogLike(blog!.id)} />
+            <span>{blog?.dislikedBy.length}</span>
+            <RiThumbDownLine onClick={() => handleBlogDislike(blog!.id)} />
+          </div>
+        </div>
+
         {session && (
           <div>
             <form
@@ -277,9 +325,7 @@ export default function BlogView({ id }: { id: string }) {
                     type="button"
                     className="text-gray-500 dark:text-gray-400 flex items-center text-sm hover:underline"
                   >
-                    <RiThumbUpLine
-                      onClick={() => handleLike(comment.id)}
-                    />
+                    <RiThumbUpLine onClick={() => handleLike(comment.id)} />
                     {comment.likedBy.length}
                   </button>
 

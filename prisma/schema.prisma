@@ -41,6 +41,8 @@ model User {
   CommentBlog      CommentBlog[]
   likedComments    CommentBlog[]    @relation("LikedComments")
   dislikedComments CommentBlog[]    @relation("DislikedComments")
+  likedBlogs       KontenBlog[]     @relation("LikedBlogs")
+  dislikedBlogs    KontenBlog[]     @relation("DislikedBlogs")
 }
 
 // model VerificationToken {
@@ -157,7 +159,8 @@ model KontenBlog {
   comment      CommentBlog[]
   isi          String        @db.Text
   posted       Boolean
-  like         Int
+  likedBy      User[]        @relation("LikedBlogs")
+  dislikedBy   User[]        @relation("DislikedBlogs")
   gambarBlogId String        @unique
   gambarBlog   GambarBlog    @relation(fields: [gambarBlogId], references: [id])
   createdAt    DateTime      @default(now())

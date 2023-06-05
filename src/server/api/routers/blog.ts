@@ -165,7 +165,6 @@ export const blogRouter = createTRPCRouter({
         data: {
           judul: input.judul,
           isi: input.isi,
-          like: 0,
           posted: false,
           gambarBlog: {
             connect: { id: input.imageId },
@@ -200,6 +199,8 @@ export const blogRouter = createTRPCRouter({
         },
         include: {
           gambarBlog: true,
+          dislikedBy: true,
+          likedBy: true,
         },
       });
 
@@ -347,6 +348,222 @@ export const blogRouter = createTRPCRouter({
       });
     }),
 
+  addBlogLike: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const blog = await ctx.prisma.kontenBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!blog) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Blog not found",
+        });
+      }
+
+      const isLiked = await ctx.prisma.kontenBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          likedBy: {
+            where: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+
+      if (isLiked!.likedBy.length > 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Already liked",
+        });
+      }
+
+      return await ctx.prisma.kontenBlog.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          likedBy: {
+            connect: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+    }),
+
+  addBlogDislike: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const blog = await ctx.prisma.kontenBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!blog) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Blog not found",
+        });
+      }
+
+      const isLiked = await ctx.prisma.kontenBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          dislikedBy: {
+            where: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+
+      if (isLiked!.dislikedBy.length > 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Already liked",
+        });
+      }
+
+      return await ctx.prisma.kontenBlog.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          dislikedBy: {
+            connect: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+    }),
+
+  removeBlogLike: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const blog = await ctx.prisma.kontenBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!blog) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Blog not found",
+        });
+      }
+
+      const isLiked = await ctx.prisma.kontenBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          likedBy: {
+            where: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+
+      if (isLiked!.likedBy.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Already liked",
+        });
+      }
+
+      return await ctx.prisma.kontenBlog.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          likedBy: {
+            disconnect: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+    }),
+
+  removeBlogDislike: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const blog = await ctx.prisma.kontenBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!blog) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Blog not found",
+        });
+      }
+
+      const isLiked = await ctx.prisma.kontenBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          dislikedBy: {
+            where: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+
+      if (isLiked!.dislikedBy.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Already liked",
+        });
+      }
+
+      return await ctx.prisma.kontenBlog.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          dislikedBy: {
+            disconnect: {
+              id: ctx.session.id,
+            },
+          },
+        },
+      });
+    }),
+
   addLike: userProcedure
     .input(
       z.object({
@@ -455,7 +672,7 @@ export const blogRouter = createTRPCRouter({
       });
     }),
 
-    removeLike: userProcedure
+  removeLike: userProcedure
     .input(
       z.object({
         id: z.string(),
@@ -509,7 +726,7 @@ export const blogRouter = createTRPCRouter({
       });
     }),
 
-    removeDislike: userProcedure
+  removeDislike: userProcedure
     .input(
       z.object({
         id: z.string(),
@@ -562,5 +779,4 @@ export const blogRouter = createTRPCRouter({
         },
       });
     }),
-
 });
