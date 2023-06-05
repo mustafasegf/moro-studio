@@ -215,7 +215,7 @@ export default function DetailPemesanan(props: { id: string }) {
           </div>
 
           <div className="mt-6 grid grid-cols-3 gap-3 px-6 md:grid-cols-8">
-            <div className="col-span-2 ml-2 flex items-center">
+            <div className="col-span-2 flex items-center">
               <label
                 htmlFor="tanggal"
                 className="text-gray-900 block text-sm font-medium leading-6"
@@ -246,7 +246,7 @@ export default function DetailPemesanan(props: { id: string }) {
             <Link
               href={`/aksesfoto/list/${id}`}
               type="button"
-              className="mb-2 inline-flex w-full justify-center rounded-md bg-light-grey px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-28"
+              className="mb-2 inline-flex w-full justify-center rounded-md bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28"
             >
               Daftar Foto
             </Link>

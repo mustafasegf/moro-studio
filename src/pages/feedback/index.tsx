@@ -34,7 +34,7 @@ export default function ListFeedback() {
   useEffect(
     function () {
       if (deleteFeedbackMutation.isSuccess) {
-        makeToast("Feedback berhasil dihapus", { duration: 5000 })
+        makeToast("Feedback berhasil dihapus", { duration: 5000 });
         const timeout = setTimeout(() => {
           deleteFeedbackMutation.reset();
         }, 5000);
@@ -47,7 +47,9 @@ export default function ListFeedback() {
   useEffect(
     function () {
       if (deleteFeedbackMutation.isError) {
-        makeToast(`Error: ${deleteFeedbackMutation.error.message}`, { type: "error" })
+        makeToast(`Error: ${deleteFeedbackMutation.error.message}`, {
+          type: "error",
+        });
         const timeout = setTimeout(() => {
           deleteFeedbackMutation.reset();
         }, 5000);
@@ -68,42 +70,57 @@ export default function ListFeedback() {
         kembaliHandler={() => setOpen(false)}
         actionHandler={deleteHandler}
       />
-      <h1 className="my-8 text-center text-3xl font-bold">Daftar Feedback</h1>
 
-      <div className="mb-4 flex justify-end">
-        <Link href="/feedback/tambah">
-          {session && (
-            <button className="mr-4 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
-              + Buat Feedback
-            </button>
-          )}
-        </Link>
-      </div>
+      <div className="min-h-screen">
+        <h1 className="my-8 text-center text-3xl font-bold">Daftar Feedback</h1>
 
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-        {data?.map((item) => (
-          <div className={`mx-4 my-6 rounded-lg bg-[#e5e7eb] p-6 shadow-lg md:mx-10 lg:mx-20 flex flex-col justify-between border ${item.isiFeedback.length > 100 ? 'h-auto' : 'h-[20rem]'}`}>
-            <div>
-              <h3 className="text-lg font-medium text-gray-900">{item.user.nama}</h3>
-              <p className="mt-4 rounded-md bg-light-grey p-4 text-black break-words">{item.isiFeedback}</p>
-            </div>
-            <div className="mt-4 flex justify-between items-center">
-              <div className="text-sm text-gray-600">{item.updatedAt.toDateString()}</div>
-              <div className="flex items-center">
-                {item.userId === session?.id && (
-                  <Link className="mr-2 rounded-md border border-gray-600 px-6 py-2 text-gray-600 transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey" href={`/feedback/${item.id}`}>Ubah</Link>
-                )}
-                {session?.role === 'admin' && (
-                  <button
-                    className="focus:shadow-outline rounded bg-[#FC182A] py-2 px-4 font-bold text-white-grey hover:bg-red focus:outline-none"
-                    onClick={() => openModal(item.id)}>
-                    Hapus
-                  </button>
-                )}
+        <div className="mb-4 flex justify-end">
+          <Link href="/feedback/tambah">
+            {session && (
+              <button className="mr-4 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+                + Buat Feedback
+              </button>
+            )}
+          </Link>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+          {data?.map((item) => (
+            <div
+              className={`mx-4 my-6 flex flex-col justify-between rounded-lg border border-medium-grey bg-white-grey p-6 shadow-lg md:mx-10 lg:mx-20 ${
+                item.isiFeedback.length > 100 ? "h-auto" : "h-[20rem]"
+              }`}
+            >
+              <div>
+                <h3 className="text-base font-medium">{item.user.nama}</h3>
+                <p className="mt-4 break-words rounded-md bg-light-grey bg-opacity-60 p-4 text-black">
+                  {item.isiFeedback}
+                </p>
+              </div>
+              <div className="mt-4 flex items-center justify-between">
+                <div className="text-sm">{item.updatedAt.toDateString()}</div>
+                <div className="flex items-center">
+                  {item.userId === session?.id && (
+                    <Link
+                      className="mr-2 rounded-md border border-dark-grey px-6 py-2 transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey"
+                      href={`/feedback/${item.id}`}
+                    >
+                      Ubah
+                    </Link>
+                  )}
+                  {session?.role === "admin" && (
+                    <button
+                      className="focus:shadow-outline rounded bg-[#FC182A] py-2 px-4 font-bold text-white-grey hover:bg-red focus:outline-none"
+                      onClick={() => openModal(item.id)}
+                    >
+                      Hapus
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </>
   );

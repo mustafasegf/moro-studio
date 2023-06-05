@@ -11,6 +11,11 @@ export function Navbar() {
       role: undefined,
     },
     {
+      name: "Kelola Jadwal",
+      path: "/pesan/konfirmasi",
+      role: "admin",
+    },
+    {
       name: "Blog",
       path: "/blog",
       role: undefined,
@@ -43,7 +48,7 @@ export function Navbar() {
     {
       name: "Dashboard",
       path: "/dashboard",
-      role: "admin" || "studioManager",
+      role: "studioManager" || "admin",
     },
     {
       name: "Detail Pesanan",
@@ -149,7 +154,7 @@ export function Navbar() {
                   <li key={page.path}>
                     <Link
                       href={page.path}
-                      className="mr-2 text-white-grey hover:bg-light-grey hover:text-black"
+                      className="text-white-grey hover:bg-light-grey hover:text-black"
                     >
                       {page.name}
                     </Link>
@@ -160,13 +165,13 @@ export function Navbar() {
         </div>
         <div className="flex-none">
           <ul className="menu menu-horizontal px-1">
-            {session && session?.role !== "user" && (
+            {/* {session && session?.role !== "user" && (
               <li className="hidden sm:block">
                 <p className="mr-2 bg-dark-grey text-white-grey">
                   role: {session?.role}
                 </p>
               </li>
-            )}
+            )} */}
             {session && (
               <li className="hidden sm:block">
                 <p className="mr-2 bg-dark-grey font-semibold text-white-grey">

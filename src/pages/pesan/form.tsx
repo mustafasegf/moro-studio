@@ -110,7 +110,7 @@ export default function Jadwal({
       <CenterContainer>
         <div className="flex justify-center">
           <form
-            className="max-w-lg mt-4 mb-8 grow rounded-3xl bg-base-200 p-8"
+            className="max-w-lg mt-4 mb-8 grow rounded-3xl bg-grey bg-opacity-20 p-8"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="mb-4">
@@ -247,7 +247,7 @@ export default function Jadwal({
               </label>
               <select
                 id="warna"
-                className="input-bordered input mt-1 mb-4 w-full max-w-xs"
+                className="input-bordered input mt-1 mb-4 w-full max-w-md"
                 {...register("warna")}
               >
                 {backgrounds?.map(({warna}) => <option key={warna} value={warna}>{warna}</option>)}
@@ -268,11 +268,11 @@ export default function Jadwal({
               </label>
               <select
                 id="peliharaan"
-                className="input-bordered input mt-1 mb-4 w-full max-w-xs"
+                className="input-bordered input mt-1 mb-4 w-full max-w-md"
                 {...register("peliharaan", { setValueAs: (v) => v === "true" })}
               >
-                <option value="false">tidak</option>
-                <option value="true">ya</option>
+                <option value="false">Tidak</option>
+                <option value="true">Ya</option>
               </select>
               {errors.peliharaan && (
                 <span
@@ -312,7 +312,7 @@ export default function Jadwal({
             <input type="hidden" {...register(`katalog`)} />
 
             <input
-              className="btn-primary btn mt-4"
+              className="mt-4 h-10 rounded-3xl inline-flex w-full justify-center bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28"
               type="submit"
               value="kirim"
             />

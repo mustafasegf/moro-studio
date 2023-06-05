@@ -66,12 +66,12 @@ export default function AddUser() {
   return (
     <>
       <div className="m-8">
-        <Link href="/user" className="btn mb-4">
+        <Link href="/user" className="h-10 rounded-3xl inline-flex w-full justify-center bg-light-grey py-2 px-3 text-sm font-semibold text-black hover:bg-medium-grey hover:text-white-grey sm:mt-0 sm:w-28">
           kembali
         </Link>
         <div className="flex justify-center">
           <form
-            className="max-w-lg grow rounded-3xl bg-base-200 p-8"
+            className="max-w-lg grow rounded-3xl bg-grey bg-opacity-20 p-8"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div>
@@ -153,7 +153,7 @@ export default function AddUser() {
                 </label>
                 <select
                   id="role"
-                  className="input-bordered input mt-1 mb-4 w-full max-w-xs"
+                  className="input-bordered input mt-1 mb-4 w-full max-w-md"
                   {...register("role")}
                 >
                   {roles.map((role) => (
@@ -162,7 +162,7 @@ export default function AddUser() {
                 </select>
               </div>
 
-              <input className="btn mt-4" type="submit" value="kirim" />
+              <input className="mt-4 h-10 rounded-3xl inline-flex w-full justify-center bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28" type="submit" value="kirim" />
             </div>
           </form>
         </div>

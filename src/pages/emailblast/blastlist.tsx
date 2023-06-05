@@ -3,67 +3,38 @@ import React from "react";
 export default function DraftList() {
   return (
     <>
-      <div className="bg-white py-5">
-        <div>
-          <p className="mx-5 flex text-2xl font-bold text-black">Draf Blog</p>
-        </div>
-
-        <div>
-          <a href="createblast" className="btn-sm btn mx-5 my-5 ">
-            + | Buat email blast baru
-          </a>
-        </div>
-
-        <div>
-          {/* to solve text overflow can either make new attribute foe blog obj (description), or just let it happened :) */}
-          {/* make the loop func here */}
-          <div className="card card-compact mx-5 mb-2 flex justify-center rounded-none bg-white shadow-md">
-            <div className="card-body">
-              <table className="w-10/10 table-fixed">
-                <thead>
-                  <tr>
-                    <th className="w-2/10"></th>
-                    <th className="w-6/10"></th>
-                    <th className="w-2/10 "></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-
-                    
-
-                    <td className="w-6/10 px-2">
-                      <div >
-                      <div>
-                        <td>
-                        <p className="max-w-min badge rounded-none w-20">12/05/2013
-                        
-                      </p>
-                        </td>
-                        <td>
-                            <p className="card-title text-black">
-                        halo ini judul email blast terkirim
-                        </p></td>
-                      </div>
-                        
-                      
-                        
-                      <p className="text-black  ">
-                        is simply dummy text of the printing and typesetting
-                        industry. Lorem Ipsum has been the industrys standard
-                        dummy text ever since the 1500s, printing and
-                        typesetting industry. Lorem Ipsum has been the
-                        industrys standard dummy text ever since the 1500s,
-                      </p>
-                      </div>
-                    </td>
-                    
-                  </tr>
-                </tbody>
-              </table>
+      <div className="bg-gray-100 min-h-screen">
+        <div className="py-5">
+          <div className="mx-auto max-w-4xl px-6">
+            <h1 className="my-8 text-center text-3xl font-bold">Draft Email</h1>
+            <div className="mb-4 flex justify-end">
+              <a
+                href="createblast"
+                className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]"
+              >
+                + Buat email blast baru
+              </a>
+            </div>
+            <div className="flex justify-center">
+              {/* Loop through blog posts here */}
+              <div className="bg-white-grey w-full max-w-2xl overflow-hidden rounded-lg shadow-md">
+                <div className="p-4">
+                  <p className="text-sm">12/05/2013</p>
+                  <p className="mt-2 text-xl font-bold">
+                    Halo Ini Judul Email Blast Terkirim
+                  </p>
+                  <p className="mt-2">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Duis varius tellus ligula, at dapibus enim rutrum sit amet.
+                    Nullam malesuada feugiat justo ut feugiat. Curabitur
+                    venenatis bibendum arcu id semper. Sed eget velit ac ex
+                    finibus facilisis.
+                  </p>
+                </div>
+              </div>
+              {/* End of loop */}
             </div>
           </div>
-          {/* loop end here */}
         </div>
       </div>
     </>
