@@ -108,54 +108,69 @@ export default function DraftList() {
         kembaliHandler={() => setIsKonfirmasi(false)}
         actionHandler={konfirmasiHandler}
       />
+
       <div className="min-h-screen">
-        <div className="m-8">
-          <div className="flex flex-col items-center justify-end gap-4 md:flex-row md:items-center">
-            <div className="w-full">
-              {blogs?.map((blog) => (
-                <Link key={blog.id} href={`/blog/draft/${blog.id}`}>
-                  <div className="mb-4 w-full flex-col rounded-lg bg-white-grey p-4 shadow-md">
-                    <div className="flex flex-row items-center justify-between">
-                      <div className="flex flex-col">
-                        <h3 className="text-lg font-semibold">{blog.judul}</h3>
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                          <img
-                            className="max-h-48 md:w-1/3"
-                            src={
-                              images?.find(
-                                (image) => image.id === blog.gambarBlogId
-                              )?.url
-                            }
-                            alt="Blog Image"
-                          />
-                          <p className="text-sm md:w-2/3 md:pl-4">
-                            {blog.isi.substring(0, 500)}...
-                          </p>
-                          <div className="mt-4 flex gap-2 sm:mt-0 md:ml-4 md:mb-0 md:w-auto">
-                            {session?.role === "admin" && (
-                              <button
-                                className="rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]"
-                                /*@ts-ignore*/
-                                onClick={(e) => onKonfirmasi(e, blog.id)}
-                              >
-                                Konfirmasi
-                              </button>
-                            )}
-                            <button
-                              className="rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
-                              /*@ts-ignore*/
-                              onClick={(e) => onDelete(e, blog.id)}
-                            >
-                              Hapus
-                            </button>
-                          </div>
-                        </div>
+        <div className="mx-auto mx-2 px-4 sm:mx-16">
+          <h1 className="my-8 text-center text-3xl font-bold">
+            Daftar Blog Draft
+          </h1>
+          <div className="mb-4 flex justify-end">
+            {(session?.role === "admin" || session?.role === "blogManager") && (
+              <>
+              <Link href="/blog/tambah">
+                <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+                  + Buat Blog Baru
+                </button>
+              </Link>
+
+              <Link href="/blog">
+                <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+                  Blog 
+                </button>
+              </Link>
+              </>
+            )}
+          </div>
+
+          <div className="mb-5 grid grid-cols-1 gap-8">
+            {blogs?.map((blog) => (
+              <Link key={blog.id} href={`/blog/draft/${blog.id}`}>
+                <div className="rounded-lg border-dark-grey bg-white-grey shadow-lg hover:border">
+                  <div className="flex h-full flex-col p-4 lg:flex-row lg:items-stretch">
+                    <img
+                      className="mb-4 mr-2 h-48 w-auto object-cover lg:mb-0"
+                      src={
+                        images?.find((image) => image.id === blog.gambarBlogId)
+                          ?.url
+                      }
+                      alt="Blog Image"
+                    />
+                    <div className="flex flex-grow flex-col">
+                      <h3 className="text-lg font-semibold">{blog.judul}</h3>
+                      <p className="text-sm">{blog.isi.substring(0, 500)}...</p>
+                      <div className="mt-4">
+                        {session?.role === "admin" && (
+                          <button
+                            className="rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]"
+                            /*@ts-ignore*/
+                            onClick={(e) => onKonfirmasi(e, blog.id)}
+                          >
+                            Konfirmasi
+                          </button>
+                        )}
+                        <button
+                          className="rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
+                          /*@ts-ignore*/
+                          onClick={(e) => onDelete(e, blog.id)}
+                        >
+                          Hapus
+                        </button>
                       </div>
                     </div>
                   </div>
-                </Link>
-              ))}
-            </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>

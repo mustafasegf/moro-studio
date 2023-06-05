@@ -20,23 +20,29 @@ datasource db {
 }
 
 model User {
-  id             String           @id @default(cuid())
-  nama           String
-  email          String
-  hp             String?
-  instagram      String?
-  role           Role             @default(user)
+  id               String           @id @default(cuid())
+  nama             String
+  email            String
+  hp               String?
+  instagram        String?
+  role             Role             @default(user)
   // sessions       Session[]
-  booking        Booking[]
-  blastMarketing BlastMarketing[]
-  chatRoomStaff  ChatRoom[]       @relation("ChatRoomStaff")
-  chatRoomUser   ChatRoom[]       @relation("ChatRoomUser")
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  deleted        Boolean          @default(false)
-  ContohImage    ContohImage[]
-  Feedback       Feedback[]
-  FotoUser       FotoUser[]
+  booking          Booking[]
+  blastMarketing   BlastMarketing[]
+  chatRoomStaff    ChatRoom[]       @relation("ChatRoomStaff")
+  chatRoomUser     ChatRoom[]       @relation("ChatRoomUser")
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  deleted          Boolean          @default(false)
+  // feedback       Feedback[]
+  ContohImage      ContohImage[]
+  Feedback         Feedback[]
+  FotoUser         FotoUser[]
+  CommentBlog      CommentBlog[]
+  likedComments    CommentBlog[]    @relation("LikedComments")
+  dislikedComments CommentBlog[]    @relation("DislikedComments")
+  likedBlogs       KontenBlog[]     @relation("LikedBlogs")
+  dislikedBlogs    KontenBlog[]     @relation("DislikedBlogs")
 }
 
 // model VerificationToken {
@@ -145,7 +151,8 @@ model KontenBlog {
   comment      CommentBlog[]
   isi          String        @db.Text
   posted       Boolean
-  like         Int
+  likedBy      User[]        @relation("LikedBlogs")
+  dislikedBy   User[]        @relation("DislikedBlogs")
   gambarBlogId String        @unique
   gambarBlog   GambarBlog    @relation(fields: [gambarBlogId], references: [id])
   createdAt    DateTime      @default(now())
@@ -163,12 +170,13 @@ model CommentBlog {
   id           String     @id @default(cuid())
   kontenBlogId String
   kontenBlog   KontenBlog @relation(fields: [kontenBlogId], references: [id])
-  nama         String
-  isi          String
-  like         Int
-  dislike      Int
-  createdAt    DateTime
-  updatedAt    DateTime
+  userId       String
+  user         User       @relation(fields: [userId], references: [id])
+  isi          String     @db.Text
+  likedBy      User[]     @relation("LikedComments")
+  dislikedBy   User[]     @relation("DislikedComments")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 model BlastMarketing {
