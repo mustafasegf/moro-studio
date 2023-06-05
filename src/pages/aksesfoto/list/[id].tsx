@@ -31,20 +31,52 @@ export default function ListAksesFoto() {
     },
   });
 
-  async function handleDelete(id: string) {
-    await deleteImage.mutateAsync({ id })
+  async function handleDelete(id: string, bookingId: string) {
+    await deleteImage.mutateAsync({ id, bookingId })
     refetch()
   }
 
-  async function handleDownload(url: string) {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const urlObject = window.URL.createObjectURL(blob);
+  // async function handleDownload(url: string) {
+  //   console.log(url)
+  //   try {
+  //     const response = await fetch(url, { mode: 'no-cors' });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to fetch resource');
+  //     }
+
+  //     const blob = await response.blob();
+  //     const urlObject = window.URL.createObjectURL(blob);
+  //     const link = document.createElement('a');
+  //     link.href = urlObject;
+  //     link.download = 'morostudio.jpg'; // Provide a desired file name
+  //     link.click();
+  //     window.URL.revokeObjectURL(urlObject);
+  //   } catch (error) {
+  //     console.error('Download error:', error);
+  //     // Handle the error, show an error message, or perform any necessary actions
+  //   }
+  // }
+
+  // async function handleDownload(url: string) {
+  //   const response = await fetch(url, { mode: 'cors' });
+  //   const blob = await response.blob();
+  //   const urlObject = window.URL.createObjectURL(blob);
+  //   const link = document.createElement('a');
+  //   link.href = urlObject;
+  //   link.download = 'morostudio.jpg'; // Provide a desired file name
+  //   link.click();
+  //   window.URL.revokeObjectURL(urlObject);
+  // }
+
+  function handleDownload(url: string) {
     const link = document.createElement('a');
-    link.href = urlObject;
+    link.href = url;
     link.download = 'morostudio.jpg'; // Provide a desired file name
+    link.target = '_blank'; // Open the download in a new tab/window
+    link.rel = 'noopener noreferrer'; // Set link relationship attributes
+
     link.click();
-    window.URL.revokeObjectURL(urlObject);
   }
 
 
@@ -69,7 +101,7 @@ export default function ListAksesFoto() {
               <div key={image.id} className="flex flex-col justify-center gap-2">
                 <img className="max-h-72 object-contain" src={image.url} />
                 {(session?.role === 'admin' || session?.role === 'studioManager') && (
-                  <button className="btn btn-error" onClick={() => handleDelete(image.id)}>Hapus</button>
+                  <button className="btn btn-error" onClick={() => handleDelete(image.id, id)}>Hapus</button>
                 )}
                 <button className="btn btn-primary" onClick={() => handleDownload(image.url)}>Unduh</button>
               </div>

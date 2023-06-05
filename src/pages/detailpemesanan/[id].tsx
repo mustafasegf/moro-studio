@@ -59,18 +59,7 @@ export default function DetailPemesanan(props: { id: string }) {
   const [jumlahOrang, setJumlahOrang] = useState(0);
   const [jadwal, setJadwal] = useState(new Date());
 
-  const updateKupon = api.kupon.updateKupon.useMutation();
-  const router = useRouter();
   const { id } = props;
-
-  useEffect(
-    function () {
-      if (updateKupon.isSuccess) {
-        void router.push("/kupon/list-kupon");
-      }
-    },
-    [updateKupon.isSuccess]
-  );
 
   const { data, isLoading, error } = api.detailPemesanan.getPemesananById.useQuery({ id });
 
@@ -95,48 +84,6 @@ export default function DetailPemesanan(props: { id: string }) {
 
   return (
     <>
-      {updateKupon.isSuccess && (
-        <div className="alert alert-success shadow-lg">
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 flex-shrink-0 stroke-current"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span>Kupon telah berhasil diubah</span>
-          </div>
-        </div>
-      )}
-
-      {updateKupon.error && (
-        <div className="alert alert-error shadow-lg">
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 flex-shrink-0 stroke-current"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span>Error! Kupon tidak dapat diubah.</span>
-          </div>
-        </div>
-      )}
-
       <h1 className="my-8 mb-4 text-center text-3xl font-bold">Detail Pemesanan</h1>
 
       <div className="flex w-full flex-wrap py-4 px-4 sm:px-6 lg:px-8">
@@ -278,9 +225,8 @@ export default function DetailPemesanan(props: { id: string }) {
             </div>
             <div className="col-span-3 flex items-center">
               <input
-                value={new Date(jadwal).toISOString().substr(0, 10)}
-                type="date"
-                min={new Date().toISOString().split("T")[0]}
+                // value={new Date(jadwal).toISOString().substr(0, 16)}
+                value={format(jadwal, "dd/MM/yyyy hh:mm aa", {locale: enUS,})}
                 name="tanggal"
                 id="tanggal"
                 className="text-gray-900 focus:ring-indigo-600 mt-2 block w-full rounded-md border-0 py-1.5 px-2.5 shadow-sm ring-1 ring-inset  ring-dark-grey focus:ring-inset sm:text-sm sm:leading-6"

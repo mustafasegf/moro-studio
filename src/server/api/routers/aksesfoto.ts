@@ -71,7 +71,7 @@ export const aksesFotoRouter = createTRPCRouter({
     try {
       const post = ctx.s3.createPresignedPost({
         Fields: {
-          key: `${ctx.session.id}/${gambarRow.id}`,
+          key: `${input.bookingId}/${gambarRow.id}`,
         },
         Conditions: [
           ["starts-with", "$Content-Type", "image/"],
@@ -124,6 +124,7 @@ export const aksesFotoRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
+        bookingId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -137,7 +138,7 @@ export const aksesFotoRouter = createTRPCRouter({
         ctx.s3.deleteObject(
           {
             Bucket: env.BUCKET_NAME,
-            Key: `${ctx.session.id}/${input.id}`,
+            Key: `${input.bookingId}/${input.id}`,
           },
           (err, data) => {
             if (err) reject(err);
@@ -167,7 +168,7 @@ export const aksesFotoRouter = createTRPCRouter({
       );
     }),
 
-    getAllFotoByBookingId: userProcedure
+    getAllFotoByBookingId: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -198,7 +199,7 @@ export const aksesFotoRouter = createTRPCRouter({
           ...image,
           url: await ctx.s3.getSignedUrlPromise("getObject", {
             Bucket: env.BUCKET_NAME,
-            Key: `${booking?.userId}/${image.id}`,
+            Key: `${input.id}/${image.id}`,
           }),
         };
       })

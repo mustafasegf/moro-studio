@@ -12,9 +12,10 @@ export default function Upload() {
 
   const upload = api.aksesFoto.createPresignedUrl.useMutation()
   const deleteImage = api.aksesFoto.deleteFoto.useMutation()
-  const { data: images, refetch } = api.aksesFoto.getAllFoto.useQuery()
   const router = useRouter();
   const { id } = router.query as Query;
+
+  const { data, refetch } = api.booking.getBookingByBookingId.useQuery({ id })
 
   async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
@@ -56,7 +57,7 @@ export default function Upload() {
       console.error('Upload failed.')
       const reqData = await response.text()
       console.log(reqData)
-      await deleteImage.mutateAsync({ id: imageId })
+      await deleteImage.mutateAsync({ id: imageId, bookingId: id })
     }
     refetch()
 
