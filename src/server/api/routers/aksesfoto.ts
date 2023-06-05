@@ -11,6 +11,7 @@ import { env } from "~/env.mjs";
 import { tryToCatch } from "~/utils/trycatch";
 import { TRPCError } from "@trpc/server";
 
+
 export const aksesFotoRouter = createTRPCRouter({
   createPresignedUrl: studioManagerProcedure
   .input(
@@ -119,7 +120,7 @@ export const aksesFotoRouter = createTRPCRouter({
     );
   }),
 
-  deleteFoto: userProcedure
+  deleteFoto: studioManagerProcedure
     .input(
       z.object({
         id: z.string(),
@@ -164,6 +165,43 @@ export const aksesFotoRouter = createTRPCRouter({
           };
         })
       );
+    }),
 
-    })
+    getAllFotoByBookingId: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+    const images = await ctx.prisma.fotoUser.findMany({
+      where: {
+        bookingId: input.id,
+      },
+    });
+
+    const booking = await ctx.prisma.booking.findUnique({
+      where: {
+        id: input.id,
+      },
+    });
+
+    if (!ctx.session) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Anda belum login",
+      });
+    }
+    return await Promise.all(
+      images.map(async (image) => {
+        return {
+          ...image,
+          url: await ctx.s3.getSignedUrlPromise("getObject", {
+            Bucket: env.BUCKET_NAME,
+            Key: `${booking?.userId}/${image.id}`,
+          }),
+        };
+      })
+    );
+  }),
 });

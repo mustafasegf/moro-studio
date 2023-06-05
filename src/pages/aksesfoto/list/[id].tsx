@@ -1,17 +1,28 @@
+import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
+import React, { FormEvent, useEffect } from "react";
 import { useState } from "react";
 import { ModalAction } from "~/component/modal";
 import makeToast from "~/component/toast";
+import { createSSG } from "~/server/SSGHelper";
 import { api } from "~/utils/api";
-import { useAuth } from "~/utils/session";
+import { getServerAuthSession, useAuth } from "~/utils/session";
+
+interface Query extends ParsedUrlQuery {
+  id: string;
+}
 
 export default function ListAksesFoto() {
   const [open, setOpen] = useState(false);
   const [idFoto, setIdFoto] = useState("");
   const { session } = useAuth();
-  const { data: images, refetch } = api.aksesFoto.getAllFoto.useQuery()
   const deleteImage = api.aksesFoto.deleteFoto.useMutation();
+  const router = useRouter();
+  const { id } = router.query as Query;
+
+  const { data: images, refetch } = api.aksesFoto.getAllFotoByBookingId.useQuery({ id })
 
   const utils = api.useContext();
   const deleteFotoMutation = api.aksesFoto.deleteFoto.useMutation({
@@ -42,10 +53,12 @@ export default function ListAksesFoto() {
       <h1 className="my-8 text-center text-3xl font-bold">Daftar Foto</h1>
 
       <div className="mb-4 flex justify-end">
-        <Link href="/aksesfoto/create">
-          <button className="mr-4 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
-            + Tambah Foto
-          </button>
+        <Link href={`/aksesfoto/${id}`}>
+          {(session?.role === 'studioManager' || session?.role === 'admin')  && (
+            <button className="mr-4 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+              + Tambah Foto
+            </button>
+          )}
         </Link>
       </div>
 

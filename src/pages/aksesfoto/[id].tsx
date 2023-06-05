@@ -1,5 +1,5 @@
 import Link from "next/link"
-import router from "next/router"
+import router, { useRouter } from "next/router"
 import { api } from "~/utils/api"
 import { tryToCatch } from "~/utils/trycatch"
 import { ParsedUrlQuery } from "querystring";
@@ -8,12 +8,13 @@ interface Query extends ParsedUrlQuery {
   id: string;
 }
 
-export default function Upload(props: { id: string }) {
+export default function Upload() {
 
   const upload = api.aksesFoto.createPresignedUrl.useMutation()
   const deleteImage = api.aksesFoto.deleteFoto.useMutation()
   const { data: images, refetch } = api.aksesFoto.getAllFoto.useQuery()
-  const { id } = props;
+  const router = useRouter();
+  const { id } = router.query as Query;
 
   async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
@@ -92,7 +93,7 @@ export default function Upload(props: { id: string }) {
 
           <div className="bg-gray-300 px-4 py-3 text-right sm:px-6">
             <Link
-              href="/aksesfoto/list"
+              href={`/aksesfoto/list/${id}`}
               type="button"
               className="inline-flex w-full justify-center rounded-md border border-gray-600 px-3 py-2 text-sm font-semibold text-gray-600 transition duration-300 ease-in-out hover:border-gray-700 hover:bg-gray-700 hover:text-gray-200 sm:mr-3 sm:w-auto"
             >

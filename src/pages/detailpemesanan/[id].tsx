@@ -3,7 +3,7 @@ import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { GetServerSidePropsContext } from "next";
-import { getServerAuthSession } from "~/utils/session";
+import { getServerAuthSession, useAuth } from "~/utils/session";
 import { createSSG } from "~/server/SSGHelper";
 import { ParsedUrlQuery } from "querystring";
 import { LoadingPage } from "~/component/loading";
@@ -32,9 +32,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = getServerAuthSession(ctx);
   if (!session) {
     return { redirect: { destination: "/login" } };
-  }
-  if (session.role !== "admin") {
-    return { redirect: { destination: "/" } };
   }
 
   const { id } = ctx.query;
@@ -95,18 +92,6 @@ export default function DetailPemesanan(props: { id: string }) {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-
-  // const handleUpdateKupon = (e: FormEvent) => {
-  //   e.preventDefault();
-  //   updateKupon.mutate({
-  //     id,
-  //     nama,
-  //     kode,
-  //     diskon,
-  //     kuotaPemakaian,
-  //     tanggal,
-  //   });
-  // };
 
   return (
     <>
@@ -313,11 +298,11 @@ export default function DetailPemesanan(props: { id: string }) {
               Kembali
             </Link>
             <Link
-              href={`/aksesfoto/${data?.id}`}
+              href={`/aksesfoto/list/${id}`}
               type="button"
               className="mb-2 inline-flex w-full justify-center rounded-md bg-light-grey px-3 py-2 text-sm font-semibold text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey sm:mr-3 sm:w-28"
             >
-              Akses Foto
+              Daftar Foto
             </Link>
           </div>
         </form>

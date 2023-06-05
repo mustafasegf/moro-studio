@@ -3,36 +3,17 @@ import Link from "next/link";
 import { useState } from "react";
 import { Booking } from "@prisma/client";
 import { GetServerSidePropsContext } from "next";
-import { getServerAuthSession } from "~/utils/session";
+import { getServerAuthSession, useAuth } from "~/utils/session";
 import { createSSG } from "~/server/SSGHelper";
 import { BiEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { ModalAction } from "~/component/modal";
 import { LoadingPage } from "~/component/loading";
 
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const session = getServerAuthSession(ctx);
-  if (!session) {
-    return { redirect: { destination: "/login" } };
-  }
-  if (session.role !== "admin") {
-    return { redirect: { destination: "/" } };
-  }
-  const ssg = createSSG();
-  await ssg.kupon.getAllKupon.prefetch();
-
-  return {
-    props: {
-      trpcState: ssg.dehydrate(),
-    },
-  };
-}
-
-export default function ListKupon() {
-  const { data, isLoading, error } = api.detailPemesanan.getAllPemesananan.useQuery();
-
+export default function ListPemesanan() {
+  const { data, isLoading, error } = api.detailPemesanan.getAllPemesanan.useQuery();
+  const { session } = useAuth();
   const [selected, setSelected] = useState<Booking | undefined>(undefined);
-
   const [open, setOpen] = useState(false);
 
   const handleDeleteButton = (item: Booking) => {
