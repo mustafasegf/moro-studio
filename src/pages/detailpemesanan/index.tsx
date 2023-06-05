@@ -10,6 +10,14 @@ import { MdDelete } from "react-icons/md";
 import { ModalAction } from "~/component/modal";
 import { LoadingPage } from "~/component/loading";
 
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = getServerAuthSession(ctx);
+  if (!session) {
+    return { redirect: { destination: "/login" } };
+  }
+  return { props: {} };
+}
+
 export default function ListPemesanan() {
   const { data, isLoading, error } =
     api.detailPemesanan.getAllPemesanan.useQuery();
