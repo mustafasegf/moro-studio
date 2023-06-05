@@ -15,12 +15,13 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 import makeToast from "~/component/toast";
 
 import { RiThumbUpLine, RiThumbDownLine } from "react-icons/ri";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { AddCommentSchema, addCommentSchema } from "~/utils/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import cn from "classnames";
 import Link from "next/link";
+import { ModalAction } from "~/component/modal";
 
 const converter = new Showdown.Converter({
   tables: true,
@@ -68,6 +69,9 @@ export default function BlogView({ id }: { id: string }) {
 
   const { data: comments } = api.blog.getAllComment.useQuery({ id });
   const utils = api.useContext();
+
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [commentId, setCommentId] = useState<string>("");
 
   const addComment = api.blog.addComment.useMutation({
     onSuccess() {
@@ -122,6 +126,22 @@ export default function BlogView({ id }: { id: string }) {
       utils.blog.getAllComment.invalidate({ id });
     },
   });
+
+  const deleteComment = api.blog.deleteComment.useMutation({
+    onSuccess() {
+      utils.blog.getAllComment.invalidate({ id });
+    },
+  });
+
+  function handleDeleteComment(id: string) {
+    setCommentId(id);
+    setIsDeleting(true);
+  }
+
+  function handleActionDeleteComment() {
+    deleteComment.mutate({ id: commentId });
+    setIsDeleting(false);
+  }
 
   function handleDislike(id: string) {
     if (
@@ -232,13 +252,23 @@ export default function BlogView({ id }: { id: string }) {
 
   return (
     <>
+      <ModalAction
+        isDelete
+        open={isDeleting}
+        title="Hapus Komentar"
+        content="Apakah Anda yakin akan menghapus Komentar ini?"
+        onClose={() => setIsDeleting(false)}
+        kembaliHandler={() => setIsDeleting(false)}
+        actionHandler={handleActionDeleteComment}
+      />
+
       <CenterContainer>
         <Link href="/blog">
           <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
             Kembali Ke Blog
           </button>
         </Link>
-        
+
         <h3 className="mx-4 text-center text-2xl font-bold">{blog?.judul}</h3>
         <img src={image?.url} className="mx-auto my-4" />
 
@@ -287,7 +317,7 @@ export default function BlogView({ id }: { id: string }) {
               <input
                 type="submit"
                 value="Kirim komentar"
-                className="btn-sm btn-md btn"
+                className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]"
               />
             </form>
           </div>
@@ -346,6 +376,15 @@ export default function BlogView({ id }: { id: string }) {
                     />
                     {comment.dislikedBy.length}
                   </button>
+
+                  {session && session.role === "admin" && (
+                    <button
+                      className="btn-error btn-sm btn"
+                      onClick={() => handleDeleteComment(comment.id)}
+                    >
+                      Hapus Komentar
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

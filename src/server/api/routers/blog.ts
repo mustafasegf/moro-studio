@@ -7,6 +7,7 @@ import {
   publicProcedure,
   blogManagerProcedure,
   userProcedure,
+  adminProcedure,
 } from "~/server/api/trpc";
 import { env } from "~/env.mjs";
 import { tryToCatch } from "~/utils/trycatch";
@@ -831,4 +832,31 @@ export const blogRouter = createTRPCRouter({
       },
     ];
   }),
+
+  deleteComment: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.prisma.commentBlog.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!comment) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comment not found",
+        });
+      }
+
+      return await ctx.prisma.commentBlog.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });
