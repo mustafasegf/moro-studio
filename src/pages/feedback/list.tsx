@@ -82,16 +82,16 @@ export default function ListFeedback() {
 
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         {data?.map((item) => (
-          <div className={`mx-4 my-6 rounded-lg bg-[#e5e7eb] p-6 shadow-lg md:mx-10 lg:mx-20 flex flex-col justify-between border ${item.isiFeedback.length > 100 ? 'h-auto' : 'h-[20rem]'}`}>
+          <div className={`mx-4 my-6 rounded-lg bg-white-grey border-medium-grey p-6 shadow-lg md:mx-10 lg:mx-20 flex flex-col justify-between border ${item.isiFeedback.length > 100 ? 'h-auto' : 'h-[20rem]'}`}>
             <div>
-              <h3 className="text-lg font-medium text-gray-900">{item.userId}</h3>
-              <p className="mt-4 rounded-md bg-light-grey p-4 text-black break-words">{item.isiFeedback}</p>
+              <h3 className="text-base font-medium">{item.userId}</h3>
+              <p className="mt-4 rounded-md bg-light-grey bg-opacity-60 p-4 text-black break-words">{item.isiFeedback}</p>
             </div>
             <div className="mt-4 flex justify-between items-center">
-              <div className="text-sm text-gray-600">{item.updatedAt.toDateString()}</div>
+              <div className="text-sm">{item.updatedAt.toDateString()}</div>
               <div className="flex items-center">
                 {item.userId === session?.id && (
-                  <Link className="mr-2 rounded-md border border-gray-600 px-6 py-2 text-gray-600 transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey" href={`/feedback/${item.id}`}>Ubah</Link>
+                  <Link className="mr-2 rounded-md border border-dark-grey px-6 py-2 transition duration-300 ease-in-out hover:border-medium-grey hover:bg-medium-grey hover:text-white-grey" href={`/feedback/${item.id}`}>Ubah</Link>
                 )}
                 {session?.role === 'admin' && (
                   <button

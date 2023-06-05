@@ -123,14 +123,14 @@ export default function ListAksesFoto() {
               <div key={image.id} className="flex flex-col justify-center gap-2">
                 <img className="max-h-72 object-contain" src={image.url} />
                 {session?.role === 'user' && (
-                  <button className="btn btn-error" onClick={() => handleDelete(image.id)}>Hapus</button>
+                  <button className="rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey" onClick={() => handleDelete(image.id)}>Hapus</button>
                   // <button
                   //   className="btn btn-error"
                   //   onClick={() => openModal(image.id)}>
                   //   Hapus
                   // </button>
                 )}
-                <button className="btn btn-primary" onClick={() => handleDownload(image.url)}>Unduh</button>
+                <button className="border rounded-3xl bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]" onClick={() => handleDownload(image.url)}>Unduh</button>
               </div>
             ))
           )}

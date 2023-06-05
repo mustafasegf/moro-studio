@@ -80,7 +80,7 @@ export default function ListFeedback() {
 
       <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
         {data?.map((item) => (
-          <div key={item.id} className="mx-4 my-6 rounded-lg bg-[#e5e7eb] p-6 shadow-lg md:mx-10 lg:mx-20">
+          <div key={item.id} className="mx-4 my-6 rounded-lg bg-grey bg-opacity-20 p-6 shadow-lg md:mx-10 lg:mx-20">
             <p className="text-left text-lg font-bold">{item.pertanyaan}</p>
             <div className="mt-4 flex justify-between items-center">
               <div className="flex items-center">
