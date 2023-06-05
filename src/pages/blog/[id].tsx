@@ -20,6 +20,7 @@ import { AddCommentSchema, addCommentSchema } from "~/utils/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import cn from "classnames";
+import Link from "next/link";
 
 const converter = new Showdown.Converter({
   tables: true,
@@ -232,6 +233,12 @@ export default function BlogView({ id }: { id: string }) {
   return (
     <>
       <CenterContainer>
+        <Link href="/blog">
+          <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+            Kembali Ke Blog
+          </button>
+        </Link>
+        
         <h3 className="mx-4 text-center text-2xl font-bold">{blog?.judul}</h3>
         <img src={image?.url} className="mx-auto my-4" />
 

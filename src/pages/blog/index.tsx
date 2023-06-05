@@ -88,23 +88,31 @@ export default function DraftList() {
       <ModalAction
         open={isKonfirmasi}
         title="Draft Blog"
-        content="Apakah Anda yakin akan mengdraft blog ini?"
+        content="Apakah Anda yakin akan unpublish konten blog ini dan menambahkannya ke draft?"
         onClose={() => setIsKonfirmasi(false)}
         kembaliHandler={() => setIsKonfirmasi(false)}
         actionHandler={konfirmasiHandler}
       />
 
       <div className="min-h-screen">
-        <div className="mx-auto px-4 mx-2 sm:mx-16">
+        <div className="mx-auto mx-2 px-4 sm:mx-16">
           <h1 className="my-8 text-center text-3xl font-bold">Blog</h1>
 
           <div className="mb-4 flex justify-end">
             {(session?.role === "admin" || session?.role === "blogManager") && (
-              <Link href="/blog/tambah">
-                <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
-                  + Buat Blog Baru
-                </button>
-              </Link>
+              <>
+                <Link href="/blog/tambah">
+                  <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+                    + Buat Blog Baru
+                  </button>
+                </Link>
+
+                <Link href="/blog/draft">
+                  <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+                    Draft Blog
+                  </button>
+                </Link>
+              </>
             )}
           </div>
 
@@ -125,18 +133,27 @@ export default function DraftList() {
                       <h3 className="mb-3 text-lg font-semibold">
                         {blog.judul}
                       </h3>
-                      <p className="text-sm">
-                        {blog.isi.substring(0, 500)}...
-                      </p>
-                      {session?.role === "admin" && (
-                        <div className="mt-4">
-                          <button
-                            className="mr-2 rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]"
-                            /*@ts-ignore*/
-                            onClick={(e) => onKonfirmasi(e, blog.id)}
-                          >
-                            Draft
-                          </button>
+                      <p className="text-sm">{blog.isi.substring(0, 500)}...</p>
+                      <div className="mt-4">
+                        {session?.role === "admin" && (
+                          <>
+                            <button
+                              className="mr-2 rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]"
+                              /*@ts-ignore*/
+                              onClick={(e) => onKonfirmasi(e, blog.id)}
+                            >
+                              Draft
+                            </button>
+                            <button
+                              className="rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
+                              /*@ts-ignore*/
+                              onClick={(e) => onDelete(e, blog.id)}
+                            >
+                              Hapus
+                            </button>
+                          </>
+                        )}
+                        {session?.role === "blogManager" && (
                           <button
                             className="rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
                             /*@ts-ignore*/
@@ -144,17 +161,8 @@ export default function DraftList() {
                           >
                             Hapus
                           </button>
-                        </div>
-                      )}
-                      {session?.role === "blogManager" && (
-                        <button
-                          className="rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
-                          /*@ts-ignore*/
-                          onClick={(e) => onDelete(e, blog.id)}
-                        >
-                          Hapus
-                        </button>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -12,6 +12,7 @@ import ReactMde from "react-mde";
 import Showdown from "showdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import makeToast from "~/component/toast";
+import Link from "next/link";
 
 const converter = new Showdown.Converter({
   tables: true,
@@ -118,7 +119,7 @@ export default function CreateDraft({ id }: { id: string }) {
   }
 
   useEffect(
-    function() {
+    function () {
       if (updateBlog.isSuccess) {
         makeToast("blog berhasil ditambah");
         const timeout = setTimeout(() => {
@@ -131,7 +132,7 @@ export default function CreateDraft({ id }: { id: string }) {
   );
 
   useEffect(
-    function() {
+    function () {
       if (updateBlog.isError) {
         makeToast(`Eror: ${updateBlog.error.message}`, { type: "error" });
         const timeout = setTimeout(() => {
@@ -145,13 +146,21 @@ export default function CreateDraft({ id }: { id: string }) {
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
-    updateBlog.mutate({ ...blog!, isi: value, judul, gambarBlogId: imgId, id,  });
+    updateBlog.mutate({ ...blog!, isi: value, judul, gambarBlogId: imgId, id });
   }
 
   return (
     <>
       <CenterContainer>
-        <h3 className="mx-4 mb-8 text-center text-3xl font-bold">Ubah Draft Blog</h3>
+        <Link href="/blog/draft">
+          <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+            Kembali Ke Draft Blog
+          </button>
+        </Link>
+
+        <h3 className="mx-4 mb-8 text-center text-3xl font-bold">
+          Ubah Draft Blog
+        </h3>
 
         <form className="form-control gap-4" onSubmit={onSubmit}>
           <label htmlFor="thumbnail" className="text-sm font-medium leading-6">
@@ -161,7 +170,7 @@ export default function CreateDraft({ id }: { id: string }) {
             <input
               type="file"
               id="thumbnail"
-              className="file-input-bordered file-input file-input-info"
+              className="file-input-bordered file-input-info file-input"
               disabled={!!image}
               onChange={uploadPhoto}
             />
@@ -215,7 +224,11 @@ export default function CreateDraft({ id }: { id: string }) {
             }}
           />
 
-          <input className="mb-6 mt-3 border rounded-3xl bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]" type="submit" value="Simpan" />
+          <input
+            className="mb-6 mt-3 rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]"
+            type="submit"
+            value="Simpan"
+          />
         </form>
       </CenterContainer>
     </>
