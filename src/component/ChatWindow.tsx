@@ -7,15 +7,17 @@ interface ChatWindowProps {
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ messages }) => {
   return (
-    <div className="chat-window">
-      {messages.map((msg, index) => (
-        <ChatBubble
-          key={index}
-          sender={msg.sender}
-          message={msg.message}
-          isOwnMessage={msg.isOwnMessage}
-        />
-      ))}
+    <div className="overflow-y-auto">
+      <div className="chat-window">
+        {messages.map((msg, index) => (
+          <ChatBubble
+            key={index}
+            sender={msg.sender}
+            message={msg.message}
+            isOwnMessage={msg.isOwnMessage}
+          />
+        ))}
+      </div>
     </div>
   );
 };
