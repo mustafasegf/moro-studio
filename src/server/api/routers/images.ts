@@ -1,17 +1,11 @@
 import { z } from "zod";
-import { sign } from "jsonwebtoken";
 
-import {
-  createTRPCRouter,
-  publicProcedure,
-  userProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, studioManagerProcedure } from "~/server/api/trpc";
 import { env } from "~/env.mjs";
-import { tryToCatch } from "~/utils/trycatch";
 import { TRPCError } from "@trpc/server";
 
 export const imageRouter = createTRPCRouter({
-  createPresignedUrl: userProcedure.mutation(async ({ ctx }) => {
+  createPresignedUrl: studioManagerProcedure.mutation(async ({ ctx }) => {
     console.log("ctx.session.id", ctx.session);
 
     const gambarRow = await ctx.prisma.contohImage.create({
@@ -55,12 +49,8 @@ export const imageRouter = createTRPCRouter({
     }
   }),
 
-  getAllImages: userProcedure.query(async ({ ctx }) => {
-    const images = await ctx.prisma.contohImage.findMany({
-      where: {
-        userId: ctx.session.id,
-      },
-    });
+  getAllImages: studioManagerProcedure.query(async ({ ctx }) => {
+    const images = await ctx.prisma.contohImage.findMany({});
 
     return await Promise.all(
       images.map(async (image) => {
@@ -75,7 +65,7 @@ export const imageRouter = createTRPCRouter({
     );
   }),
 
-  deleteImage: userProcedure
+  deleteImage: studioManagerProcedure
     .input(
       z.object({
         id: z.string(),

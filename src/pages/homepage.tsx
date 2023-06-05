@@ -2,6 +2,20 @@ import { useState } from "react";
 import { api } from "~/utils/api";
 import { tryToCatch } from "~/utils/trycatch";
 import { Modal } from "~/component/modal";
+import { getServerAuthSession } from "~/utils/session";
+import { GetServerSidePropsContext } from "next";
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = getServerAuthSession(ctx);
+  if (!session) {
+    return { redirect: { destination: "/login" } };
+  }
+  if (session.role !== "studioManager") {
+    return { redirect: { destination: "/" } };
+  }
+
+  return { props: {} };
+}
 
 export default function Homepage() {
   const upload = api.image.createPresignedUrl.useMutation();
@@ -45,6 +59,7 @@ export default function Homepage() {
   }
 
   async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    setIsChecked(false);
     e.preventDefault();
 
     const file = e.target.files?.[0];
@@ -86,6 +101,7 @@ export default function Homepage() {
     }
     refetch();
   }
+
   async function handleDelete(id: string) {
     await deleteImage.mutateAsync({ id });
     refetch();
@@ -129,6 +145,13 @@ export default function Homepage() {
                 {Xbutton()}
               </button>
             </div>
+            <div className="carousel-center carousel rounded-box mb-8 space-x-4 bg-light-grey p-4">
+              {img && (
+                <div className="carousel-item">
+                  <img src={img} style={{ height: "36px" }} />
+                </div>
+              )}
+            </div>
             <div className="flex flex-col place-content-center">
               <div className="flex flex-wrap items-center justify-center gap-4 py-8 px-4 sm:px-6 lg:px-8">
                 {images &&
@@ -166,6 +189,13 @@ export default function Homepage() {
               </button>
 
               <button
+                onClick={() => setImgs(() => [])}
+                className="ml-4 inline-flex w-full justify-center rounded-md border-blue bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]  sm:mt-0 sm:w-auto"
+              >
+                Reset
+              </button>
+
+              <button
                 className="ml-auto"
                 onClick={() => setIsModalOpen2(false)}
               >
@@ -173,6 +203,13 @@ export default function Homepage() {
               </button>
             </div>
             <div className="flex flex-col place-content-center">
+              <div className="carousel-center carousel rounded-box mb-8 space-x-4 bg-light-grey p-4">
+                {imgs.map((item) => (
+                  <div className="carousel-item">
+                    <img src={item} style={{ height: "36px" }} />
+                  </div>
+                ))}
+              </div>
               <div className="flex flex-wrap items-center justify-center gap-4 py-8 px-4 sm:px-6 lg:px-8">
                 {images &&
                   images.map((image) => (
@@ -239,7 +276,7 @@ export default function Homepage() {
           </div>
         </div>
 
-        <div className="flex justify-center sm:flex-col md:flex-col lg:flex-row">
+        <div className="flex justify-center">
           <button
             className="btn gap-2 rounded-md border-blue bg-blue text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]"
             onClick={handleOpenModal2}
