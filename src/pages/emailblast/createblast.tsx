@@ -10,7 +10,7 @@ export default function CreateBlast() {
           </h1>
         </div>
 
-        <form>
+        <form className="m-5">
           <div className="mx-5">
             <div className=" form-control">
               <div className=" flex justify-center pt-5">

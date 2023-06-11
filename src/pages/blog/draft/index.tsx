@@ -130,7 +130,7 @@ export default function DraftList() {
               </Link>
 
               <Link href="/blog">
-                <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+                <button className="rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
                   Blog 
                 </button>
               </Link>
@@ -157,7 +157,7 @@ export default function DraftList() {
                       <div className="mt-4">
                         {session?.role === "admin" && (
                           <button
-                            className="rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]"
+                            className="mr-2 rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]"
                             /*@ts-ignore*/
                             onClick={(e) => onKonfirmasi(e, blog.id)}
                           >

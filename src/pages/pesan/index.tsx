@@ -45,7 +45,7 @@ export default function Book() {
                       <div className="flex items-center">
                         <BiTimeFive className="mr-2 text-2xl text-gray-600" />
                         <span> 
-                          {item.durasi > 60 && Math.floor(item.durasi/60) + " Jam" } 
+                          {item.durasi > 60 && Math.floor(item.durasi/60) + " Jam " } 
                           {item.durasi % 60 + " Menit" } 
                         </span>
                       </div>

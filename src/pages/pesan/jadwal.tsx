@@ -123,20 +123,20 @@ export default function Jadwal({ katalogId }: { katalogId: string }) {
   return (
     <>
       <CenterContainer>
-        <div className=" flex flex-row justify-between">
+        <div className=" flex flex-row justify-between overflow-x-auto">
           {dates.map((date, rowIdx) => (
             <div
               key={date.toISOString()}
               className={cn(
                 "mt-4 mb-8 rounded-xl py-3 px-4 text-center text-lg  ",
                 {
-                  "relative rounded-lg bg-base-300":
+                  "relative rounded-lg bg-light-grey bg-opacity-40":
                     getDay(now) == getDay(date),
                 }
               )}
             >
               {getDay(now) == getDay(date) && (
-                <p className="absolute -top-3 left-8 inline-block rounded-2xl bg-[#595959] py-0.5 px-1 text-sm text-neutral-50">
+                <p className="absolute -top-3 left-7 md:left-10 inline-block rounded-2xl bg-[#595959] py-0.5 px-1 text-sm text-neutral-50">
                   Today
                 </p>
               )}

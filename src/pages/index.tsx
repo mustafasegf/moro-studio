@@ -56,7 +56,7 @@ const Home: NextPage = () => {
           }}
         >
           <div className="hero-overlay bg-opacity-60 object-fill"></div>
-          <div className="hero-content w-5/6 flex-col gap-12 rounded-lg bg-white-grey bg-opacity-70 p-8 sm:w-3/4 sm:p-16">
+          <div className="hero-content w-5/6 flex-col gap-12 rounded-lg bg-white-grey bg-opacity-70 p-8 sm:w-3/4 sm:p-16 my-4">
             <h1 className="text-5xl font-bold">Moro Studio</h1>
 
             {(!session || session?.role === "user") && (

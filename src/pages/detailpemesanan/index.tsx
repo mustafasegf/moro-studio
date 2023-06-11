@@ -5,7 +5,7 @@ import { Booking } from "@prisma/client";
 import { GetServerSidePropsContext } from "next";
 import { getServerAuthSession, useAuth } from "~/utils/session";
 import { createSSG } from "~/server/SSGHelper";
-import { BiEdit } from "react-icons/bi";
+import { GrCircleInformation } from "react-icons/gr";
 import { MdDelete } from "react-icons/md";
 import { ModalAction } from "~/component/modal";
 import { LoadingPage } from "~/component/loading";
@@ -58,14 +58,60 @@ export default function ListPemesanan() {
         ?.filter((item) => item.user.id === session?.id)
         .map((item, i) => (
           <tr key={item.id}>
-            <th>{item.id}</th>
-            <td>{item.user.nama}</td>
-            <td>{item.jadwal.toDateString()}</td>
-            <td>{item.jumlahOrang}</td>
-            <td>{item.status}</td>
-            <td className="flex items-center">
+            <td
+              className={
+                i % 2 === 0
+                  ? "bg-white-grey bg-opacity-50"
+                  : "bg-light-grey bg-opacity-40"
+              }
+            >
+              {item.id}
+            </td>
+            <td
+              className={
+                i % 2 === 0
+                  ? "bg-white-grey bg-opacity-50"
+                  : "bg-light-grey bg-opacity-40"
+              }
+            >
+              {item.user.nama}
+            </td>
+            <td
+              className={
+                i % 2 === 0
+                  ? "bg-white-grey bg-opacity-50"
+                  : "bg-light-grey bg-opacity-40"
+              }
+            >
+              {item.jadwal.toDateString()}
+            </td>
+            <td
+              className={
+                i % 2 === 0
+                  ? "bg-white-grey bg-opacity-50"
+                  : "bg-light-grey bg-opacity-40"
+              }
+            >
+              {item.jumlahOrang}
+            </td>
+            <td
+              className={
+                i % 2 === 0
+                  ? "bg-white-grey bg-opacity-50"
+                  : "bg-light-grey bg-opacity-40"
+              }
+            >
+              {item.status}
+            </td>
+            <td
+              className={`flex items-center ${
+                i % 2 === 0
+                  ? "bg-white-grey bg-opacity-50"
+                  : "bg-light-grey bg-opacity-40"
+              }`}
+            >
               <Link href={`/detailpemesanan/${item.id}`}>
-                <BiEdit className="mr-2 text-2xl" />
+                <GrCircleInformation className="mr-2 text-2xl" />
               </Link>
             </td>
           </tr>
@@ -73,14 +119,60 @@ export default function ListPemesanan() {
     } else {
       return data?.map((item, i) => (
         <tr key={item.id}>
-          <th>{item.id}</th>
-          <td>{item.user.nama}</td>
-          <td>{item.jadwal.toDateString()}</td>
-          <td>{item.jumlahOrang}</td>
-          <td>{item.status}</td>
-          <td className="flex items-center">
+          <td
+            className={
+              i % 2 === 0
+                ? "bg-white-grey bg-opacity-50"
+                : "bg-light-grey bg-opacity-40"
+            }
+          >
+            {item.id}
+          </td>
+          <td
+            className={
+              i % 2 === 0
+                ? "bg-white-grey bg-opacity-50"
+                : "bg-light-grey bg-opacity-40"
+            }
+          >
+            {item.user.nama}
+          </td>
+          <td
+            className={
+              i % 2 === 0
+                ? "bg-white-grey bg-opacity-50"
+                : "bg-light-grey bg-opacity-40"
+            }
+          >
+            {item.jadwal.toDateString()}
+          </td>
+          <td
+            className={
+              i % 2 === 0
+                ? "bg-white-grey bg-opacity-50"
+                : "bg-light-grey bg-opacity-40"
+            }
+          >
+            {item.jumlahOrang}
+          </td>
+          <td
+            className={
+              i % 2 === 0
+                ? "bg-white-grey bg-opacity-50"
+                : "bg-light-grey bg-opacity-40"
+            }
+          >
+            {item.status}
+          </td>
+          <td
+            className={`flex items-center ${
+              i % 2 === 0
+                ? "bg-white-grey bg-opacity-50"
+                : "bg-light-grey bg-opacity-40"
+            }`}
+          >
             <Link href={`/detailpemesanan/${item.id}`}>
-              <BiEdit className="mr-2 text-2xl" />
+              <GrCircleInformation className="mr-2 text-2xl" />
             </Link>
           </td>
         </tr>
@@ -90,31 +182,33 @@ export default function ListPemesanan() {
 
   return (
     <>
-      <ModalAction
-        isDelete
-        open={open}
-        title="Hapus Kupon"
-        content="Apakah Anda yakin akan menghapus kupon ini?"
-        onClose={() => setOpen(false)}
-        kembaliHandler={() => setOpen(false)}
-        actionHandler={deleteHandler}
-      />
-
       <div className="min-h-screen">
         <h1 className="my-8 text-center text-3xl font-bold">
           Daftar Pemesanan
         </h1>
 
         <div className="relative z-0 m-5 overflow-x-auto">
-          <table className="table-zebra table w-full">
+          <table className="table w-full">
             <thead>
               <tr>
-                <th>ID Booking</th>
-                <th>Nama Pemesan</th>
-                <th>Jadwal</th>
-                <th>Jumlah Orang</th>
-                <th>Status</th>
-                <th>Aksi</th>
+                <td className="bg-light-grey bg-opacity-80 text-base normal-case">
+                  ID Booking
+                </td>
+                <th className="bg-light-grey bg-opacity-80 text-base normal-case">
+                  Nama Pemesan
+                </th>
+                <th className="bg-light-grey bg-opacity-80 text-base normal-case">
+                  Jadwal
+                </th>
+                <th className="bg-light-grey bg-opacity-80 text-base normal-case">
+                  Jumlah Orang
+                </th>
+                <th className="bg-light-grey bg-opacity-80 text-base normal-case">
+                  Status
+                </th>
+                <th className="bg-light-grey bg-opacity-80 text-base normal-case">
+                  Aksi
+                </th>
               </tr>
             </thead>
             <tbody>{generateTable()}</tbody>

@@ -31,11 +31,6 @@ export function Navbar() {
       role: "admin",
     },
     {
-      name: "Edit Homepage",
-      path: "/homepage",
-      role: "admin",
-    },
-    {
       name: "Konfirmasi Pesanan",
       path: "/pesan/konfirmasi",
       role: "studioManager",

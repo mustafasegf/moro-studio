@@ -264,7 +264,7 @@ export default function BlogView({ id }: { id: string }) {
 
       <CenterContainer>
         <Link href="/blog">
-          <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+          <button className="rounded-3xl mb-4 bg-light-grey text-black px-6 py-2 hover:bg-medium-grey hover:text-white-grey">
             Kembali Ke Blog
           </button>
         </Link>
@@ -303,8 +303,8 @@ export default function BlogView({ id }: { id: string }) {
 
               <textarea
                 rows={10}
-                placeholder="Masukkan komentar anda"
-                className="bg-white input-bordered input h-[inherit] w-screen max-w-2xl p-4"
+                placeholder="Masukkan komentar Anda"
+                className="bg-white input-bordered input h-32 sm:h-48 lg:h-64 w-full sm:w-96 lg:w-2/3 xl:w-1/2 2xl:w-1/3 max-w-2xl p-4"
                 {...register("isi")}
               />
               {errors.isi && (
@@ -317,7 +317,7 @@ export default function BlogView({ id }: { id: string }) {
               <input
                 type="submit"
                 value="Kirim komentar"
-                className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]"
+                className="rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]"
               />
             </form>
           </div>
@@ -379,7 +379,7 @@ export default function BlogView({ id }: { id: string }) {
 
                   {session && (session.role === "admin" || session.id == comment.userId) && (
                     <button
-                      className="btn-error btn-sm btn"
+                      className="rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
                       onClick={() => handleDeleteComment(comment.id)}
                     >
                       Hapus Komentar
