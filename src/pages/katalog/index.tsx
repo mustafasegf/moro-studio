@@ -91,8 +91,8 @@ export default function ListCatalogue() {
           >
             <h2 className="text-left text-lg font-bold">{item.nama}</h2>
             <div className="mt-4 rounded-md bg-light-grey p-4 text-black">
-              <div className="text">
-                <pre>{item.deskripsi}</pre>
+              <div className="whitespace-pre-line">
+                <p>{item.deskripsi}</p>
               </div>
             </div>
             <div className="mt-6 flex items-center justify-between">

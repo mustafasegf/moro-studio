@@ -314,7 +314,7 @@ export default function Jadwal({
             <input
               className="mt-4 h-10 rounded-3xl inline-flex w-full justify-center bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28"
               type="submit"
-              value="kirim"
+              value="Kirim"
             />
           </form>
           {addBooking.isLoading && <LoadingPage />}

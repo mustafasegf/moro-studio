@@ -36,27 +36,49 @@ export default function Dashboard() {
 
   return (
     <>
-      <CenterContainer>
-        <div className="overflow-x-auto">
-          <table className="table-zebra table">
-            {/* head */}
-            <thead>
-              <tr>
-                <th>Tipe</th>
-                <th>Jumlah</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.map((item) => (
+      <div className="flex min-h-screen flex-col items-center">
+        <h1 className="mt-8 text-center text-3xl font-bold">Blog Dashboard</h1>
+        <CenterContainer>
+          <div className="relative z-0 m-5 overflow-x-auto">
+            <table className="table w-full">
+              <thead>
                 <tr>
-                  <th>{item.name}</th>
-                  <td>{item.value}</td>
+                  <th className="bg-light-grey bg-opacity-80 text-base normal-case">
+                    Tipe
+                  </th>
+                  <th className="bg-light-grey bg-opacity-80 text-base normal-case">
+                    Jumlah
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </CenterContainer>
+              </thead>
+              <tbody>
+                {data?.map((item, i) => (
+                  <tr>
+                    <td
+                      className={
+                        i % 2 === 0
+                          ? "bg-white-grey bg-opacity-50"
+                          : "bg-light-grey bg-opacity-40"
+                      }
+                    >
+                      {item.name}
+                    </td>
+                    <td
+                      className={
+                        i % 2 === 0
+                          ? "bg-white-grey bg-opacity-50"
+                          : "bg-light-grey bg-opacity-40"
+                      }
+                    >
+                      {item.value}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CenterContainer>
+      </div>
     </>
   );
 }

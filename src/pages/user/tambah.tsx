@@ -38,9 +38,9 @@ export default function AddUser() {
   }
 
   useEffect(
-    function() {
+    function () {
       if (addUser.isSuccess) {
-        makeToast("user berhasil ditambah")
+        makeToast("user berhasil ditambah");
         const timeout = setTimeout(() => {
           void router.push("/");
         }, 1000);
@@ -51,9 +51,9 @@ export default function AddUser() {
   );
 
   useEffect(
-    function() {
+    function () {
       if (addUser.isError) {
-        makeToast(`Eror: ${addUser.error.message}`, {type: "error"})
+        makeToast(`Eror: ${addUser.error.message}`, { type: "error" });
         const timeout = setTimeout(() => {
           addUser.reset();
         }, 5000);
@@ -65,10 +65,14 @@ export default function AddUser() {
 
   return (
     <>
+      <h1 className="my-8 mb-4 text-center text-3xl font-bold">Buat Akun</h1>
       <div className="m-8">
-        <Link href="/user" className="h-10 rounded-3xl inline-flex w-full justify-center bg-light-grey py-2 px-3 text-sm font-semibold text-black hover:bg-medium-grey hover:text-white-grey sm:mt-0 sm:w-28">
-          kembali
-        </Link>
+        {/* <Link
+          href="/user"
+          className="my-3 inline-flex w-full justify-center rounded-3xl bg-light-grey py-2 px-3 text-sm font-semibold text-black hover:bg-medium-grey hover:text-white-grey sm:mt-0 sm:w-28"
+        >
+          Kembali
+        </Link> */}
         <div className="flex justify-center">
           <form
             className="max-w-lg grow rounded-3xl bg-grey bg-opacity-20 p-8"
@@ -162,7 +166,11 @@ export default function AddUser() {
                 </select>
               </div>
 
-              <input className="mt-4 h-10 rounded-3xl inline-flex w-full justify-center bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28" type="submit" value="kirim" />
+              <input
+                className="mt-4 inline-flex h-10 w-full justify-center rounded-3xl bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:bg-[#6380BB] sm:mt-0 sm:w-28"
+                type="submit"
+                value="Kirim"
+              />
             </div>
           </form>
         </div>

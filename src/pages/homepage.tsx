@@ -132,12 +132,12 @@ export default function Homepage() {
     <>
       <Modal open={isModalOpen} onClose={handleCloseModal}>
         <form onSubmit={handleUpdateHero}>
-          <div>
-            <div className="flex items-center py-3 px-4">
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="flex items-center py-3">
               <h3 className="text-lg font-medium">Update Gambar Utama</h3>
               <button
                 type="submit"
-                className="ml-4 inline-flex w-full justify-center rounded-md border-blue bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]  sm:mt-0 sm:w-auto"
+                className="ml-4 inline-flex justify-center rounded-md border-blue bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]  sm:ml-auto sm:mt-0 sm:w-auto"
               >
                 Simpan
               </button>
@@ -148,28 +148,27 @@ export default function Homepage() {
             <div className="carousel-center carousel rounded-box mb-8 space-x-4 bg-light-grey p-4">
               {img && (
                 <div className="carousel-item">
-                  <img src={img} style={{ height: "36px" }} />
+                  <img src={img} style={{ height: "36px" }} alt="Main Image" />
                 </div>
               )}
             </div>
-            <div className="flex flex-col place-content-center">
-              <div className="flex flex-wrap items-center justify-center gap-4 py-8 px-4 sm:px-6 lg:px-8">
-                {images &&
-                  images.map((image) => (
-                    <div
-                      key={image.id}
-                      className="flex flex-col justify-center gap-2"
-                      onClick={() => {
-                        setImg(image.url);
-                      }}
-                    >
-                      <img
-                        className="max-h-32 object-contain"
-                        src={image.url}
-                      />
-                    </div>
-                  ))}
-              </div>
+            <div className="flex flex-wrap items-center justify-center gap-4 py-8">
+              {images &&
+                images.map((image) => (
+                  <div
+                    key={image.id}
+                    className="flex flex-col justify-center gap-2"
+                    onClick={() => {
+                      setImg(image.url);
+                    }}
+                  >
+                    <img
+                      className="max-h-32 object-contain"
+                      src={image.url}
+                      alt="Gallery Image"
+                    />
+                  </div>
+                ))}
             </div>
           </div>
         </form>
@@ -177,24 +176,21 @@ export default function Homepage() {
 
       <Modal open={isModalOpen2} onClose={handleCloseModal2}>
         <form onSubmit={handleUpdateCarousel}>
-          <div>
-            <div className="flex items-center py-3 px-4">
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="flex items-center py-3">
               <h3 className="text-lg font-medium">Update Gambar Carousel</h3>
-
               <button
                 type="submit"
-                className="ml-4 inline-flex w-full justify-center rounded-md border-blue bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]  sm:mt-0 sm:w-auto"
+                className="ml-4 inline-flex justify-center rounded-md border-blue bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]  sm:ml-auto sm:mt-0 sm:w-auto"
               >
                 Simpan
               </button>
-
               <button
-                onClick={() => setImgs(() => [])}
-                className="ml-4 inline-flex w-full justify-center rounded-md border-blue bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]  sm:mt-0 sm:w-auto"
+                onClick={() => setImgs([])}
+                className="ml-4 inline-flex justify-center rounded-md border-blue bg-blue py-2 px-3 text-sm font-semibold text-white-grey hover:border-[#6380BB] hover:bg-[#6380BB]  sm:mt-0 sm:w-auto"
               >
                 Reset
               </button>
-
               <button
                 className="ml-auto"
                 onClick={() => setIsModalOpen2(false)}
@@ -202,31 +198,34 @@ export default function Homepage() {
                 {Xbutton()}
               </button>
             </div>
-            <div className="flex flex-col place-content-center">
-              <div className="carousel-center carousel rounded-box mb-8 space-x-4 bg-light-grey p-4">
-                {imgs.map((item) => (
-                  <div className="carousel-item">
-                    <img src={item} style={{ height: "36px" }} />
+            <div className="carousel-center carousel rounded-box mb-8 space-x-4 bg-light-grey p-4">
+              {imgs.map((item, index) => (
+                <div className="carousel-item" key={index}>
+                  <img
+                    src={item}
+                    style={{ height: "36px" }}
+                    alt={`Carousel Item ${index + 1}`}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-4 py-8">
+              {images &&
+                images.map((image) => (
+                  <div
+                    key={image.id}
+                    className="flex flex-col justify-center gap-2"
+                    onClick={() =>
+                      setImgs((prevImgs) => [...prevImgs, image.url])
+                    }
+                  >
+                    <img
+                      className="max-h-32 object-contain"
+                      src={image.url}
+                      alt="Gallery Image"
+                    />
                   </div>
                 ))}
-              </div>
-              <div className="flex flex-wrap items-center justify-center gap-4 py-8 px-4 sm:px-6 lg:px-8">
-                {images &&
-                  images.map((image) => (
-                    <div
-                      key={image.id}
-                      className="flex flex-col justify-center gap-2"
-                      onClick={() =>
-                        setImgs((prevImgs) => [...prevImgs, image.url])
-                      }
-                    >
-                      <img
-                        className="max-h-32 object-contain"
-                        src={image.url}
-                      />
-                    </div>
-                  ))}
-              </div>
             </div>
           </div>
         </form>

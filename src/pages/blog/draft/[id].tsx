@@ -153,7 +153,7 @@ export default function CreateDraft({ id }: { id: string }) {
     <>
       <CenterContainer>
         <Link href="/blog/draft">
-          <button className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]">
+          <button className="rounded-3xl mb-4 bg-light-grey text-black px-6 py-2 hover:bg-medium-grey hover:text-white-grey">
             Kembali Ke Draft Blog
           </button>
         </Link>

@@ -10,14 +10,14 @@ export default function DraftList() {
             <div className="mb-4 flex justify-end">
               <a
                 href="createblast"
-                className="mr-5 rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]"
+                className="rounded-md bg-blue px-6 py-2 text-white-grey hover:bg-[#6380BB]"
               >
                 + Buat email blast baru
               </a>
             </div>
             <div className="flex justify-center">
               {/* Loop through blog posts here */}
-              <div className="bg-white-grey w-full max-w-2xl overflow-hidden rounded-lg shadow-md">
+              <div className="bg-white-grey border border-medium-grey w-full max-w-2xl overflow-hidden rounded-lg shadow-md">
                 <div className="p-4">
                   <p className="text-sm">12/05/2013</p>
                   <p className="mt-2 text-xl font-bold">

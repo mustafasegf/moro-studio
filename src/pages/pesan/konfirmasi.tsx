@@ -206,7 +206,7 @@ export function Jadwal() {
 
       />
       <CenterContainer>
-        <div className=" flex flex-row justify-between">
+        <div className=" flex flex-row justify-between overflow-x-auto">
           {dates.map((date, rowIdx) => (
             <div
               key={date.toISOString()}
@@ -422,7 +422,7 @@ export function ModalBooking({
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
             <select
               id="role"
-              className="input-bordered input mt-1 mb-4 w-full max-w-xs"
+              className="input-bordered input mt-1 mb-4 ml-2 w-full max-w-xs"
               onChange={handleChangeStatus}
               defaultValue={booking?.status}
             >
@@ -457,7 +457,7 @@ export function ModalBooking({
 
                 <input
                   className={cn(
-                    "input-bordered input mt-1 mb-2 w-full max-w-xs",
+                    "input-bordered input mt-1 mb-2 ml-2 w-full max-w-xs",
                     { "input-error": errors.jumlah }
                   )}
                   {...register(`jumlah`, {
@@ -480,10 +480,10 @@ export function ModalBooking({
             />
 
             <div className="flex justify-end py-3 px-4">
-              <button className="h-10 rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey" onClick={onDelete}>
+              <button className="h-10 mr-2 rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey" onClick={onDelete}>
                 Hapus
               </button>
-              <button className="h-10 rounded-3xl border bg-light-grey border-light-grey px-6 py-2 text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey" onClick={onLeave}>
+              <button className="h-10 mr-2 rounded-3xl border bg-light-grey border-light-grey px-6 py-2 text-black transition duration-300 ease-in-out hover:bg-medium-grey hover:text-white-grey" onClick={onLeave}>
                 Batal
               </button>
               <input className="h-10 rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB] hover:text-white-grey" type="submit" value="Simpan" />

@@ -76,7 +76,7 @@ export default function Upload() {
                 <div className="col-span-6">
                   <label
                     htmlFor="paket-foto"
-                    className="block text-sm font-medium leading-6"
+                    className="mb-2 block text-sm font-medium leading-6"
                   >
                     Masukkan Foto
                   </label>

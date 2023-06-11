@@ -2,6 +2,26 @@ import { FormEvent, useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import router from "next/router";
+import { createSSG } from "~/server/SSGHelper";
+import { GetServerSidePropsContext } from "next";
+import { getServerAuthSession } from "~/utils/session";
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = getServerAuthSession(ctx);
+  if (!session) {
+    return { redirect: { destination: "/login" } };
+  }
+  if (session.role !== "admin") {
+    return { redirect: { destination: "/" } };
+  }
+  const ssg = createSSG();
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+  };
+}
 
 export default function CreateKupon() {
   const [nama, setNama] = useState("");

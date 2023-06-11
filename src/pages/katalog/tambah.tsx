@@ -6,6 +6,26 @@ import { addCatalogueSchema, AddCatalogueSchema } from "~/utils/schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import cn from "classnames";
+import { createSSG } from "~/server/SSGHelper";
+import { GetServerSidePropsContext } from "next";
+import { getServerAuthSession } from "~/utils/session";
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const session = getServerAuthSession(ctx);
+  if (!session) {
+    return { redirect: { destination: "/login" } };
+  }
+  if (session.role !== "admin") {
+    return { redirect: { destination: "/" } };
+  }
+  const ssg = createSSG();
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+    },
+  };
+}
 
 export default function CreateCatalogue() {
   const addCatalogue = api.catalogue.addCatalogue.useMutation();

@@ -120,7 +120,7 @@ const Chat: React.FC = () => {
           <ChatWindow messages={messages} />
           {session?.role !== "studioManager" && !selectedChatRoom && (
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white rounded py-2 px-4 font-bold"
+              className="bg-blue hover:bg-[#6380BB] text-white-grey rounded-3xl py-2 px-4 font-bold"
               onClick={handleCreateChatRoom}
             >
               Buat Chat Room
