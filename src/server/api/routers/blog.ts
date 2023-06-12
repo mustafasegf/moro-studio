@@ -866,7 +866,7 @@ export const blogRouter = createTRPCRouter({
       },
 
       {
-        name: "Total Like Blog",
+        name: "Total Dislike Blog",
         value: dislikeBlogCount,
       },
 
