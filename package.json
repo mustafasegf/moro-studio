@@ -11,7 +11,7 @@
         "studio": "prisma studio",
         "lint": "next lint",
         "start": "next start",
-        "reset": "prisma db push --accept-data-loss --schema=./prisma/reset.prisma; prisma db push --accept-data-loss"
+        "reset": "prisma db push --accept-data-loss --schema=./prisma/reset.prisma; prisma db push --accept-data-loss; prisma db seed"
     },
     "prisma": {
         "seed": "node prisma/seed.mjs"

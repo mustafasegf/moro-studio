@@ -1,11 +1,17 @@
 import { getServerAuthSession } from "~/utils/session";
-import { FormEvent, FormEventHandler, useEffect, useState } from "react";
+import {
+  FormEvent,
+  FormEventHandler,
+  MouseEvent,
+  useEffect,
+  useState,
+} from "react";
 import { GetServerSidePropsContext } from "next/types";
 import { createSSG } from "~/server/SSGHelper";
 import { api } from "~/utils/api";
 import { CenterContainer } from "~/component/centercontainer";
 import { useForm } from "react-hook-form";
-import { tryToCatch } from "~/utils/trycatch"
+import { tryToCatch } from "~/utils/trycatch";
 import { useRouter } from "next/router";
 
 import ReactMde from "react-mde";
@@ -20,14 +26,12 @@ const converter = new Showdown.Converter({
   tasklists: true,
 });
 
-
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const session = getServerAuthSession(ctx);
   if (!session) {
     return { redirect: { destination: "/login" } };
   }
   if (session.role !== "blogManager" && session.role !== "admin") {
-
     return { redirect: { destination: "/" } };
   }
   const ssg = createSSG();
@@ -44,6 +48,7 @@ export default function CreateDraft() {
   const [judul, setJudul] = useState("");
   const [selectedTab, setSelectedTab] = useState<"write" | "preview">("write");
   const [id, setId] = useState<string>("");
+  const [creator, setCreator] = useState("");
 
   const upload = api.blog.createPresignedUrl.useMutation();
   const deleteImage = api.blog.deleteImage.useMutation();
@@ -52,9 +57,10 @@ export default function CreateDraft() {
   const { data: image, refetch } = api.blog.getImage.useQuery({ id });
   const router = useRouter();
 
-  async function handleDelete(id: string) {
-    await deleteImage.mutateAsync({id})
-    refetch()
+  async function handleDelete(e: MouseEvent, id: string) {
+    e.preventDefault();
+    await deleteImage.mutateAsync({ id });
+    refetch();
   }
 
   async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
@@ -102,11 +108,10 @@ export default function CreateDraft() {
     refetch();
   }
 
-
   useEffect(
-    function() {
+    function () {
       if (createBlog.isSuccess) {
-        makeToast("blog berhasil ditambah")
+        makeToast("blog berhasil ditambah");
         const timeout = setTimeout(() => {
           void router.push("/blog/draft");
         }, 1000);
@@ -117,9 +122,9 @@ export default function CreateDraft() {
   );
 
   useEffect(
-    function() {
+    function () {
       if (createBlog.isError) {
-        makeToast(`Eror: ${createBlog.error.message}`, {type: "error"})
+        makeToast(`Eror: ${createBlog.error.message}`, { type: "error" });
         const timeout = setTimeout(() => {
           createBlog.reset();
         }, 5000);
@@ -129,9 +134,9 @@ export default function CreateDraft() {
     [createBlog.isError]
   );
 
-  function onSubmit(e: FormEvent ) {
+  function onSubmit(e: FormEvent) {
     e.preventDefault();
-    createBlog.mutate({judul, isi: value, imageId: id})
+    createBlog.mutate({ judul, isi: value, imageId: id });
   }
 
   return (
@@ -142,11 +147,7 @@ export default function CreateDraft() {
         </h3>
 
         <form className="form-control gap-4" onSubmit={onSubmit}>
-
-          <label
-            htmlFor="thumbnail" 
-            className="text-sm font-medium leading-6"
-          >
+          <label htmlFor="thumbnail" className="text-sm font-medium leading-6">
             Pilih Thumbnail
           </label>
           <div className=" flex justify-center rounded-lg">
@@ -161,11 +162,15 @@ export default function CreateDraft() {
 
           {image && (
             <div key={image.id}>
-               <img width={400} src={image.url} />
-               <button className="mt-3 rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey" onClick={() => handleDelete(image.id) }>Delete</button>
-             </div>
+              <img width={400} src={image.url} />
+              <button
+                className="mt-3 rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
+                onClick={(e) => handleDelete(e, image.id)}
+              >
+                Delete
+              </button>
+            </div>
           )}
-
 
           <label htmlFor="judul" className="text-sm font-medium leading-6">
             Judul Blog
@@ -203,7 +208,11 @@ export default function CreateDraft() {
             }}
           />
 
-          <input className="mb-6 mt-3 border rounded-3xl bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]" type="submit" value="Simpan" />
+          <input
+            className="mb-6 mt-3 rounded-3xl border bg-blue px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-[#6380BB]"
+            type="submit"
+            value="Simpan"
+          />
         </form>
       </CenterContainer>
     </>

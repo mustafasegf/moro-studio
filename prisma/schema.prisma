@@ -150,13 +150,14 @@ model KontenBlog {
   judul        String
   comment      CommentBlog[]
   isi          String        @db.Text
-  posted       Boolean
+  posted       Boolean       @default(false)
   likedBy      User[]        @relation("LikedBlogs")
   dislikedBy   User[]        @relation("DislikedBlogs")
-  gambarBlogId String        @unique
-  gambarBlog   GambarBlog    @relation(fields: [gambarBlogId], references: [id])
+  gambarBlogId String       @unique
+  gambarBlog   GambarBlog   @relation(fields: [gambarBlogId], references: [id])
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
+  deleted      Boolean       @default(false)
 }
 
 model GambarBlog {

@@ -68,7 +68,8 @@ export default function CreateDraft({ id }: { id: string }) {
   const { data: image, refetch } = api.blog.getImage.useQuery({ id: imgId });
   const router = useRouter();
 
-  async function handleDelete(id: string) {
+  async function handleDelete(e: MouseEvent, id: string) {
+    e.preventDefault();
     await deleteImage.mutateAsync({ id });
     refetch();
   }
@@ -181,7 +182,8 @@ export default function CreateDraft({ id }: { id: string }) {
               <img width={400} src={image.url} />
               <button
                 className="mt-3 rounded-3xl border bg-[#FC182A] px-6 py-2 text-white-grey transition duration-300 ease-in-out hover:bg-red hover:text-white-grey"
-                onClick={() => handleDelete(image.id)}
+                // @ts-ignore
+                onClick={(e) => handleDelete(e, image.id)}
               >
                 Delete
               </button>

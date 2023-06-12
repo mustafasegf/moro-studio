@@ -133,7 +133,7 @@ export const blogRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.contohImage.delete({
+      await ctx.prisma.gambarBlog.delete({
         where: {
           id: input.id,
         },
@@ -170,6 +170,7 @@ export const blogRouter = createTRPCRouter({
           gambarBlog: {
             connect: { id: input.imageId },
           },
+
         },
       });
 
@@ -194,9 +195,10 @@ export const blogRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const blog = await ctx.prisma.kontenBlog.findUnique({
+      const blog = await ctx.prisma.kontenBlog.findFirst({
         where: {
           id: input.id,
+          deleted: false,
         },
         include: {
           gambarBlog: true,
@@ -212,6 +214,7 @@ export const blogRouter = createTRPCRouter({
     const blogs = await ctx.prisma.kontenBlog.findMany({
       where: {
         posted: false,
+        deleted: false,
       },
       include: {
         gambarBlog: true,
@@ -225,6 +228,7 @@ export const blogRouter = createTRPCRouter({
     const blogs = await ctx.prisma.kontenBlog.findMany({
       where: {
         posted: true,
+        deleted: false,
       },
       include: {
         gambarBlog: true,
@@ -277,9 +281,12 @@ export const blogRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const blog = await ctx.prisma.kontenBlog.delete({
+      const blog = await ctx.prisma.kontenBlog.update({
         where: {
           id: input.id,
+        },
+        data: {
+          deleted: true,
         },
       });
 
