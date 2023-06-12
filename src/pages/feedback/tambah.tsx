@@ -34,7 +34,7 @@ export default function Feedback() {
   useEffect(
     function () {
       if (addFeedback.isSuccess) {
-        makeToast("Feedback berhasil ditambah");
+        makeToast("Feedback Berhasil Ditambahkan!");
         const timeout = setTimeout(() => {
           void router.push("/feedback");
         }, 1000);

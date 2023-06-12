@@ -34,7 +34,7 @@ export default function ListFeedback() {
   useEffect(
     function () {
       if (deleteFeedbackMutation.isSuccess) {
-        makeToast("Feedback berhasil dihapus", { duration: 5000 });
+        makeToast("Feedback Berhasil Dihapus!", { duration: 5000 });
         const timeout = setTimeout(() => {
           deleteFeedbackMutation.reset();
         }, 5000);

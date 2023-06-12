@@ -3,6 +3,7 @@ import { api } from "~/utils/api";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
+import makeToast from "~/component/toast";
 
 interface Query extends ParsedUrlQuery {
   id: string;
@@ -19,7 +20,11 @@ export default function UpdateFeedback() {
   useEffect(
     function () {
       if (updateFeedback.isSuccess) {
-        void router.push("/feedback");
+        makeToast("Feedback Berhasil Diubah!");
+        const timeout = setTimeout(() => {
+          void router.push("/feedback");
+        }, 1000);
+        return () => clearTimeout(timeout);
       }
     },
     [updateFeedback.isSuccess]
