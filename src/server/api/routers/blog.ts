@@ -789,9 +789,29 @@ export const blogRouter = createTRPCRouter({
     }),
 
   getDashboardData: blogManagerProcedure.query(async ({ ctx }) => {
-    const blogCount = await ctx.prisma.kontenBlog.count();
+
+    const totalBlog = await ctx.prisma.kontenBlog.count({
+    where: {
+      deleted: false,
+    },
+  });
+    
+    const blogCount = await ctx.prisma.kontenBlog.count({
+    where: {
+      posted: true,
+      deleted: false,
+    },
+  });
+
     const commentCount = await ctx.prisma.commentBlog.count();
     // const userCount = await ctx.prisma.user.count();
+    const blogDraftCount = await ctx.prisma.kontenBlog.count({
+      where: {
+        posted: false,
+        deleted: false,
+      },
+    });
+
     const likedBlogCount = await ctx.prisma.kontenBlog.count({
       where: {
         likedBy: {
@@ -818,11 +838,22 @@ export const blogRouter = createTRPCRouter({
 
     return [
       {
-        name: "blogCount",
+        name: "Total Blog",
+        value: totalBlog,
+      },
+
+      {
+        name: "Jumlah Draft Blog",
+        value: blogDraftCount,
+      },
+
+      {
+        name: "Jumlah Blog Diposting",
         value: blogCount,
       },
+
       {
-        name: "commentCount",
+        name: "Total Komentar Semua Blog",
         value: commentCount,
       },
       // {
@@ -830,13 +861,15 @@ export const blogRouter = createTRPCRouter({
       //   value: userCount,
       // },
       {
-        name: "likedBlogCount",
+        name: "Total Like Blog",
         value: likedBlogCount,
       },
+
       {
-        name: "dislikeBlogCount",
+        name: "Total Like Blog",
         value: dislikeBlogCount,
       },
+
     ];
   }),
 
