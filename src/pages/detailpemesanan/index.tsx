@@ -165,6 +165,15 @@ export default function ListPemesanan() {
             {item.status}
           </td>
           <td
+            className={
+              i % 2 === 0
+                ? "bg-white-grey bg-opacity-50"
+                : "bg-light-grey bg-opacity-40"
+            }
+          >
+            {item.fotoUser.length}
+          </td>
+          <td
             className={`flex items-center ${
               i % 2 === 0
                 ? "bg-white-grey bg-opacity-50"
@@ -205,6 +214,9 @@ export default function ListPemesanan() {
                 </th>
                 <th className="bg-light-grey bg-opacity-80 text-base normal-case">
                   Status
+                </th>
+                <th className="bg-light-grey bg-opacity-80 text-base normal-case">
+                  Jumlah Foto
                 </th>
                 <th className="bg-light-grey bg-opacity-80 text-base normal-case">
                   Aksi

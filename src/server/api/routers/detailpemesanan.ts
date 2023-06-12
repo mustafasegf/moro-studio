@@ -14,6 +14,7 @@ export const detailPemesananRouter = createTRPCRouter({
       include :{
         user: true,
         katalog: true,
+        fotoUser: true,
       }
     });
   }),
