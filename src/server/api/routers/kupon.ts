@@ -23,9 +23,17 @@ export const kuponRouter = createTRPCRouter({
           kode: input.kode,
         },
       });
+      const existingNamaKupon =  await ctx.prisma.kupon.findFirst({
+        where: {
+          nama: input.nama,
+        },
+      });
 
       if (existingKupon) {
         throw new Error("Kode kupon telah ada");
+      }
+      if (existingNamaKupon) {
+        throw new Error("Nama kupon telah ada");
       }
 
       return ctx.prisma.kupon.create({
