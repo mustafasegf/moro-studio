@@ -286,6 +286,7 @@ export default function Homepage() {
         </div>
       </div>
 
+      {/* {images && images.length !== 0 && ( */}
       <div className="flex flex-col place-content-center">
         <h1 className="my-8 mb-4 text-center text-3xl font-bold">
           Daftar Gambar
@@ -298,6 +299,7 @@ export default function Homepage() {
               checked={isChecked}
               className="checkbox"
               onClick={handleCheck}
+              disabled={images && images.length === 0}
             />
           </span>
         </h1>
@@ -322,6 +324,7 @@ export default function Homepage() {
           </div>
         )}
       </div>
+      {/* )} */}
     </>
   );
 }
