@@ -50,6 +50,11 @@ export function Navbar() {
       path: "/detailpemesanan",
       role: "studioManager" || "admin",
     },
+    {
+      name: "Email Blast",
+      path: "/emailblast/blastlist",
+      role: "admin",
+    },
   ];
 
   return (
