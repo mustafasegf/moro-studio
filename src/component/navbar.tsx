@@ -45,6 +45,11 @@ export function Navbar() {
       path: "/dashboard",
       role: "admin" || "studioManager",
     },
+    {
+      name: "Email Blast",
+      path: "/emailblast/blastlist",
+      role: "admin",
+    },
   ];
 
   return (
